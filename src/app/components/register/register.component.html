@@ -1,0 +1,117 @@
+<div class="space-medium">
+	<div class="container">
+		<div class="row">
+			<div class="alert alert-success" *ngIf="status =='success'">
+				Leuk dat je weer meedoet! <a [routerLink]="['/login']">Log hier in</a>
+			</div>
+			<div class="alert alert-danger" *ngIf="status =='error'">
+				De registratie kan niet worden voltooid, misschien is uw e-mailadres of gebruikersnaam al in gebruik,
+				probeer het opnieuw
+			</div>
+			<div class="col-md-6">
+				<div class="feature-description">
+					<h2>Account maken</h2>
+					<hr>
+					<div class="feature-left">
+						<div class="feature-icon"><i class="far fa-address-book"></i></div>
+						<div class="feature-content">
+							<p>Blabla voordeel links nog een icoontje zodat het nog duidelijker is hoe koel we zijn</p>
+						</div>
+					</div>
+					<div class="feature-left">
+						<div class="feature-icon"><i class="far fa-compass"></i></div>
+						<div class="feature-content">
+							<p>Blabla voordeel links nog een icoontje zodat het nog duidelijker is hoe koel we zijn</p>
+						</div>
+					</div>
+					<div class="feature-left">
+						<div class="feature-icon"><i class="far fa-question-circle"></i></div>
+						<div class="feature-content">
+							<p>Blabla voordeel links nog een icoontje zodat het nog duidelijker is hoe koel we zijn</p>
+						</div>
+					</div>
+					<hr>
+					<p>LINKJE ALGEMENE VOORWAARDEN EN ZO HIHI OKE. KOpierechten aan HYVEN</p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+					<div class="register-form">
+						<div class="row">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 ">
+								<div class="form-group register-form-group">
+									<label class="control-label sr-only" for="name"></label>
+									<input id="name" type="text" name="name" #name="ngModel" [(ngModel)]="user.name"
+										   placeholder="Voornaam" class="form-control" required>
+									<div class="form-icon"><i class="fa fa-user"></i></div>
+									<span *ngIf="!name.valid && name.touched">Voornaam niet geldig</span>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12  ">
+								<div class="form-group register-form-group">
+									<label class="control-label sr-only" for="name"></label>
+									<input id="name" type="text" name="surname" #surname="ngModel"
+										   [(ngModel)]="user.surname" placeholder="Achternaam" class="form-control"
+										   required>
+									<div class="form-icon"><i class="fa fa-user"></i></div>
+									<span *ngIf="!surname.valid && surname.touched">Achternaam niet geldig</span>
+								</div>
+							</div>
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+								<div class="form-group register-form-group">
+									<label class="control-label sr-only" for="email"></label>
+									<input id="email" type="email" name="email" #email="ngModel"
+										   [(ngModel)]="user.email" placeholder="Emailadres" class="form-control"
+										   required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+									<div class="form-icon"><i class="fa fa-envelope"></i></div>
+									<span *ngIf="!email.valid && email.touched">Emailadres niet geldig</span>
+								</div>
+							</div>
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+								<div class="form-group register-form-group">
+									<label class="control-label sr-only" for="nick"></label>
+									<input id="nick" type="text" name="nick" #nick="ngModel" [(ngModel)]="user.nick"
+										   placeholder="Nickname" class="form-control" required>
+									<div class="form-icon"><i class="fa fa-user"></i></div>
+									<span *ngIf="!nick.valid && nick.touched">Gebruikersnaam niet geldig</span>
+								</div>
+							</div>
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+								<div class="form-group">
+									<label class="control-label sr-only" for="select"></label>
+									<div class="select">
+										<select id="select" name="select" class="form-control" required>
+											<option value="" disabled>Geslacht</option>
+											<option value="">Man</option>
+											<option value="">Vrouw</option>
+											<option value="">Overige</option>
+										</select>
+
+									</div>
+								</div>
+							</div>
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+								<div class="form-group register-form-group">
+									<label class="control-label sr-only" for="wachtwoord"></label>
+									<input id="wachtwoord" type="password" name="password" #password="ngModel"
+										   [(ngModel)]="user.password" placeholder="Wachtwoord" class="form-control"
+										   required>
+									<div class="form-icon"><i class="fa fa-lock"></i></div>
+									<span *ngIf="!password.valid && password.touched">Wachtwoordt niet geldig</span>
+								</div>
+							</div>
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+								<input type="submit" value="MAAK ACCOUNT" [disabled]="!registerForm.form.valid"
+									   name="singlebutton" class="btn btn-default btn-block mb10"/>
+								<p>
+									<small>Door te registreren ga je akkoord met onze algemene voorwaarden</small>
+								</p>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+			

@@ -1,0 +1,58 @@
+<div>
+	<div class="aboveRow">
+		<button ngbTooltip="{{'message.bold' | i18n}}" placement="bottom" (click)="insertMD('*')">
+			<b>B</b>
+		</button>
+		<button ngbTooltip="{{'message.italic' | i18n}}" placement="bottom" (click)="insertMD('-')">
+			<i>I</i>
+		</button>
+		<button ngbTooltip="{{'message.underline' | i18n}}" placement="bottom" (click)="insertMD('_')">
+			<u>U</u>
+		</button>
+		<button class="spaceButton" ngbTooltip="{{'message.strikethrough' | i18n}}" placement="bottom" (click)="insertMD('~')">
+			<s>abc</s>
+		</button>
+		<button ngbTooltip="{{'message.spoiler' | i18n}}" placement="bottom" (click)="insertMD('||')">
+			<span class="spoiler">H</span>
+		</button>
+		<button ngbTooltip="{{'message.blok' | i18n}}" placement="bottom" (click)="insertMD('```')">
+			[]
+		</button>
+		<button ngbTooltip="{{'message.quote' | i18n}}" placement="bottom" (click)="insertMD('`')">
+			' '
+		</button>
+		<button class="spaceButton" ngbTooltip="{{'message.casing' | i18n}}" placement="bottom" (click)="toggleCasing()">
+			Cc
+		</button>
+	</div>
+	<label for="box"></label>
+	<div class="txtHolder">
+		<textarea id="box"
+				  rows="3"
+				  class="form-control"
+				  placeholder="{{ 'message.idle' | i18n }}"
+				  [(ngModel)]="input"
+				  #inputField
+		></textarea>
+	</div>
+	<div class="belowRow">
+		<button ngbTooltip="{{'message.preview' | i18n}}" (click)="togglePreview()">
+			<i class="fas fa-search icon-orange"></i>
+		</button>
+		<button ngbTooltip="{{'message.image' | i18n}}">
+			<i class="fas fa-images icon-orange"></i>
+		</button>
+		<button ngbTooltip="{{'message.poll' | i18n}}">
+			<i class="fas fa-chart-bar icon-orange"></i>
+		</button>
+		<button ngbTooltip="{{'message.location' | i18n}}">
+			<i class="fas fa-map-marker-alt icon-orange"></i>
+		</button>
+
+		<button style="float: right;" ngbTooltip="{{'message.post' | i18n}}">
+			<i class="fas fa-paper-plane icon-orange"></i>
+		</button>
+	</div>
+	<div class="md preview animated-1" #preview [innerHTML]="input | md">
+	</div>
+</div>

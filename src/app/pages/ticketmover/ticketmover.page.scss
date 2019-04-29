@@ -1,0 +1,253 @@
+* {
+  font-family: "Lato", sans-serif;
+}
+
+.page > .header {
+  &:empty {
+    min-height: 72px;
+  }
+
+  position: relative;
+  background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
+  overflow: hidden;
+  max-width: 100%;
+  text-align: center;
+  font-size: 3em;
+  color: var(--background);
+  font-weight: 600;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+
+  text-overflow: ellipsis;
+  max-height: 2em;
+  white-space: nowrap;
+}
+
+.center {
+  text-align: center;
+}
+
+.unassigned {
+  & > h3 {
+    text-align: center;
+    display: inline-block;
+    width: calc(100% - 150px);
+  }
+
+  & .horizontal-wrapper {
+    margin: 0 -10px -10px;
+  }
+
+  & .ticket {
+    & .btn-group-responsive {
+      width: calc(100% - 22px);
+    }
+
+    & > .bottom-icon {
+      padding-left: 2px;
+      bottom: -2px;
+
+      @media (max-width: 991px) {
+        bottom: -4em;
+      }
+    }
+
+    max-width: 25vw;
+    border-color: var(--red);
+  }
+
+  & > .btn {
+    padding: 0;
+    width: 110px;
+    height: 40px;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    position: relative;
+    left: -10px;
+    top: -10px;
+  }
+
+  border: 1px solid var(--main-3);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.no-margin {
+  margin-left: 0 !important;
+  margin-right: 0 !important;;
+}
+
+.btn-group {
+  width: 100%;
+}
+
+.btn-33 {
+  width: 33%;
+}
+
+.padding {
+  padding: 5px;
+}
+
+.ticket-holder {
+  height: 8em;
+
+  @media (max-width: 991px) {
+    height: 12em;
+  }
+}
+
+.ticket {
+  &.cdk-drag-disabled {
+    background-color: var(--highlight);
+  }
+
+  & > .bottom-icon {
+    padding-top: 5px;
+    display: inline-flex;
+    position: relative;
+    bottom: 20px;
+    float: right;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  & > span {
+    height: 3em;
+    overflow: hidden;
+    display: block;
+  }
+
+  & > b {
+    & > a {
+      color: var(--text);
+    }
+
+    height: 1.5em;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  background-color: var(--background);
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--main-3);
+
+}
+
+.main-block {
+  border: 1px solid var(--main-3);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  height: calc(100vh - 150px);
+  margin: 5px;
+  user-select: none;
+
+  & .btn-group-responsive {
+    display: inline-flex;
+  }
+}
+
+.sub-block {
+  border: 1px solid var(--main-3);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  margin: 5px;
+  max-width: 250px;
+
+  & .btn-group-responsive {
+    display: none;
+  }
+}
+
+.btn-group-responsive {
+  display: none;
+}
+
+.col-4vw {
+  flex: 0 0 16vw;
+  max-width: 16vw;
+}
+
+.col-3vw {
+  flex: 0 0 25vw;
+  width: 25vw;
+}
+
+@media (max-width: 991px) {
+  .col-lg-3vw {
+    flex: 0 0 25vw;
+    width: 25vw;
+  }
+}
+
+.space-top {
+  margin-top: 10px;
+}
+
+.horizontal-wrapper {
+  overflow-x: auto;
+}
+
+.entities {
+  & .row {
+    height: 99%;
+  }
+
+  & .assigned {
+    height: 50%;
+  }
+
+  @media (max-width: 991px) {
+    height: calc(100% - 275px);
+  }
+  height: calc(100% - 210px);
+}
+
+.horizontal {
+  & > * {
+    margin: 0 2.5px;
+  }
+
+  flex-wrap: nowrap;
+}
+
+
+.btn-group-responsive > * {
+  &:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+
+  &:first-child {
+    @media (min-width: 992px) {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+    @media (max-width: 991px) {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  &:last-child {
+    @media (min-width: 992px) {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+    @media (max-width: 991px) {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+
+  padding: 4px 0;
+  margin: 0;
+}
+
+.user-popup {
+  text-align: left;
+}

@@ -1,0 +1,20 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+before_script:
+  - docker login -u jefcarlier -p $CI_BUILD_TOKEN registry.gitlab.com
+
+variables:
+  CONTAINER_TEST_IMAGE: registry.gitlab.com/hyven/hyven28.1-frontend
+
+build:
+  stage: build
+  only: [master]
+  script:
+    - docker build -t $CONTAINER_TEST_IMAGE:latest -t $CONTAINER_TEST_IMAGE:$CI_JOB_ID .
+    - docker push $CONTAINER_TEST_IMAGE

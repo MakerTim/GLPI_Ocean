@@ -1,0 +1,95 @@
+* {
+	font-family: "Lato", sans-serif;
+}
+
+.home > .header {
+	height: 280px;
+	padding-top: 50px;
+	position: relative;
+	background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
+	overflow: hidden;
+	max-width: 100%;
+}
+
+.center {
+	text-align: center;
+}
+
+.header_wave {
+	position: absolute;
+	top: 270px;
+	left: -25vw;
+	right: 0;
+}
+
+path#double-wave {
+	fill: var(--background);
+}
+
+.wave1 {
+	height: 200px;
+	transform: translateY(-40px);
+}
+
+.wave2 {
+	height: 240px;
+	transform: translateY(-80px);
+	background-size: 960px 240px;
+	opacity: 0.5;
+	left: -200px;
+}
+
+.wave3 {
+	height: 220px;
+	transform: translateY(-120px);
+	background-size: 880px 220px;
+	opacity: 0.33;
+	left: -300px;
+}
+
+.wave4 {
+	height: 280px;
+	transform: translateY(-160px);
+	background-size: 1120px 280px;
+	opacity: 0.1;
+	left: -780px;
+	top: 320px;
+}
+
+.header {
+	p {
+		color: white;
+	}
+
+	h4 {
+		color: white;
+		margin: 0;
+		padding: 0;
+		font-size: 35px;
+		line-height: 55px;
+		font-weight: 600;
+	}
+}
+
+.latest_title {
+	color: var(--text-head);
+	line-height: 18px;
+	font-size: 15px;
+	font-weight: 600;
+
+	> a {
+		color: var(--main);
+	}
+}
+
+.crd {
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+label{
+	max-width: 100%;
+}
+
+input {
+	max-width: 80%;
+}

@@ -1,0 +1,11 @@
+<div class="switch" #element>
+	<input type="checkbox" id="s{{rng}}" (change)="markChange($event)" [checked]="checked">
+	<label
+			for="s{{rng}}"
+			(swipeleft)="onSwipe($event)"
+			(swiperight)="onSwipe($event)"
+			[class]="clss">
+		<span class="left">{{ left | i18n }}</span>
+		<span class="right">{{ right | i18n }}</span>
+	</label>
+</div>

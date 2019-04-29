@@ -1,0 +1,78 @@
+<ng-template #loginModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ 'login.popup.title' | i18n }}</h4>
+    </div>
+    <div class="modal-body">
+        <form (submit)="startLogin(modal.username, modal.password, modal)">
+            <p *ngIf="checkLogin(modal)" [innerHTML]="error | i18n"></p>
+            <div *ngIf="!isLoggingin()" class="form-group">
+                <label class="centered" for="usernamepopup">{{ 'login.popup.username' | i18n }}</label><br>
+                <input ngbAutofocus [(ngModel)]="modal.username" name="username" id="usernamepopup"
+                       class="form-control" type="text"> <br>
+                <label class="centered" for="passwordpopup">{{ 'login.popup.password' | i18n }}</label><br>
+                <input ngbAutofocus [(ngModel)]="modal.password" name="password" id="passwordpopup"
+                       class="form-control" type="password"> <br>
+            </div>
+            <svg *ngIf="isLoggingin()" class="lds-blocks" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+                 preserveAspectRatio="xMidYMid" style="height: auto;">
+                <rect x="19" y="19" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="40" y="19" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="61" y="19" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="19" y="40" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="61" y="40" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="19" y="61" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="40" y="61" width="20" height="20" fill="#93dbe9"></rect>
+                <rect x="61" y="61" width="20" height="20" fill="#93dbe9"></rect>
+            </svg>
+            <p *ngIf="isLoggingin(false) && !loggingIn" class="centered">{{ 'login.popup.autologin' | i18n }}</p>
+            <p *ngIf="isLoggingin(false) && loggingIn" class="centered">{{ 'login.popup.logging' | i18n }}</p>
+            <button class="hidden" type="submit">hidden submit</button>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!isLoggingin()" [disabled]="error" type="button" class="btn btn-primary"
+                (click)="startLogin(modal.username, modal.password, modal)">{{ 'login.popup.login' | i18n }}</button>
+    </div>
+</ng-template>
+
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" [routerLink]="['/']"><img src="./assets/img/fd_logo.png" alt="GLPI"
+                                                      style="width: 42px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars navbar-toggler-icon"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto" *ngIf="navigationItems">
+            <li class="nav-item dropdown" *ngFor="let navigationItemIndex of objectKeys(navigationItems)">
+                <a class="nav-link dropdown-toggle" id="navbar{{navigationItemIndex}}"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"
+                   [routerLink]="['page/'+navigationItemIndex]">
+                    <i class="{{iconOf(navigationItemIndex)}} feather feather-home icon-orange"></i>
+                    <span>{{ navigationItemIndex | titlecase }}</span>
+                </a>
+                <div class="dropdown-menu" attr.aria-labelledby="navbar{{navigationItemIndex}}"
+                     *ngIf="navigationItems[navigationItemIndex] as navigation">
+                    <a class="dropdown-item" *ngFor="let navigationSubItem of objectKeys(navigation)"
+                       [routerLink]="[navigation[navigationSubItem]]">
+						<span *ngIf="navigationItemIndex === 'Plugins'">
+							{{ 'nav.' + saveI18n('plugin-' + navigationSubItem.replace("Plugin", '').replace("Config", '')) | i18n }}
+						</span>
+                        <span *ngIf="navigationItemIndex !== 'Plugins'">
+							{{ 'nav.' + saveI18n(navigationSubItem) | i18n }}
+						</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" *ngIf="loggedIn">
+            <li><a class="btn btn-link" (click)="logout()">Logout</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto" *ngIf="!loggedIn">
+            <li><a [routerLink]="['/']">Login</a></li>
+        </ul>
+    </div>
+</nav>
+<router-outlet></router-outlet>

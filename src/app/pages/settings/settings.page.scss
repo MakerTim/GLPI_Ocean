@@ -1,0 +1,64 @@
+* {
+	font-family: "Lato", sans-serif;
+}
+
+.setting > .header {
+	&:empty {
+		min-height: 72px;
+	}
+
+	position: relative;
+	background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
+	overflow: hidden;
+	max-width: 100%;
+	text-align: center;
+	font-size: 3em;
+	color: var(--background);
+	font-weight: 600;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+	margin-top: 1em;
+}
+
+.right {
+	text-align: end;
+	padding-right: 2em;
+}
+
+.center {
+	text-align: center;
+}
+
+.highlight {
+	background-color: var(--highlight);
+	margin-left: -12px;
+	margin-right: -12px;
+
+	& > div {
+		overflow-wrap: break-word;
+	}
+}
+
+.listBlock {
+	h3 {
+		svg {
+			font-size: 12px;
+			float: right;
+		}
+
+		text-align: center;
+		background-color: var(--main-background);
+		padding: 2px;
+	}
+
+	.listBlock-body {
+		min-height: 2em;
+		padding-left: 5%;
+		padding-right: 3px;
+	}
+
+	margin-bottom: 0.5em;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+}

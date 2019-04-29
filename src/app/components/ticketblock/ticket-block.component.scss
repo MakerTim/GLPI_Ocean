@@ -1,0 +1,24 @@
+label {
+	font-size: larger;
+}
+
+option {
+	font-size: large;
+}
+
+.boxed {
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fieldbox {
+	padding: 7px 3px;
+}
+
+.highlight-img {
+	background-color: var(--highlight);
+}
+
+.center {
+	text-align: center;
+}
+

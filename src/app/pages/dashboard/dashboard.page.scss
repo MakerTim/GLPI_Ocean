@@ -1,0 +1,139 @@
+* {
+  font-family: "Lato", sans-serif;
+}
+
+.dashboard {
+  & > .header {
+    &:empty {
+      min-height: 72px;
+    }
+
+    position: relative;
+    background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
+    overflow: hidden;
+    max-width: 100%;
+    text-align: center;
+    font-size: 3em;
+    color: var(--background);
+    font-weight: 600;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+
+    text-overflow: ellipsis;
+    max-height: 2em;
+    white-space: nowrap;
+  }
+
+  height: calc(100vh - 72px);
+}
+
+.row {
+  height: 100%;
+}
+
+.ticket {
+  .date {
+    float: right;
+    max-width: 30%;
+    overflow: hidden;
+  }
+
+  b {
+    > a {
+      color: #000041;
+      text-decoration: underline;
+    }
+
+    display: block;
+    text-align: center;
+  }
+
+  &.panic {
+    background-color: #ff0000ba;
+
+    > div {
+      animation: 5s ease-in-out 0s infinite normal none running flashy;
+    }
+  }
+
+  &.higher {
+    background-color: lightpink;
+
+    > div {
+      animation: 7.5s ease-in-out 0s infinite normal none running flashy;
+    }
+  }
+
+  &.high {
+    background-color: lightsalmon;
+
+    > div {
+      animation: 10s ease-in-out 0s infinite normal none running flashy;
+    }
+  }
+
+  &.abnormal {
+    background-color: lightgoldenrodyellow;
+  }
+
+  &.normal {
+    background-color: whitesmoke;
+  }
+
+  &.none {
+    background-color: white;
+  }
+
+  &.closed {
+    * > * {
+      color: darkgray !important;
+    }
+
+    color: darkgray !important;
+    background-color: lightgray;
+  }
+
+  > div {
+    padding: 5px;
+  }
+
+  margin: 5px;
+  border: 3px solid var(--main-2);
+  border-radius: 5px;
+  transition: background .5s ease-out;
+}
+
+.lane {
+  &:first-child {
+    border-left: none;
+  }
+
+  &:last-child {
+    border-right: none;
+  }
+
+  border-left: 1px solid var(--main);
+  border-right: 1px solid var(--main);
+}
+
+.center {
+  text-align: center;
+}
+
+.padingTop {
+  padding-top: 10px;
+}
+
+@keyframes flashy {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  80% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  90% {
+    background-color: rgba(255, 255, 255, 0.75);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}

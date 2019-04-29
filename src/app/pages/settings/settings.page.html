@@ -1,0 +1,25 @@
+<div class="setting">
+	<div class="header">{{ 'setting.header' | i18n }}</div>
+	<br>
+	<div class="center" *ngIf="error">{{ error }}</div>
+
+	<div class="row">
+		<div class="col-4"></div>
+		<div class="col-8 row">
+			<ng-container *ngFor="let setting of settings">
+				<div class="col-6 col-sm-6 col-md-3">
+					{{ 'setting.' + setting.what | i18n }}
+				</div>
+				<div class="col-6 col-md-9 row">
+					<customswitch
+						[attr.followId]="setting.id"
+						right="setting.enabled"
+						left="setting.disabled"
+						[checked]="setting.setting !== '0'"
+						[onChange]="onChangeSwitch"
+					></customswitch>
+				</div>
+			</ng-container>
+		</div>
+	</div>
+</div>

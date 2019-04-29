@@ -1,0 +1,26 @@
+<div class="dashboard">
+    <div class="header">
+        {{ 'dashboard.title ' | i18n }}
+    </div>
+
+    <div class="row">
+        <div *ngFor="let state of states" class="padingTop lane col-md-4">
+            <div class="center">
+                <b>{{ 'ticket.' + state[0] | i18n }}</b>&nbsp;
+                [<i>{{ getTicketCount(state) }}</i>]
+            </div>
+
+            <ng-container *ngFor="let ticket of sortPriority(tickets)">
+                <div *ngIf="state.indexOf(ticket.status) >= 0" [class]="'ticket ' + getPriority(ticket)">
+                    <div class="ticketContent">
+                        <b><a [routerLink]="['/open/Ticket/' + ticket.id]">{{ ticket.name }}</a></b>
+                        <article>{{ ticket.content | striphtml | limit }}</article>
+                        <u class="date" [innerHTML]="ticket.date.replace(' ', '<br>')"></u>
+                        <br>
+                        <u>Paula</u>&nbsp;<i class="fas fa-sign-in-alt"></i>&nbsp;<i>Tim, Ivo, Bas</i>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

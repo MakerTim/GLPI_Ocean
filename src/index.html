@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>GLPI Ocean</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <style>
+        @keyframes hideshow {
+            0% {
+                opacity: 0;
+            }
+            25% {
+                opacity: 1;
+            }
+            75% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+    <script>
+        let basePath = window.location.pathname.replace('index.html', '');
+        if (basePath.indexOf('dist/client') >= 0) {
+            basePath = basePath.substr(0, basePath.indexOf('dist/client') + 12);
+        } else if (basePath.indexOf('plugins/ocean') >= 0) {
+            basePath = basePath.substr(0, basePath.indexOf('plugins/ocean') + 14);
+        } else {
+            basePath = '/';
+        }
+        document.getElementsByTagName('base')[0].href = basePath;
+    </script>
+</head>
+<body>
+<noscript>Please enable JAVASCRIPT</noscript>
+<app-root>
+    <div style="z-index: -1; text-align: center;">
+        <svg class="lds-blocks" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+             preserveAspectRatio="xMidYMid" style="width: 25%;height: auto;">
+            <rect x="19" y="19" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="40" y="19" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="61" y="19" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="19" y="40" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="61" y="40" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="19" y="61" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="40" y="61" width="20" height="20" fill="#93dbe9"></rect>
+            <rect x="61" y="61" width="20" height="20" fill="#93dbe9"></rect>
+        </svg>
+        <div>Loading...</div>
+        <script>
+            const rects = document.getElementsByTagName('rect');
+            let i = 0;
+            for (const rect of rects) {
+                rect.style.animation = '2s ease ' + (-(i++) / 10) + 's infinite normal none running hideshow';
+            }
+        </script>
+    </div>
+    <span id="rootspan-1337-2304"
+          style="display: none; width: 100vw; height: 100vh; text-align: center; color: white; padding-top: calc(50vh - 4em); font-size: 30px; background-color: red;position: absolute; top: 0;">
+		Please use a modern browser like <br>
+		Veuillez utiliser un navigateur moderne comme <br>
+		Por favor, use un navegador moderno como <br>
+		Gebruik alstublieft een moderne browser zoals <br>
+		<b>
+			<a style="color: yellow" href="https://www.google.com/chrome/">Chrome</a> /
+			<a style="color: yellow" href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a> /
+			<a style="color: yellow" id="aedgelink-1337-2304" href="microsoft-edge:/">Edge</a>
+		</b>
+	</span>
+    <script>
+        setTimeout(function () {
+            if (!document.getElementById('rootspan-1337-2304')) return;
+            document.getElementById('rootspan-1337-2304').style.display = 'block';
+            document.getElementById('aedgelink-1337-2304').setAttribute('href', 'microsoft-edge:' + window.location.href);
+            document.getElementById('aedgelink-1337-2304').setAttribute('onClick', 'setTimeout(function () {window.close()}, 250);');
+        }, 30000);
+    </script>
+</app-root>
+<script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js"
+        integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ"
+        crossorigin="anonymous"></script>
+</body>
+</html>

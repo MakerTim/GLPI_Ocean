@@ -1,0 +1,70 @@
+<!--suppress HtmlFormInputWithoutLabel -->
+<div class="input">
+	<ng-container *ngIf="['empty', 'pre'].indexOf(typeArray[0]) >= 0">
+		<div *ngIf="debug" class="hiddenDebugInput row">
+			<div class="col">{{ 'ticket.' + label | i18n }}</div>
+			<div class="col">{{ typeArray[0] }}</div>
+			<div class="col" *ngIf="typeArray[0] === 'pre'">: "{{ typeArray[1] }}"</div>
+		</div>
+	</ng-container>
+
+	<div class="input-group mb-1" *ngIf="'empty' !== typeArray[0]">
+		<div class="input-group-prepend" *ngIf="['empty', 'pre'].indexOf(typeArray[0]) < 0">
+			<label class="input-group-text" [for]="'FormId' + label">
+				{{ 'ticket.' + label | i18n}}
+			</label>
+		</div>
+
+		<ng-container [ngSwitch]="typeArray[0]">
+			<ng-container *ngSwitchCase="'dropdown'">
+				<select #theInput class="custom-select" (change)="onChange($event.target.value)" [id]="'FormId' + label"
+						[title]="typeArray[1]" [value]="typeArray[1]" [name]="label" [required]="['title', 'description'].indexOf(label) >= 0">
+					<option
+						*ngFor="let option of subArray(subArray(typeArray))"
+						[value]="option[objectKeys(option)[0]]"
+						[selected]="typeArray[1] === option[objectKeys(option)[0]]">
+						{{ objectKeys(option)[0] | i18n }}{{ debug ? ': ' + option[objectKeys(option)[0]] : '' }}
+					</option>
+				</select>
+			</ng-container>
+			<ng-container *ngSwitchCase="'field'">
+				<select #theInput class="custom-select" (change)="onChange($event.target.value)" [id]="'FormId' + label"
+						[name]="label" [required]="['title', 'description'].indexOf(label) >= 0">
+					<option *ngFor="let option of getDatabaseOptions(typeArray[1], typeArray[2])"
+							[value]="typeArray[3] ? option['value'] : option['id']">
+						{{ option['value'] | i18n }}{{ debug ? ': ' + (typeArray[3] ? option['value'] : option['id']) : '' }}
+					</option>
+				</select>
+			</ng-container>
+			<ng-container *ngSwitchCase="'input'">
+				<input #theInput [type]="typeArray[1]" (change)="onChange($event.target.value)" [name]="label"
+					   [placeholder]="typeArray[2] ? typeArray[2] : ''" [id]="'FormId' + label"
+					   [title]="typeArray[3] ? typeArray[3] : ''" [value]="typeArray[3] ? typeArray[3] : ''"
+					   [required]="['title', 'description'].indexOf(label) >= 0"
+					   class="form-control">
+			</ng-container>
+			<ng-container *ngSwitchCase="'text'">
+				<textarea #theInput class="form-control"
+						  (change)="onChange($event.target.value)"
+						  [id]="'FormId' + label"
+						  [name]="label"
+						  [required]="['title', 'description'].indexOf(label) >= 0"></textarea>
+			</ng-container>
+			<ng-container *ngSwitchCase="'file'">
+				<div class="custom-file">
+					<input #theInput (change)="changeFile($event.target)" type="file" class="custom-file-input"
+						   [id]="'FormId' + label" [name]="'attach:' + label + '[]'"
+							[required]="['title', 'description'].indexOf(label) >= 0">
+					<label class="custom-file-label" [for]="'FormId' + label">
+						<ng-container *ngIf="!shownValue">{{ 'ticket.browse' | i18n }}</ng-container>
+						<ng-container *ngIf="shownValue && !debug">{{ shownValue }}</ng-container>
+						<ng-container *ngIf="shownValue && debug">{{ debugValue }}</ng-container>
+					</label>
+				</div>
+			</ng-container>
+			<ng-container *ngSwitchCase="'pre'">
+				<input #theInput type="hidden" [value]="typeArray[1]" [name]="label">
+			</ng-container>
+		</ng-container>
+	</div>
+</div>

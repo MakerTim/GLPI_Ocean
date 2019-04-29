@@ -1,0 +1,79 @@
+<div class="ticket-block">
+	<div class="center animated-1 animated-delay-1 fadeInUpLower">
+		<form class="boxed" #form>
+			<b>{{ 'ticket.mainquestion' | i18n }}</b>
+			<hr>
+			<br>
+			<div class="boxed">
+				<label *ngIf="categories.length > 0">
+					{{ 'ticket.maincategorie' | i18n }} <br>
+					<select [(ngModel)]="selectedMainCategory" (change)="changeMainCategory()" class="form-control form-ignore" name="mainCat">
+						<option hidden disabled [value]="''">{{ 'ticket.notSelected' | i18n }}</option>
+						<ng-container *ngFor="let mainCat of categories">
+							<ng-container *ngIf="debug || categories[indexOf(categories, mainCat)].data.length > 0">
+								<option [value]="indexOf(categories, mainCat)">
+									{{ mainCat.category_i18n | i18n }}
+									<ng-container *ngIf="debug">
+										: {{ categories[indexOf(categories, mainCat)].data.length }}
+									</ng-container>
+								</option>
+							</ng-container>
+						</ng-container>
+					</select>
+				</label>
+				<br>
+				<div *ngIf="selectedMainCategory" class="center animated-1 fadeInUpLower">
+					<label>
+						{{ 'ticket.subcategorie' | i18n }} <br>
+						<select [(ngModel)]="selectedSubCategory" (change)="changeSubCategory()" class="form-control form-ignore" name="subCat">
+							<option hidden disabled [value]="''">{{ 'ticket.notSelected' | i18n }}</option>
+							<option *ngFor="let indexSubs of objectKeys(categories[selectedMainCategory].data)"
+									[value]="indexSubs">
+								{{ objectKeys(categories[selectedMainCategory].data[indexSubs])[0] | i18n }}
+							</option>
+						</select>
+					</label>
+				</div>
+
+				<div *ngIf="selectedSubCategory" class="animated-1 fadeInUpLower">
+					<div class="boxed fieldbox"
+						 *ngVar="nthKey(categories[selectedMainCategory].data[selectedSubCategory]) as subCategory">
+						<div *ngFor="let field of objectKeys(subCategory)">
+							<ticketinput (valueChange)="onValueInput(field, $event)" [debug]="debug" [label]="field"
+										 [typeArray]="subCategory[field]"></ticketinput>
+						</div>
+						<button *ngIf="!posting" class="animated-1 animated-delay-1 fadeInUpLower btn btn-primary"
+								(click)="onSubmit(form)">
+							{{ 'ticket.submit' | i18n }}
+						</button>
+						<ngb-progressbar *ngIf="posting" [value]="postingValue" [type]="stageType"
+										 animated="true" [striped]="stage != 'finished'" max="100" height="50px">
+							<a *ngIf="stage == 'finished'" [routerLink]="['/open/Ticket/' + lastTicketId]">{{ 'ticket.stage.' + stage | i18n }}</a>
+							<ng-container *ngIf="stage != 'finished'">{{ 'ticket.stage.' + stage | i18n }}</ng-container>
+						</ngb-progressbar>
+					</div>
+				</div>
+				<ng-container *ngIf="!selectedSubCategory">
+					<br><br>
+				</ng-container>
+			</div>
+			<div class="boxed">
+				<div class="highlight-img">
+					<span *ngIf="screenshots.length > 0">{{ 'ticket.screenshots' | i18n }} <br></span>
+					<span
+						ngbTooltip="{{'ticket.noScreenshotsTooltip' | i18n}}" placement="bottom"
+						*ngIf="screenshots.length == 0">{{ 'ticket.noScreenshots' | i18n }} <br></span>
+					<ng-container *ngFor="let img of screenshots" (click)="removeScreenshot($event.target, img)">
+						<input type="hidden" [value]="img" name="attach:img[]">
+						<img
+							(click)="removeScreenshot($event.target, img)"
+							ngbTooltip="{{'ticket.imgRemove' | i18n}}"
+							placement="bottom"
+							[classList]="'animated-1 fadeIn height-max-250 width-p-max-' + floor(100 / ((screenshots.length > 4) ? 5 : ((screenshots.length - 1 % 4) + 2)))"
+							[src]="img" alt="Screenshot">
+					</ng-container>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

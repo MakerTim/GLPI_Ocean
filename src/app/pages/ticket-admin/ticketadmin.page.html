@@ -1,0 +1,334 @@
+<ng-template #selectorDropdown let-dataOption="dataOption">
+	<label>
+		{{ 'ticket.default' | i18n }}:
+		<select class="btn btn-sm btn-outline-primary"
+				[(ngModel)]="dataOption[1]">
+			<option
+				*ngFor="let dropdownOption of (subArray(subArray(dataOption)))"
+				[value]="dropdownOption[objectKeys(dropdownOption)]"
+				[selected]="dropdownOption[objectKeys(dropdownOption)] == dataOption[1]">
+				{{ objectKeys(dropdownOption)[0] | i18n }}: {{ dropdownOption[objectKeys(dropdownOption)] }}
+			</option>
+		</select>
+	</label>&nbsp;
+	<button class="btn btn-outline-success btn-sm" (click)="addOption(newOptionModal, dataOption)">
+		{{ 'ticket.addnew' | i18n }}
+	</button>&nbsp;
+	<button class="btn btn-outline-warning btn-sm" (click)="deleteOption(dataOption, dataOption[1])">
+		{{ 'ticket.removeselected' | i18n }}
+	</button>&nbsp;
+	<button class="btn btn-outline-danger btn-sm" (click)="deleteAll(dataOption)">
+		{{ 'ticket.emptyall' | i18n }}
+	</button>&nbsp;
+</ng-template>
+<ng-template #selectorField let-dataOption="dataOption">
+	<label>
+		{{ 'ticket.table' | i18n }}:
+		<select class="btn btn-sm btn-outline-primary"
+				[(ngModel)]="dataOption[1]">
+			<option
+				*ngFor="let table of objectKeys(databaseStructure)"
+				[value]="table"
+				[selected]="table == dataOption[1]">
+				{{ table }}
+			</option>
+		</select>
+	</label>&nbsp;
+	<label>
+		{{ 'ticket.field' | i18n }}:
+		<select class="btn btn-sm btn-outline-primary"
+				[(ngModel)]="dataOption[2]">
+			<option
+				*ngFor="let field of databaseStructure[dataOption[1]]"
+				[value]="field"
+				[selected]="field == dataOption[2]">
+				{{ field }}
+			</option>
+		</select>
+	</label>&nbsp;
+	<label>
+		<ng-container *ngIf="dataOption[3]">{{ 'ticket.useName' | i18n }}:</ng-container>
+		<ng-container *ngIf="!dataOption[3]">{{ 'ticket.useId' | i18n }}:</ng-container>
+		<input [(ngModel)]="dataOption[3]" type="checkbox" [value]="dataOption[3]" >
+	</label>&nbsp;
+</ng-template>
+<ng-template #selectorInput let-dataOption="dataOption">
+	<label>
+		{{ 'ticket.type' | i18n }}:
+		<select class="btn btn-sm btn-outline-primary"
+				[(ngModel)]="dataOption[1]">
+			<option
+				*ngFor="let field of htmlInput"
+				[value]="field"
+				[selected]="field == dataOption[1]">
+				{{ field }}
+			</option>
+		</select>
+	</label>&nbsp;
+	<label>
+		{{ 'ticket.placeholder' | i18n }}:
+		<input class="sm" [(ngModel)]="dataOption[2]">
+	</label><br>
+	<label>
+		{{ 'ticket.prefilled' | i18n }}:
+		<input class="sm" [(ngModel)]="dataOption[3]">
+	</label>
+</ng-template>
+<ng-template #selectorPre let-dataOption="dataOption">
+	<label>
+		{{ 'ticket.value' | i18n }}:
+		<input class="sm" [(ngModel)]="dataOption[1]">
+	</label>
+</ng-template>
+
+
+<ng-template #newOptionModal let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">{{ 'ticket.optionName' | i18n }}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form>
+			<div class="form-group">
+				<label for="optionName">{{ 'ticket.name' | i18n }}</label>
+				<div class="input-group">
+					<input [(ngModel)]="modal.optionName" name="optionName" id="optionName" class="form-control" type="text">
+				</div>
+				<label for="optionValue">{{ 'ticket.value' | i18n }}</label>
+				<div class="input-group">
+					<input [(ngModel)]="modal.optionValue" name="optionName" id="optionValue" class="form-control" type="text">
+				</div>
+			</div>
+			<span *ngIf="modal.optionName">{{ modal.optionName | i18n }}</span>
+			<span *ngIf="modal.optionValue">: "{{ modal.optionValue | i18n }}"</span>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close([modal.optionName, modal.optionValue])">{{ 'ticket.save' | i18n }}</button>
+	</div>
+</ng-template>
+<ng-template #mainCategory let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">{{ 'ticket.catName' | i18n }}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form>
+			<div class="form-group">
+				<label for="catName"></label>
+				<div class="input-group">
+					<input [(ngModel)]="modal.catName" name="catName" id="catName" class="form-control" type="text">
+				</div>
+			</div>
+			<div *ngIf="modal.catName">{{ modal.catName | i18n }}</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close(modal.catName)">{{ 'ticket.save' | i18n }}</button>
+	</div>
+</ng-template>
+<ng-template #changeCategory let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">{{ 'ticket.order' | i18n }}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="colHolder"
+			 cdkDropList
+			 (cdkDropListDropped)="changeOrderCategory($event.previousIndex, $event.currentIndex)">
+			<div
+				cdkDragLockAxis="y" cdkDrag cdkDragBoundary=".colHolder"
+				*ngFor="let category of categories"
+				class="row-block row-block-p">
+				{{ category.category_i18n | i18n }}
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close()">{{ 'ticket.close' | i18n }}</button>
+	</div>
+</ng-template>
+
+<div class="ticketadmin">
+	<ngx-snackbar position="bottom-center"></ngx-snackbar>
+	<div class="header">{{ 'ticket-admin.header' | i18n }}</div>
+
+	<br>
+	<div *ngIf="error">{{ error }}</div>
+	<div *ngIf="!error" class="row no-margin">
+		<div class="col-lg-8">
+			<div class="inner-block">
+				<h3>{{ 'ticket.settings' | i18n }}</h3>
+				<hr>
+				<button (click)="orderCat(changeCategory)" style="margin-top: -2px;" class="btn btn-primary">
+					<i class="fas fa-sort"></i>
+				</button>
+				<ngb-pagination
+					style="display: inline-block" [collectionSize]="categories.length * 10" [(page)]="page"
+					[rotate]="true" [boundaryLinks]="false">
+					<ng-template ngbPaginationPrevious>&lt;</ng-template>
+					<ng-template ngbPaginationNext>&gt;</ng-template>
+					<ng-template ngbPaginationNumber let-p>
+						<ng-container *ngIf="categories[p-1].data.length <= 0">
+							<span class="error-underline" ngbTooltip="{{'ticket.noSubCategory' | i18n}}"
+								  placement="bottom">
+								{{ getPageSymbol(p) | i18n }}
+							</span>
+						</ng-container>
+						<ng-container *ngIf="categories[p-1].data.length > 0">
+							{{ getPageSymbol(p) | i18n }}
+						</ng-container>
+					</ng-template>
+				</ngb-pagination>
+				<button (click)="newCategory(mainCategory)" style="margin-top: -2px;" class="btn btn-primary">+</button>
+				<br>
+				<br>
+				<ng-container *ngIf="categories && categories[page - 1]">
+					<ng-container *ngVar="categories[page - 1] as selectedCategory">
+						<h4>{{ selectedCategory.category_i18n | i18n }}</h4>
+						<div class="row boxed" cdkDropList
+							 (cdkDropListDropped)="moveSub($event.previousIndex, $event.currentIndex, selectedCategory.data)">
+							<ng-container *ngFor="let data of selectedCategory.data">
+								<div class="col-2 row-block" cdkDragLockAxis="y"
+									 [attr.tabindex]="indexOf(selectedCategory.data, data)" cdkDrag
+									 cdkDragBoundary=".row.boxed">
+									<b class="click-able"
+									   (click)="openPopup(selectedCategory, data, mainCategory)">
+										{{ objectKeys(data)[0] | i18n }}
+									</b>
+									<br>
+									<button class="btn btn-primary btn-edit btn-sm"
+											*ngIf="isViewing(selectedCategory.category_i18n, objectKeys(data)[0])"
+											(click)="hide(selectedCategory.category_i18n, objectKeys(data)[0])">
+										{{ 'ticket.hide' | i18n }}
+									</button>
+									<button class="btn btn-primary btn-edit btn-sm"
+											*ngIf="!isEditing(selectedCategory.category_i18n, objectKeys(data)[0])"
+											(click)="toggleShowEdit(selectedCategory.category_i18n, objectKeys(data)[0])">
+										{{ 'ticket.more' | i18n }}
+									</button>
+									<button class="btn btn-primary btn-edit btn-sm"
+											*ngIf="isEditing(selectedCategory.category_i18n, objectKeys(data)[0])"
+											(click)="toggleShowEdit(selectedCategory.category_i18n, objectKeys(data)[0])">
+										{{ 'ticket.less' | i18n }}
+									</button>
+									<br>
+									<button class="btn btn-secondary btn-edit btn-sm"
+											(click)="copyOption(selectedCategory.category_i18n, data)">
+										{{ 'ticket.copy' | i18n }}
+									</button>
+								</div>
+								<ng-container *ngIf="isViewing(selectedCategory.category_i18n, objectKeys(data)[0])">
+									<div cdkDropList
+										 (cdkDropListDropped)="moveSetting($event.previousIndex, $event.currentIndex, selectedCategory, objectKeys(data)[0])"
+										 class="col-10 colHolder" *ngVar="data[objectKeys(data)[0]] as options">
+										<div cdkDragLockAxis="y" cdkDrag cdkDragBoundary=".colHolder"
+											 class="row row-block row-block-p"
+											 *ngFor="let option of objectKeys(data[objectKeys(data)[0]])">
+											<div class="col-2 normalwrap">
+												{{ 'ticket.' + option | i18n }}
+											</div>
+											<ng-container
+												*ngIf="options[option] && isEditing(selectedCategory.category_i18n, objectKeys(data)[0])">
+												<div class="col-10 typing" *ngVar="options[option] as dataOption">
+													<div class="btn-group btn-group-toggle" ngbRadioGroup name="type"
+														 [(ngModel)]="dataOption[0]">
+														<label ngbButtonLabel class="btn-primary"
+															   *ngFor="let inputType of inputTypes">
+															<input ngbButton type="radio"
+																   [disabled]="['title', 'description'].indexOf(option) >= 0 && ['empty'].indexOf(inputType) >= 0"
+																   [value]="inputType"> {{ inputType }}
+														</label>
+													</div>
+													<br>
+													<ng-container [ngSwitch]="dataOption[0]">
+														<ng-container *ngSwitchCase="'dropdown'">
+															<ng-container
+																*ngTemplateOutlet="selectorDropdown;context:{dataOption: dataOption}"></ng-container>
+														</ng-container>
+														<ng-container *ngSwitchCase="'field'">
+															<ng-container
+																*ngTemplateOutlet="selectorField;context:{dataOption: dataOption}"></ng-container>
+														</ng-container>
+														<ng-container *ngSwitchCase="'input'">
+															<ng-container
+																*ngTemplateOutlet="selectorInput;context:{dataOption: dataOption}"></ng-container>
+														</ng-container>
+														<ng-container *ngSwitchCase="'pre'">
+															<ng-container
+																*ngTemplateOutlet="selectorPre;context:{dataOption: dataOption}"></ng-container>
+														</ng-container>
+														<ng-container *ngSwitchDefault>
+															<br>
+														</ng-container>
+													</ng-container>
+												</div>
+											</ng-container>
+										</div>
+									</div>
+								</ng-container>
+								<ng-container *ngIf="!isViewing(selectedCategory.category_i18n, objectKeys(data)[0])">
+									<div class="col-10"></div>
+								</ng-container>
+							</ng-container>
+							<div class="col-2 center"></div>
+							<div class="col-6">
+								<label style="width: 160px;">
+									{{ 'ticket.addSubcategory' | i18n }}<br>
+									<input style="width: 100%" [(ngModel)]="newOptionName">
+								</label>
+								<button class="btn btn-primary btn-edit"
+										(click)="addNewOption()">
+									{{ 'ticket.add' | i18n }}
+								</button>
+							</div>
+							<div class="col-4">
+								<button class="btn btn-success btn-edit"
+										(click)="save()">
+									{{ 'ticket.save' | i18n }}
+								</button>
+								<button class="btn btn-warning btn-edit"
+										(click)="toJson()">
+									{{ 'ticket.toJson' | i18n }}
+								</button>
+								<br>
+								<button class="btn btn-secondary btn-edit"
+										(click)="logAll()">
+									{{ 'ticket.logAll' | i18n }}
+								</button>
+								<button class="btn btn-danger btn-edit"
+										(click)="resetAll($event.target)">
+									{{ 'ticket.resetAll' | i18n }}
+								</button>
+							</div>
+						</div>
+					</ng-container>
+				</ng-container>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="inner-block">
+				<h3>
+					<label class="float-left">
+						<input
+							type="checkbox"
+							[(ngModel)]="debug"
+							ngbTooltip="{{'ticket.debuginfo' | i18n}}"
+							placement="bottom">
+					</label>
+					{{ 'ticket.preview' | i18n }}
+					<span class="float-right" (click)="refresh()">{{ 'ticket.refresh' | i18n }}</span>
+				</h3>
+				<hr>
+				<ticket-block *ngIf="categories.length > 0 && !hiddenPreview" [categories]="categories"
+							  [debug]="debug"></ticket-block>
+			</div>
+		</div>
+	</div>
+</div>

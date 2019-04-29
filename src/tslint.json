@@ -1,0 +1,37 @@
+{
+	"extends": "../tslint.json",
+	"rules": {
+		"indent": [
+			true,
+			"tabs",
+			2
+		],
+		"file-name-casing": [
+			false,
+			"camel-case"
+		],
+		"directive-selector": [
+			true,
+			"attribute",
+			"app",
+			"camelCase"
+		],
+		"component-selector": [
+			true,
+			"element",
+			"app",
+			"kebab-case"
+		]
+	},
+	"overrides": [
+		{
+			"files": [
+				"*.page.ts"
+			],
+			"rules": {
+				"component-class-suffix": false,
+				"use-life-cycle-interface": false
+			}
+		}
+	]
+}

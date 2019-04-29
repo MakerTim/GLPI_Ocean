@@ -1,0 +1,93 @@
+<div class="home">
+    <div class="header">{{ 'ticket.header' | i18n }}</div>
+
+    <br>
+    <h3 class="animated-2 fadeInUpBig center">{{ 'ticket.welcome' | i18n }} {{ from.replace(',', '') | reverse }}</h3>
+
+    <div class="row root-row" #rows>
+        <!-- LEFT MENU -->
+        <div class="col-lg-3">
+            <div class="inner-block inner-block-left">
+                <div class="animated-1 animated-delay-2 fadeInUpLow">
+                    <b>{{ 'ticket.yoursopen' | i18n }}</b>
+                    <hr>
+                    <ng-container *ngFor="let ticket of openTickets">
+                        <a [routerLink]="['/open/Ticket/' + ticket.id]" [classList]="['smallTicket ' + ticket.status]">
+							<span class="ticketName" [title]="ticket.name">
+								{{ ticket.name | limit }}
+							</span>
+                            <span class="priority">
+								{{ 'ticket.' + ticket.status | i18n }}
+							</span>
+                        </a>
+                    </ng-container>
+                    <div *ngIf="openTickets == null">Loading...</div>
+                    <div *ngIf="openTickets && openTickets.length == 0">{{ 'ticket.empty' | i18n }}</div>
+                </div>
+                <div class="animated-1 animated-delay-3 fadeInUpLow">
+                    <b>{{ 'ticket.yoursclosed' | i18n }}</b>
+                    <hr>
+                    <ng-container *ngFor="let ticket of closedTickets">
+                        <a [routerLink]="['/open/Ticket/' + ticket.id]" class="smallTicket">
+							<span class="ticketName" [title]="ticket.name">
+								{{ ticket.name | limit }}
+							</span>
+                            <span class="priority">
+								{{ toDate(ticket.date_mod) }}
+							</span>
+                        </a>
+                    </ng-container>
+                    <div *ngIf="closedTickets == null">Loading...</div>
+                    <div *ngIf="closedTickets && closedTickets.length == 0">{{ 'ticket.empty' | i18n }}</div>
+                </div>
+                <div class="animated-1 animated-delay-4 fadeInUpLow">
+                    <b>{{ 'ticket.departmenttickets' | i18n }}</b>
+                    <hr>
+                    <ng-container *ngFor="let ticket of aroundTickets">
+                        <a [routerLink]="['/open/Ticket/' + ticket.id]" [classList]="'smallTicket ' + ticket.status">
+							<span class="ticketName" [title]="ticket.name">
+								{{ ticket.name | limit }}
+							</span>
+                            <span class="priority">
+								{{ 'ticket.' + ticket.status | i18n }}
+							</span>
+                        </a>
+                    </ng-container>
+                    <div *ngIf="aroundTickets == null">Loading...</div>
+                    <div *ngIf="aroundTickets && aroundTickets.length == 0">{{ 'ticket.empty' | i18n }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- CENTER -->
+        <div class="col-lg-6">
+            <div class="inner-block inner-block-center">
+                <ticket-block (onSubValueChange)="checkRightMenu($event)"
+                              (onTicketCreate)="onTicketCreate()"></ticket-block>
+            </div>
+        </div>
+        <!-- RIGHT MENU -->
+        <div class="col-lg-3">
+            <div class="inner-block inner-block-right">
+                <div *ngIf="lookalikeTickets.length > 0" class="animated-1 fadeInUpLow rightMenu">
+                    <b>{{ 'ticket.lookalike' | i18n }}</b>
+                    <hr>
+                    <ng-container *ngFor="let ticket of lookalikeTickets">
+                        <a [title]="ticket.content | striphtml" [routerLink]="['/open/Ticket/' + ticket.id]" [classList]="['smallTicket ' + ticket.status]">
+							<span class="ticketName" [title]="ticket.name">
+								{{ ticket.name | limit }}
+							</span>
+                            <span class="priority">
+                                {{ 'ticket.' + ticket.status | i18n }}
+                            </span>
+                            <br>
+                            <span class="ticketName" [innerHTML]="ticket.content | striphtml"></span>
+                            <span class="priority date">
+                                {{ ticket.date_mod }}
+							</span>
+                        </a>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

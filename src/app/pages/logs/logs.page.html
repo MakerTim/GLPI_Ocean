@@ -1,0 +1,90 @@
+<div class="logs" (window:scroll)="onScroll()">
+	<div class="header">{{ 'logs.header' | i18n }}</div>
+
+	<br>
+
+	<div *ngIf="publicLogs.length === 0" class="center">{{ error }}</div>
+	<div class="row">
+		<div class="col-lg-3">
+			&nbsp;
+			<button
+				(click)="switchType('log')"
+				[disabled]="type === 'log'"
+				class="btn btn-light">
+				Logs
+			</button>
+			<button
+				(click)="switchType('events')"
+				[disabled]="type === 'events'"
+				class="btn btn-light">
+				Events
+			</button>
+		</div>
+		<div class="col-lg-6" *ngIf="type === 'log'">
+			<div class="listBlock" *ngFor="let log of publicLogs">
+				<a [href]="glpiURL() + 'front/' + log.itemtype.toLowerCase() + '.form.php?id=' + log.items_id"
+				   target="_blank">
+					<h3>
+						{{ 'logs.' + log.linked_action | i18n }}
+						<span ngbTooltip="{{ log | dump }}" placement="left">
+							<i class="fas fa-info-circle"></i>
+						</span>
+					</h3>
+				</a>
+				<div class="listBlock-body row">
+					<div class="col-3"><a
+						[href]="glpiURL() + 'front/user.form.php?id=' + getUserId(log)"
+						target="_blank">{{ getUserName(log) }}</a>
+					</div>
+					<div class="col-5 center">
+						<a [href]="glpiURL() + 'front/' + log.itemtype.toLowerCase() + '.form.php?id=' + log.items_id"
+						   target="_blank">
+							{{ log.itemtype }}
+						</a>
+					</div>
+					<div class="col-4 right">{{ log.date_mod }}</div>
+					<br>
+					<span class="highlight row col-12">
+						<ng-container *ngIf="log.old_value && log.new_value">
+							<div class="col-5" [innerHTML]="replaceComma(log.old_value)"></div>
+							<div class="col-2 center">=&gt;</div>
+							<div class="col-5 right" [innerHTML]="replaceComma(log.new_value)"></div>
+						</ng-container>
+						<ng-container *ngIf="log.old_value && !log.new_value">
+							<div class="col-12" [innerHTML]="log.old_value"></div>
+						</ng-container>
+						<ng-container *ngIf="log.new_value && !log.old_value">
+							<div class="col-12" [innerHTML]="log.new_value"></div>
+						</ng-container>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6" *ngIf="type === 'events'">
+			<div class="listBlock" *ngFor="let event of publicEvents">
+				<a [href]="eventUrl(event)"
+				   target="_blank">
+					<h3>
+						{{ event.message }}
+						<span ngbTooltip="{{ event | dump }}" placement="left">
+							<i class="fas fa-info-circle"></i>
+						</span>
+					</h3>
+				</a>
+				<div class="listBlock-body row">
+					<div class="col-3">
+						{{ 'logs.level' | i18n }}: {{ event.level }}
+					</div>
+					<div class="col-5 center">
+						{{ 'logs.type' | i18n }}: {{ event.type }}<br>
+						{{ 'logs.service' | i18n }}: {{ event.service }}<br>
+					</div>
+					<div class="col-4 right">
+						{{ event.date }}
+					</div>
+					<br>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

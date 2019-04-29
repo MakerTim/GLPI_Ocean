@@ -1,0 +1,203 @@
+<ng-template #ticketTemplate let-name>
+    <b [title]="name.name | striphtml"><a [routerLink]="['/open/Ticket/' + name.id]">{{ name.name }}</a></b><br>
+    <span class="ticket-context" [title]="name.content | striphtml" [innerHTML]="name.content | br"></span>
+    <div class="btn-group-responsive row no-margin">
+        <button (click)="moveSelf(name.id)" [ngbTooltip]="'ticket-global.self.desc' | i18n" placement="bottom"
+                class="btn btn-sm btn-primary col-lg-4">
+            {{ 'ticket-global.self' | i18n }}
+        </button>
+        <button *ngIf="selectedType==='global'" (click)="moveGroup(name.id)"
+                [ngbTooltip]="'ticket-global.selfgroup.desc' | i18n"
+                placement="bottom"
+                class="btn btn-sm btn-primary col-lg-4">
+            {{ 'ticket-global.selfgroup' | i18n }}
+        </button>
+        <button *ngIf="selectedType==='group'" (click)="unGroup(group.id, name.id)"
+                [ngbTooltip]="'ticket-global.ungroup.desc' | i18n"
+                placement="bottom"
+                class="btn btn-sm btn-primary col-lg-4">
+            {{ 'ticket-global.ungroup' | i18n }}
+        </button>
+        <button (click)="openMove(moveTicketOption, name)" [ngbTooltip]="'ticket-global.moveto.desc' | i18n"
+                placement="bottom"
+                class="btn btn-sm btn-primary col-lg-4">
+            {{ 'ticket-global.moveto' | i18n }}
+        </button>
+    </div>
+    <ng-template #popup>
+        <div class="user-popup">
+            <span>
+                <b>{{ 'ticket.users_id_recipient' | i18n }}</b><br>
+                 &nbsp;{{ name.users_id_recipient + ' ' + name.users_id_recipient2 }}<br>
+            </span>
+            <ng-container *ngFor="let popupField of popupFields">
+                <span *ngIf="name[popupField].length > 0">
+                    <b>{{ 'ticket.' + popupField | i18n }}:</b><br>
+                    <ng-container *ngFor="let attachment of name[popupField]">
+                        &nbsp;{{ attachment[popupField] }},
+                    </ng-container>
+                    <br>
+                </span>
+            </ng-container>
+            <span>
+                <b>{{ 'ticket.date_creation' | i18n }}</b><br>
+                 &nbsp;{{ name.date_creation }}<br>
+            </span>
+        </div>
+    </ng-template>
+    <div [class]="'bottom-icon ticket-' + name.id"
+         (mouseenter)="highlight('ticket-' + name.id, true)"
+         (mouseleave)="highlight('ticket-' + name.id, false)"
+         [ngbTooltip]="popup" placement="top" (click)="openMove(moveTicketOption, name)">
+        <i class="fas fa-user-tag"></i>
+    </div>
+</ng-template>
+
+<ng-template #moveTicketOption let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ 'ticket-global.moveOptions' | i18n }}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <b (click)="modal.close()" [title]="movingTicket.name"><a
+                        [routerLink]="['/open/Ticket/' + movingTicket.id]">{{ movingTicket.name }}</a></b><br>
+                <label style="width: 100%">
+                    {{ 'ticket-global.filter' | i18n }}
+                    <input style="display: inline-block;width: 50%;" class="form-control ml-2"
+                           [(ngModel)]="modal.filter" type="text" name="filter">
+                </label>
+                <table class="table table-striped">
+                    <tr>
+                        <th scope="col">{{ 'ticket-global.th.type' | i18n }}</th>
+                        <th scope="col">{{ 'ticket-global.th.name' | i18n }}</th>
+                        <th scope="col">{{ 'ticket-global.th.assigned' | i18n }}</th>
+                        <th scope="col">{{ 'ticket-global.th.for' | i18n }}</th>
+                    </tr>
+                    <tr *ngFor="let assignedType of selectedType === 'global' ? objectKeys(assignedTickets) : subArray(objectKeys(assignedTickets))">
+                        <ng-container *ngIf="filterInObject(assignedTickets[assignedType], modal.filter)">
+                            <td>
+                                <ngb-highlight [result]="'ticket-global.' + assignedType.split('_')[0] | i18n"
+                                               [term]="modal.filter"></ngb-highlight>
+                            </td>
+                            <td>
+                                <ngb-highlight [result]="assignedTickets[assignedType].name"
+                                               [term]="modal.filter"></ngb-highlight>
+                            </td>
+                            <td>
+                                <label>
+                                    <input type="checkbox"
+                                           (change)="fastAssign($event.target.checked, assignedType, assignedTickets[assignedType].id, movingTicket)"
+                                           [checked]="isFor('assigned', assignedType, movingTicket, assignedTickets[assignedType])">
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" disabled="disabled"
+                                           [checked]="isFor('requested', assignedType, movingTicket, assignedTickets[assignedType])">
+                                </label>
+                            </td>
+                        </ng-container>
+                    </tr>
+                    <ng-container *ngIf="selectedType === 'group'">
+                        <tr *ngFor="let user of group.users">
+                            <ng-container *ngIf="filterInObject(user, modal.filter)">
+                                <td>
+                                    <ngb-highlight [result]="'User'"
+                                                   [term]="modal.filter"></ngb-highlight>
+                                </td>
+                                <td>
+                                    <ngb-highlight [result]="user.name"
+                                                   [term]="modal.filter"></ngb-highlight>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="checkbox"
+                                               (change)="fastAssign($event.target.checked, 'user_' + user.id, user.id, movingTicket)"
+                                               [checked]="isFor('assigned', 'user', movingTicket, user)">
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" disabled="disabled"
+                                               [checked]="isFor('requested', 'user', movingTicket, user)">
+                                    </label>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
+                </table>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark"
+                (click)="modal.close()">{{ 'ticket.close' | i18n }}</button>
+    </div>
+</ng-template>
+
+<div class="page">
+    <div class="header">
+        {{ 'nav.globalTicket' | i18n }}
+    </div>
+
+    <div class="padding">
+        <div class="main-block">
+            <div class="unassigned">
+                <button (click)="goBack()" class="btn btn-outline-info">{{ 'ticket.goback' | i18n }}</button>
+                <h3 *ngIf="selectedType === 'global'">{{ 'ticket-global.unassigned' | i18n }}</h3>
+                <h3 *ngIf="selectedType === 'group'"><a
+                        [routerLink]="['/dashboard/Ticket/' + group.id]">{{ group.completename }}</a></h3>
+                <div class="horizontal-wrapper">
+                    <div cdkDropList
+                         [cdkDropListData]="unassignedTickets['tickets']"
+                         [cdkDropListConnectedTo]="dropListsIds"
+                         [id]="selectedType === 'group'? 'group_' + group.id :'unassigned'"
+                         cdkDropListOrientation="horizontal"
+                         class="row no-margin horizontal ticket-holder"
+                         (cdkDropListDropped)="drop($event)">
+                        <div *ngFor="let ticket of unassignedTickets['tickets']"
+                             class="col-4vw col-lg-3vw ticket padding" cdkDrag
+                             [id]="'cdkItem-' + ticket.key + ':' + ticket.id" [cdkDragDisabled]="loading"
+                             (cdkDragStarted)="setHalt(true)" (cdkDragEnded)="setHalt(false)">
+                            <ng-container *ngTemplateOutlet="ticketTemplate;context:{$implicit: ticket}"></ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entities horizontal-wrapper space-top">
+                <div class="row no-margin horizontal">
+                    <div class="sub-block col-3vw" *ngFor="let columnName of getColumns()">
+                        <ng-container *ngVar="getColumn(columnName) as column">
+                            <a *ngIf="columnName.indexOf('user') === -1" [routerLink]="['/group/Ticket/' + column.id ]">
+                                <b [title]="column['name']">
+                                    {{ column['name'] }}
+                                </b>
+                            </a>
+                            <b *ngIf="columnName.indexOf('user') !== -1" [title]="column['name']">
+                                {{ column['name'] }}
+                            </b>
+                            <div cdkDropList
+                                 [cdkDropListData]="column['tickets']"
+                                 [cdkDropListConnectedTo]="dropListsIds"
+                                 [id]="'cdkList-' + columnName"
+                                 class="assigned"
+                                 (cdkDropListDropped)="drop($event)">
+                                <div class="ticket" *ngFor="let ticket of column['tickets']" cdkDrag
+                                     [id]="'cdkItem-' + ticket.key + ':' + ticket.id" [cdkDragDisabled]="loading"
+                                     (cdkDragStarted)="setHalt(true)" (cdkDragEnded)="setHalt(false)">
+                                    <ng-container
+                                            *ngTemplateOutlet="ticketTemplate;context:{$implicit: ticket}"></ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

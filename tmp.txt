@@ -1,0 +1,13 @@
+type
+category
+assignedToUser
+assignedToGroup
+status
+urgency
+impact
+priority
+source
+SLA-max-time
+title
+description
+other-ticket

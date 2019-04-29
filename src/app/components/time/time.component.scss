@@ -1,0 +1,26 @@
+*::selection {
+  filter: blur(1px);
+  background: transparent;
+}
+
+span > span {
+  visibility: hidden;
+  opacity: 0;
+  width: 170px;
+  background-color: var(--background-3);
+  color: var(--text-sub);
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  margin-top: calc(2em - 4px);
+  margin-left: -100px;
+
+  transition: opacity 1s;
+}
+
+span:hover > span {
+  visibility: visible;
+  opacity: 1;
+}
