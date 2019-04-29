@@ -159,7 +159,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 	}
 
 	isClosed() {
-		return this.ticket.closedate !== null && this.ticket.status_id < 5;
+		return this.ticket.status_id <= 5;
 	}
 
 	hasOpenSolution() {

@@ -140,7 +140,7 @@
                         </ng-container>
                         <ng-container
                                 *ngIf="ticket[leftMenuItem + '2']">{{ ticket[leftMenuItem + '2'] }} </ng-container>
-                        <a *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned()"
+                        <a *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'"
                            target="_blank"
                            [href]="glpiURL + 'front/user.form.php?id=' + ticket[leftMenuItem + '_id']">
                             <i class="fas fa-external-link-alt"></i>
