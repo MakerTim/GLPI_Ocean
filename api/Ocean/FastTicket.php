@@ -279,6 +279,7 @@ class FastTicket extends FastModel {
 		}
 
 		$ticket['type'] = nameOfType(FastTicket::TYPES, $ticket['type']);
+		$ticket['status_id'] = $ticket['status'];
 		$ticket['status'] = nameOfType(FastTicket::STATUS, $ticket['status']);
 		$ticket['urgency'] = nameOfType(FastTicket::PRIORITIES, $ticket['urgency']);
 		$ticket['impact'] = nameOfType(FastTicket::PRIORITIES, $ticket['impact']);
