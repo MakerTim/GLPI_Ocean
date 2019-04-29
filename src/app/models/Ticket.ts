@@ -91,6 +91,7 @@ export class Ticket {
 	public slas_id_ttr: string;
 	public solve_delay_stat: string;
 	public solvedate: null | string;
+	public status_id: number;
 	public status: 'new' | 'assign' | 'plan' | 'waiting' | 'solved' |
 		'closed' | 'accepted' | 'observe' | 'evaluation' | 'approbation' |
 		'test' | 'qualification';

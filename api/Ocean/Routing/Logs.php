@@ -26,6 +26,9 @@ class Logs extends RoutingBase {
 			if ($_SERVER['HTTP_TYPE'] == 'events') {
 				$db = 'glpi_events';
 			}
+			if ($_SERVER['HTTP_TYPE'] == 'file') {
+				return $this->logfile();
+			}
 		}
 
 		$statement = $DB->query("SELECT * FROM $db ORDER BY id DESC");
@@ -40,5 +43,24 @@ class Logs extends RoutingBase {
 			}
 		}
 		return $logs;
+	}
+
+	public function logfile() {
+		if (!array_key_exists('HTTP_SUBTYPE', $_SERVER)) {
+			return [];
+		}
+		$subtype = $_SERVER['HTTP_SUBTYPE'];
+		if (!in_array($subtype, ['cron', 'event', 'php-errors', 'mail', 'sql-errors'])) {
+			sendError('Not supported log type');
+		}
+
+		$readFile = file_get_contents(GLPI_ROOT . 'files/_log/' . $subtype . '.log');
+		$regex = '/^\[?(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]? ([^\n]+)\n([^\n]+)(?:\n? {2}([^\n]+))*/m';
+		preg_match_all($regex, $readFile, $matches, PREG_SET_ORDER);
+		foreach ($matches as &$match) {
+			$match['full'] = array_shift($match);
+		}
+
+		return $matches;
 	}
 }

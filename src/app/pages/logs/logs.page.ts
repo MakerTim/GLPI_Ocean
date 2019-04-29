@@ -20,7 +20,10 @@ export class LogsPage extends RefreshPage implements OnInit {
 	public logs: Log[];
 	public publicEvents: SystemEvent[] = [];
 	public events: SystemEvent[];
-	public type: 'log' | 'events';
+	public publicLogsfiles: any[] = [];
+	public logsfiles: any[];
+	public type: 'log' | 'events' | 'file';
+	public subtype: 'cron' | 'event' | 'php-errors' | 'mail' | 'sql-errors';
 
 	constructor(
 		private httpClient: HttpClient) {
@@ -30,15 +33,23 @@ export class LogsPage extends RefreshPage implements OnInit {
 	ngOnInit() {
 		super.ngOnInit();
 		this.switchType('log');
+		this.onRefresh();
 	}
 
 	onRefresh() {
 		this.loadLogs(false);
 	}
 
-	switchType(type: 'log' | 'events') {
+	switchType(type: 'log' | 'events' | 'file') {
 		const thiz = this;
 		this.type = type;
+
+		this.loadLogs(true);
+	}
+
+	switchSubType(subtype: 'cron' | 'event' | 'php-errors' | 'mail' | 'sql-errors') {
+		const thiz = this;
+		this.subtype = subtype;
 
 		this.loadLogs(true);
 	}
@@ -48,13 +59,20 @@ export class LogsPage extends RefreshPage implements OnInit {
 
 		sendSecureHeader((headers: HttpHeaders) => {
 			headers = headers.set('type', thiz.type);
-			this.httpClient.get<Log[] | SystemEvent[]>(GLOBAL.api + '/Logs', {headers}).toPromise()
+			if (thiz.subtype != null) {
+				headers = headers.set('subtype', thiz.subtype);
+			}
+			this.httpClient.get(GLOBAL.api + '/Logs', {headers}).toPromise()
 				.then(list => {
 					let pubList;
 					if (thiz.type === 'log') {
 						// @ts-ignore
 						thiz.logs = list;
 						pubList = thiz.publicLogs;
+					} else if (thiz.type === 'file') {
+						// @ts-ignore
+						thiz.logsfiles = list;
+						pubList = thiz.publicLogsfiles;
 					} else {
 						// @ts-ignore
 						thiz.events = list;
@@ -110,6 +128,13 @@ export class LogsPage extends RefreshPage implements OnInit {
 			}
 			for (const log of this.logs.slice(this.publicLogs.length, this.publicLogs.length + amount)) {
 				this.publicLogs.push(log);
+			}
+		} else if (this.type === 'file') {
+			if (this.logsfiles.length === this.publicLogsfiles.length) {
+				return;
+			}
+			for (const logfile of this.logsfiles.slice(this.publicLogsfiles.length, this.publicLogsfiles.length + amount)) {
+				this.publicLogsfiles.push(logfile);
 			}
 		} else {
 			if (this.events.length === this.publicEvents.length) {

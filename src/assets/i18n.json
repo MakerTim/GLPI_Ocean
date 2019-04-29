@@ -79,6 +79,8 @@
     "logs.historyplugin": "Plugin other",
     "logs.level": "Level",
     "logs.type": "Type",
+    "logs.what": "What",
+    "logs.who": "Who",
     "logs.service": "Service",
 
     "login.popup.title": "Login",

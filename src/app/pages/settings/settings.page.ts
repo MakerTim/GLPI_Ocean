@@ -29,6 +29,7 @@ export class SettingsPage extends RefreshPage implements OnInit {
 
 	ngOnInit() {
 		super.ngOnInit();
+		this.onRefresh();
 	}
 
 	onRefresh() {
