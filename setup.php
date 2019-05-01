@@ -1,7 +1,7 @@
 <?php
 
 function plugin_init_ocean() {
-	global $PLUGIN_HOOKS, $DB;
+	/** @var DB $DB */ global $PLUGIN_HOOKS, $DB;
 
 	$overwriteLogin = $DB->query("SELECT setting FROM glpi_plugin_ocean_config WHERE what = 'overwrite_login';");
 	if (!strpos($_SERVER['REQUEST_URI'], '.php?redirect=') && //
@@ -36,7 +36,7 @@ function plugin_init_ocean() {
 	Plugin::registerClass('PluginOceanConfig', ['addtabon' => ['Entity']]);
 	$PLUGIN_HOOKS["menu_toadd"]['ocean'] = ['plugins' => 'PluginOceanConfig'];
 
-	$PLUGIN_HOOKS['config_page']['ocean'] = redirectUrlOcean();
+	$DB->$PLUGIN_HOOKS['config_page']['ocean'] = redirectUrlOcean();
 }
 
 function redirectUrlOcean($withDir = false) {

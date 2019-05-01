@@ -27,7 +27,7 @@ export class LogsPage extends RefreshPage implements OnInit {
 
 	constructor(
 		private httpClient: HttpClient) {
-		super(5);
+		super(100);
 	}
 
 	ngOnInit() {
@@ -119,6 +119,18 @@ export class LogsPage extends RefreshPage implements OnInit {
 
 	replaceComma(input: string) {
 		return input ? input.replace(/,/g, ', ') : '';
+	}
+
+	hasUserId(input: string) {
+		return input.match(/":"\d+/) != null || input.match(/\[\d+/);
+	}
+
+	parseUserId(input: string) {
+		if (input.match(/":"\d+/)) {
+			return input.substr(input.indexOf('"', 6) + 3, input.indexOf('@') - input.indexOf('"', 6) - 3);
+		} else {
+			return input.substr(1, input.indexOf('@') - 1);
+		}
 	}
 
 	load(amount) {
