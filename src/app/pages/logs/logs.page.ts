@@ -51,7 +51,7 @@ export class LogsPage extends RefreshPage implements OnInit {
 		const thiz = this;
 		this.subtype = subtype;
 
-		this.loadLogs(true);
+		this.loadLogs();
 	}
 
 	loadLogs(renewList = true) {
@@ -71,7 +71,7 @@ export class LogsPage extends RefreshPage implements OnInit {
 						pubList = thiz.publicLogs;
 					} else if (thiz.type === 'file') {
 						// @ts-ignore
-						thiz.logsfiles = list;
+						thiz.logsfiles = list.reverse();
 						pubList = thiz.publicLogsfiles;
 					} else {
 						// @ts-ignore
@@ -80,7 +80,7 @@ export class LogsPage extends RefreshPage implements OnInit {
 					}
 					if (renewList) {
 						pubList.length = 0;
-						thiz.load(50);
+						thiz.load(10);
 					} else {
 						const length = pubList.length;
 						pubList.length = 0;

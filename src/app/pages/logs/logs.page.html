@@ -127,23 +127,30 @@
             </div>
         </div>
         <div class="col-lg-6" *ngIf="type === 'file'">
-            <div class="listBlock" *ngFor="let logfile of logsfiles">
+            <div class="listBlock" *ngFor="let logfile of publicLogsfiles">
                 <a target="_blank">
                     <h3>
-                        {{ logfile[1] }}
+                        {{ logfile[2] }}
+                        <a target="_blank" *ngIf="hasUserId(logfile[2])"
+                           [href]='glpiURL() + "front/user.form.php?id=" + parseUserId(logfile[2])'>
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
                         <span ngbTooltip="{{ logfile['full'] }}" placement="left">
 							<i class="fas fa-info-circle"></i>
 						</span>
                     </h3>
                 </a>
                 <div class="listBlock-body row">
-                    <div class="col-3">
-                        {{ 'logs.what' | i18n }}: <br>
-                        {{ 'logs.who' | i18n }}: <br>
-                    </div>
-                    <div class="col-5 center">
-                        {{ logfile[2] }} <br>
-                        {{ logfile[3] }}
+                    <div class="col-8">
+                        {{ 'logs.what' | i18n }}: {{ logfile[1] }}<br>
+                        <ng-container *ngIf="logfile[3]">
+                            {{ 'logs.who' | i18n }}: {{ logfile[3] }}
+                            <a target="_blank" *ngIf="hasUserId(logfile[3])"
+                               [href]='glpiURL() + "front/user.form.php?id=" + parseUserId(logfile[3])'>
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            <br>
+                        </ng-container>
                     </div>
                     <div class="col-4 right">
                         {{ logfile[0] }}

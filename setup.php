@@ -33,7 +33,7 @@ function plugin_init_ocean() {
 
 	$PLUGIN_HOOKS['csrf_compliant']['ocean'] = true;
 
-	Plugin::registerClass('PluginOceanConfig', ['addtabon' => ['Entity']]);
+	Plugin::registerClass('PluginOceanConfig', ['addtabon' => 'Entity']);
 	$PLUGIN_HOOKS["menu_toadd"]['ocean'] = ['plugins' => 'PluginOceanConfig'];
 
 	$DB->$PLUGIN_HOOKS['config_page']['ocean'] = redirectUrlOcean();
