@@ -23,18 +23,14 @@ class Dashboard extends RoutingBase {
 
 		$type1 = $this->getType();
 		if ($type1 === 'user') {
-			$type = 'tickets_users';
-			$field = 'users_id';
 			if (!preg_match('/\d+/', $_SERVER['HTTP_ID'])) {
 				$_SERVER['HTTP_ID'] = $user->id;
 			}
+			$statement = $DB->prepare("SELECT * FROM glpi_tickets WHERE users_id_recipient=:field OR id IN (SELECT tickets_id FROM glpi_tickets_users WHERE users_id=:field) ORDER BY status ASC, date DESC LIMIT 250");
 		} else {
-			$type = 'groups_tickets';
-			$field = 'groups_id';
+			$statement = $DB->prepare("SELECT * FROM glpi_tickets WHERE id IN (SELECT tickets_id FROM glpi_groups_tickets WHERE groups_id=:field) ORDER BY status ASC, date DESC LIMIT 250");
 		}
 
-		$statement = $DB->prepare('SELECT * FROM glpi_tickets WHERE id IN (SELECT tickets_id FROM glpi_' . //
-			$type . " WHERE $field=:field) ORDER BY status ASC, date DESC LIMIT 250");
 		$statement->bindParam(':field', $_SERVER['HTTP_ID']);
 		if (!$statement->execute()) {
 			sendError('Failed to get dashboard');
