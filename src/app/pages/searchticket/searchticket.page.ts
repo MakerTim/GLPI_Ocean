@@ -6,6 +6,7 @@ import {RefreshPage} from '../../models/RefreshPage';
 import {sendSecureHeader} from '../../services/login.service';
 import {GLOBAL} from '../../services/global';
 import {Ticket} from '../../models/Ticket';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
 	selector: 'searchticket',
@@ -36,7 +37,7 @@ export class SearchticketPage extends RefreshPage implements OnInit {
 		['closedate', 'date'],
 	];
 
-	public selectedFields = {
+	public selectedFields: any = {
 		'name': this.fields[0],
 		'content': this.fields[1],
 		'date_mod': this.fields[2],
@@ -47,34 +48,128 @@ export class SearchticketPage extends RefreshPage implements OnInit {
 	public today = new Date().toISOString().split('T')[0];
 
 	public lastRng;
-	public lastSearch;
+	public lastSearch = '';
 	public foundTickets: Ticket[] = [];
 	public isSearching = false;
 
 	constructor(
-		private httpClient: HttpClient) {
+		private httpClient: HttpClient,
+		private activatedRoute: ActivatedRoute,
+		private router: Router) {
 		super(60);
 	}
 
 	ngOnInit() {
 		super.ngOnInit();
+		const params = this.activatedRoute.snapshot.queryParams;
+		if ('fields' in params) {
+			this.selectedFields = this.getFieldsFromString(params.fields);
+		}
+		if ('filters' in params) {
+			this.selectedFilters = this.getFiltersFromString(params.filters);
+		}
+		if ('search' in params) {
+			this.search(params.search);
+		}
 	}
 
 	onRefresh() {
+		// this.search();
+	}
 
+	getFilterString() {
+		const indexOfA = 'A'.charCodeAt(0);
+		const indexKeys = [];
+
+		Object.keys(this.selectedFilters).forEach(filter => {
+			let index;
+			for (let i = 0; i < this.filters.length; i++) {
+				if (this.fieldsName(this.filters[i]) === filter) {
+					index = indexOfA + i;
+					break;
+				}
+			}
+			if (!index) {
+				return;
+			}
+
+			const times = this.selectedFilters[filter];
+			indexKeys.push(String.fromCharCode(index) + new Date(times[0]).getTime() + '-' + new Date(times[1]).getTime());
+		});
+
+		return indexKeys.join(',');
+	}
+
+	getFiltersFromString(stringIn: string) {
+		const indexOfA = 'A'.charCodeAt(0);
+		const filters = {};
+		for (let charsIn of stringIn.split(',')) {
+			if (!charsIn) {
+				break;
+			}
+			const filter = this.filters[charsIn.charCodeAt(0) - indexOfA];
+			charsIn = charsIn.substring(1);
+			const times: any[] = charsIn.split('-');
+			const filterName = this.fieldsName(filter);
+			for (let i = 0; i < times.length; i++) {
+				if (times[i] === 'NaN') {
+					times[i] = new Date();
+				} else {
+					times[i] = new Date(parseInt(times[i], 10));
+				}
+				times[i] = times[i].toISOString().split('T')[0];
+			}
+			filters[filterName] = times;
+		}
+		return filters;
+	}
+
+	getFieldsFromString(charsIn: string) {
+		const indexOfA = 'A'.charCodeAt(0);
+		const obj = {};
+		charsIn.split('').forEach(char => {
+			const field = this.fields[char.charCodeAt(0) - indexOfA];
+			const fieldName = this.fieldsName(field);
+			obj[fieldName] = field;
+		});
+		return obj;
+	}
+
+	getFieldsString() {
+		const indexOfA = 'A'.charCodeAt(0);
+		let fieldsString = '';
+		Object.values(this.selectedFields).forEach(field => {
+			// @ts-ignore
+			fieldsString += String.fromCharCode(indexOfA + this.fields.indexOf(field));
+		});
+		return fieldsString;
 	}
 
 	search(searchString = this.lastSearch) {
 		this.lastSearch = searchString;
 		this.lastRng = Math.random();
 		this.isSearching = true;
+		const fieldsString = '';
+		this.router.navigate([], {
+			relativeTo: this.activatedRoute,
+			queryParams: {
+				fields: this.getFieldsString(),
+				filters: this.getFilterString(),
+				search: searchString
+			},
+			queryParamsHandling: 'merge'
+		});
 		sendSecureHeader(headers => {
 			headers = headers.set('rng', this.lastRng);
 			this.httpClient.put<[string, Ticket[]]>(GLOBAL.api + '/Search',
 				[searchString, this.selectedFields, this.selectedFilters], {headers}).toPromise()
 				.then(response => {
 					if (response[0] === this.lastRng.toString()) {
-						this.foundTickets = response[1];
+						if (!Array.isArray(response[1])) {
+							this.foundTickets = <Ticket[]>Object.values(response[1]);
+						} else {
+							this.foundTickets = response[1];
+						}
 						this.isSearching = false;
 					}
 				});

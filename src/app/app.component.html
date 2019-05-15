@@ -51,7 +51,7 @@
                    aria-haspopup="true" aria-expanded="false"
                    [routerLink]="['page/'+navigationItemIndex]">
                     <i class="{{iconOf(navigationItemIndex)}} feather feather-home icon-orange"></i>
-                    <span>{{ navigationItemIndex | titlecase }}</span>
+                    <span [class]="contains(navigation, navigationItemIndex) ? 'selected' : ''">{{ navigationItemIndex | titlecase }}</span>
                 </a>
                 <div class="dropdown-menu" attr.aria-labelledby="navbar{{navigationItemIndex}}"
                      *ngIf="navigationItems[navigationItemIndex] as navigation">

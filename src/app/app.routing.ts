@@ -26,7 +26,7 @@ const appRoutes: Routes = [
 	{path: 'admin/logs', component: LogsPage},
 	{path: 'admin/settings', component: SettingsPage},
 	{path: 'admin/ticket-form', component: TicketAdminPage},
-	{path: 'listall/:page', component: ListallPage},
+	{path: 'assets/:page', component: ListallPage},
 	{path: 'open/Ticket/:id', component: OpenTicketPage},
 	{path: 'global/Ticket', component: TicketMoverPage},
 	{path: 'group/Ticket/:id', component: TicketMoverPage},

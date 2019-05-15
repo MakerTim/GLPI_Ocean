@@ -24,10 +24,12 @@
                 <div *ngIf="isSelectedFilter(fieldsName(filter))">
                     <label class="datefilter">
                         <input class="form-control dateinput" type="date" [max]="today"
+                               [value]="selectedFilters[fieldsName(filter)][0]"
                                [id]="'filter-s-' + fieldsName(filter)" (change)="updateFilter(filter)">
                     </label> -
                     <label class="datefilter">
                         <input class="form-control dateinput" type="date" [max]="today"
+                               [value]="selectedFilters[fieldsName(filter)][1]"
                                [id]="'filter-e-' + fieldsName(filter)" (change)="updateFilter(filter)">
                     </label>
                 </div>
@@ -39,6 +41,7 @@
                        (change)="search($event.target.value)"
                        style="width: calc(100% - 30px); display: inline-block"
                        type="text" class="form-control"
+                       [value]="lastSearch"
                        [title]="'searching.inputhint' | i18n"
                        placeholder="Searching for">
                 <span class="spin" style="width: 20px" *ngIf="isSearching">

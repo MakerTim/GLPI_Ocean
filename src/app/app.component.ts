@@ -1,5 +1,5 @@
 import {Component, DoCheck, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {GLOBAL} from './services/global';
 import {navItemListener, setNav} from './services/nav';
@@ -32,11 +32,17 @@ export class AppComponent implements OnInit, DoCheck {
 	public loggedIn = false;
 	public loggingIn = false;
 	public error = '';
+	public navigation = '';
 
 	constructor(
 		private router: Router,
 		private modalService: NgbModal,
 		private httpClient: HttpClient) {
+		router.events.forEach(event => {
+			if (event instanceof NavigationEnd) {
+				this.onNavChange(event.urlAfterRedirects);
+			}
+		});
 	}
 
 	iconOf(navItem: any): string {
@@ -68,6 +74,14 @@ export class AppComponent implements OnInit, DoCheck {
 				this.openLogin();
 			}, 1000);
 		}
+	}
+
+	onNavChange(newUrl: string) {
+		this.navigation = newUrl;
+	}
+
+	contains(x: string, contains: string) {
+		return x.toLowerCase().indexOf(contains.toLowerCase()) >= 0;
 	}
 
 	checkLogin(modal) {

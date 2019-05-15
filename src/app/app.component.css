@@ -24,6 +24,14 @@
     width: 100%;
 }
 
+.selected {
+    text-decoration: underline;
+}
+
+nav{
+    border-bottom: 1px solid var(--highlight);
+}
+
 nav.navbar, .nav-link, .navbar-toggler-icon {
     background: var(--background-1);
     color: var(--text);

@@ -81,6 +81,7 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 		nav.style.height = b ? '0' : '';
 		nav.style.zIndex = b ? '1' : '';
 		nav.style.padding = b ? '0' : '';
+		nav.style.border = b ? '0' : '';
 		nav.style.top = b ? '20px' : '';
 	}
 
