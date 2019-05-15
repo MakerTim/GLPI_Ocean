@@ -11,7 +11,7 @@
 	<div class="input-group mb-1" *ngIf="'empty' !== typeArray[0]">
 		<div class="input-group-prepend" *ngIf="['empty', 'pre'].indexOf(typeArray[0]) < 0">
 			<label class="input-group-text" [for]="'FormId' + label">
-				{{ 'ticket.' + label | i18n}}
+				{{ fixName('ticket.' + label | i18n) }}
 			</label>
 		</div>
 

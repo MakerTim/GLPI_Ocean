@@ -2,7 +2,7 @@
 // tslint:disable:component-class-suffix
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Ticket} from '../../models/Ticket';
 import {sendSecureHeader} from '../../services/login.service';
 import {GLOBAL} from '../../services/global';
@@ -25,26 +25,24 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 	public priorityTiming = [20160, 10080, 4320, 1440, 60];
 
 	public tickets: Ticket[] = [];
-	public pageId = 0;
+	public pageId = '0';
+	public isUser = false;
 
 	constructor(
 		private httpClient: HttpClient,
-		private route: ActivatedRoute) {
-		super(5000);
+		private route: ActivatedRoute,
+		private router: Router) {
+		super(60);
 	}
 
 	ngOnInit() {
 		this.setNavbar(true);
 		this.route.params.subscribe(page => {
 			this.pageId = page.id;
+			this.isUser = this.router.url.indexOf('user') === 18 || this.router.url.indexOf('self') === 18;
 			this.loadDashboard();
 		});
 		super.ngOnInit();
-
-		sendSecureHeader(headers => {
-			this.httpClient.get<Ticket[]>(GLOBAL.api + '/Test', {headers}).toPromise()
-				.then(console.log);
-		});
 	}
 
 	ngOnDestroy() {
@@ -68,8 +66,9 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 
 	loadDashboard() {
 		sendSecureHeader(headers => {
-			headers = headers.set('id', this.pageId.toString())
-				.set('type', 'group');
+			headers = headers //
+				.set('id', this.pageId.toString()) //
+				.set('type', this.isUser ? 'user' : 'group');
 			this.httpClient.get<Ticket[]>(GLOBAL.api + '/Dashboard', {headers}).toPromise()
 				.then(response => {
 					this.tickets = response;
@@ -86,6 +85,12 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 	}
 
 	getPriority(ticket: Ticket) {
+		if (this.isUser) {
+			if (this.states[2].indexOf(ticket.status) >= 0) {
+				return 'closed';
+			}
+			return 'none';
+		}
 		const dateMod = new Date(ticket.date_mod);
 		const dateNow = new Date();
 
@@ -125,5 +130,22 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 
 			return indexB - indexA;
 		});
+	}
+
+	requested(ticket) {
+		if (ticket.requested_users.length === 0) {
+			return ticket.users_id_recipient;
+		}
+		return ticket.requested_users.map(userObj => userObj.requested_users.split(' ')[0]).join(', ');
+	}
+
+	assigned(ticket) {
+		if (ticket.assigned_users.length === 0) {
+			if (ticket.users_id_lastupdater) {
+				return ticket.users_id_lastupdater;
+			}
+			return ticket.assigned_groups.map(groupObj => groupObj.assigned_groups).join(', ');
+		}
+		return ticket.assigned_users.map(userObj => userObj.assigned_users.split(' ')[0]).join(', ');
 	}
 }

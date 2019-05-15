@@ -100,6 +100,11 @@ body > app-root > *, body > app-root > * > * {
     -webkit-animation-delay: $i + 0s;
     animation-delay: $i + 0s;
   }
+
+  .animated-delay-#{$j}-half {
+    -webkit-animation-delay: $i/4 + 0s;
+    animation-delay: $i/4 + 0s;
+  }
 }
 
 @media (min-width: 992px) { // Alles groter dan tablet

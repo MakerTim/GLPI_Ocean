@@ -1,116 +1,163 @@
 * {
-	font-family: "Lato", sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 .home > .header {
-	height: 280px;
-	padding-top: 50px;
-	position: relative;
-	background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
-	overflow: hidden;
-	max-width: 100%;
+  height: 280px;
+  padding-top: 50px;
+  position: relative;
+  background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .header_wave {
-	position: absolute;
-	top: 270px;
-	left: -25vw;
-	right: 0;
+  position: absolute;
+  top: 270px;
+  left: -25vw;
+  right: 0;
 }
 
 path#double-wave {
-	fill: var(--background);
+  fill: var(--background);
 }
 
 .wave1 {
-	height: 200px;
-	transform: translateY(-40px);
+  height: 200px;
+  transform: translateY(-40px);
 }
 
 .wave2 {
-	height: 240px;
-	transform: translateY(-80px);
-	background-size: 960px 240px;
-	opacity: 0.5;
-	left: -200px;
+  height: 240px;
+  transform: translateY(-80px);
+  background-size: 960px 240px;
+  opacity: 0.5;
+  left: -200px;
 }
 
 .wave3 {
-	height: 220px;
-	transform: translateY(-120px);
-	background-size: 880px 220px;
-	opacity: 0.33;
-	left: -300px;
+  height: 220px;
+  transform: translateY(-120px);
+  background-size: 880px 220px;
+  opacity: 0.33;
+  left: -300px;
 }
 
 .wave4 {
-	height: 280px;
-	transform: translateY(-160px);
-	background-size: 1120px 280px;
-	opacity: 0.1;
-	left: -780px;
-	top: 320px;
+  height: 280px;
+  transform: translateY(-160px);
+  background-size: 1120px 280px;
+  opacity: 0.1;
+  left: -780px;
+  top: 320px;
 }
 
 .header {
-	p {
-		color: white;
-	}
+  p {
+    color: white;
+  }
 
-	h4 {
-		color: white;
-		margin: 0;
-		padding: 0;
-		font-size: 35px;
-		line-height: 55px;
-		font-weight: 600;
-	}
+  h4 {
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-size: 35px;
+    line-height: 55px;
+    font-weight: 600;
+  }
 }
 
 .latest_title {
-	color: var(--text-head);
-	line-height: 18px;
-	font-size: 15px;
-	font-weight: 600;
+  color: var(--text-head);
+  line-height: 18px;
+  font-size: 15px;
+  font-weight: 600;
 
-	> a {
-		color: var(--main);
-	}
+  > a {
+    color: var(--main);
+  }
 }
 
-.cardholder {
-	text-align: center;
+.center {
+  text-align: center;
 }
 
-.card {
-	display: inline-block;
-	margin: 10px;
-	text-align: center;
-	color: var(--text);
+.blocks {
+  padding-top: 5px;
+
+  .block {
+    display: inline-block;
+    width: 19vmin;
+    height: 19vmin;
+
+    border: 3px solid var(--main);
+    margin: 6px 6px;
+    font-size: larger;
+    @media (max-width: 991px) {
+      font-size: medium;
+    }
+    @media (max-width: 700px) {
+      font-size: small;
+    }
+    @media (max-width: 600px) {
+      font-size: 10px;
+    }
+    text-decoration: none;
+
+    background-color: var(--main-3);
+    background-image: linear-gradient(315deg, var(--main-1), var(--main-3));
+    color: var(--background);
+
+    > * {
+      top: 2vmin;
+      position: relative;
+      filter: drop-shadow(2px 2px var(--text));
+    }
+
+    > span:first-child {
+      max-height: 1.4em;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    > svg {
+      width: 10vmin;
+      height: 10vmin;
+    }
+  }
+
+  .bottombtn {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
 }
 
 /*Alles groter dan tablet*/
 @media (min-width: 992px) {
-	.card {
-		width: calc(20% - 20px);
-	}
+  .card {
+    width: calc(20% - 20px);
+  }
 }
 
 /*Tablet en kleiner*/
 @media (max-width: 991px) {
-	.card {
-		width: calc(33% - 20px);
-	}
+  .card {
+    width: calc(33% - 20px);
+  }
 
-	.card-body {
-		padding: 10px 0;
+  .card-body {
+    padding: 10px 0;
 
-		> button {
-			padding: 7px 15px;
-		}
-	}
+    > button {
+      padding: 7px 15px;
+    }
+  }
 
-	h5 {
-		font-size: 1em;
-	}
+  h5 {
+    font-size: 1em;
+  }
 }

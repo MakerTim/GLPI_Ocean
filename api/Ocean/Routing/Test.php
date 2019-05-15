@@ -19,5 +19,6 @@ class Test extends RoutingBase {
 		$user = new FastUser($DB->query('SELECT * FROM glpi_users WHERE id=6')->fetch());
 
 //		return FastMail::mailTicket($user, 1);
+		return '';
 	}
 }

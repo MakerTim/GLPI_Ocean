@@ -140,25 +140,35 @@
                         </ng-container>
                         <ng-container
                                 *ngIf="ticket[leftMenuItem + '2']">{{ ticket[leftMenuItem + '2'] }} </ng-container>
-                        <a *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'"
-                           target="_blank"
-                           [href]="glpiURL + 'front/user.form.php?id=' + ticket[leftMenuItem + '_id']">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
+                        <ng-container *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'">
+                            <a class="iconholder" [routerLink]="'/dashboard/Ticket/user/' + ticket[leftMenuItem + '_id']">
+                                <i class="fas fa-columns"></i>
+                            </a>
+                            <a class="iconholder" target="_blank"
+                               [href]="glpiURL + 'front/user.form.php?id=' + ticket[leftMenuItem + '_id']">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </ng-container>
                     </div>
                     <div *ngIf="leftMenuItem.length === 2 && ticket[leftMenuItem[0]]?.length > 0">
                         <b>{{ 'ticket.' + leftMenuItem[0] | i18n }}:</b><br>
                         <ng-container *ngFor="let item of ticket[leftMenuItem[0]]">
                             &nbsp;{{ item[leftMenuItem[0]] }}
                             <ng-container *ngIf="leftMenuItem[1] !== 'group'">
-                                <a *ngIf="item['id'] && userIsAssigned()"
+                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()" [routerLink]="'/dashboard/Ticket/user/' + item['id']">
+                                    <i class="fas fa-columns"></i>
+                                </a>
+                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
                                    target="_blank"
                                    [href]="glpiURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
                             </ng-container>
                             <ng-container *ngIf="leftMenuItem[1] === 'group'">
-                                <a *ngIf="item['id'] && userIsAssigned()"
+                                <a class="iconholder" [routerLink]="'/dashboard/Ticket/' + item['id']">
+                                    <i class="fas fa-columns"></i>
+                                </a>
+                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
                                    [routerLink]="['/group/Ticket/' + item['id']]">
                                     <i class="fas fa-stream"></i>
                                 </a>
@@ -266,6 +276,7 @@
                                             <i *ngIf="!action.users_id.picture"
                                                class="fas fa-user"></i>
                                             <img *ngIf="action.users_id.picture" alt="profile"
+                                                 style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
                                                  [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
                                             <br>
                                             {{ action.users_id.firstname }} {{ action.users_id.realname }}
@@ -295,6 +306,7 @@
                                             <i *ngIf="!action.users_id.picture"
                                                class="fas fa-user"></i>
                                             <img *ngIf="action.users_id.picture" alt="profile"
+                                                 style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
                                                  [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
                                             <br>
                                             {{ action.users_id.firstname }} {{ action.users_id.realname }}
@@ -333,8 +345,8 @@
                 <div>
                     <b>{{ 'ticket.solution.assigned' | i18n }}</b><br><br>
                     <p *ngIf="ticket.solutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
-                    <p *ngFor="let solution of ticket.solutions">
-                        <a [title]="solution.answer | striphtml" [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
+                    <p *ngFor="let solution of ticket.solutions" [title]="solution.answer | striphtml">
+                        <a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
                             <i class="far fa-hand-point-right"></i>
                         </a>
                         {{ solution.name | striphtml }}
@@ -343,8 +355,8 @@
                 <div>
                     <b>{{ 'ticket.solution.suggested' | i18n }}</b><br><br>
                     <p *ngIf="ticket.possibleSolutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
-                    <p *ngFor="let solution of ticket.possibleSolutions">
-                        <a [title]="solution.answer | striphtml" [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
+                    <p *ngFor="let solution of ticket.possibleSolutions" [title]="solution.answer | striphtml">
+                        <a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
                             <i class="far fa-hand-point-right"></i>
                         </a>
                         {{ solution.name | striphtml }}
@@ -353,8 +365,8 @@
                 <div>
                     <b>{{ 'ticket.solution.similar' | i18n }}</b><br><br>
                     <p *ngIf="ticket.similar.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
-                    <p *ngFor="let ticketSim of ticket.similar">
-                        <a [title]="ticketSim.content | striphtml" [href]="glpiURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
+                    <p *ngFor="let ticketSim of ticket.similar" [title]="ticketSim.content | striphtml">
+                        <a [href]="glpiURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
                             <i class="far fa-hand-point-right"></i>
                         </a>
                         {{ ticketSim.name | striphtml }}

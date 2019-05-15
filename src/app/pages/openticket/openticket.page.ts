@@ -35,8 +35,8 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 		['users_id_recipient'], ['requested_users', 'user'], ['requested_groups', 'group'], ['users_id_lastupdater'], //
 		['assigned_users', 'user'], ['assigned_groups', 'group'], [], //
 
-		['requesttypes_id'], ['status'], ['urgency'], ['impact'], //
-		['priority'], ['itilcategories_id'], ['requesttypes_id'], ['global_validation'], ['locations_id'], [], //
+		['status'], ['urgency'], ['impact'], ['priority'], //
+		['itilcategories_id'], ['requesttypes_id'], ['global_validation'], ['locations_id'], [], //
 
 		['id'],
 	];
@@ -58,7 +58,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 		private modalService: NgbModal,
 		private location: Location,
 		private route: ActivatedRoute) {
-		super(10);
+		super(60);
 	}
 
 	ngOnInit() {
@@ -95,7 +95,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 					const newAttachments = [];
 					const newActions = [];
 					for (const attachment of attachments) {
-						if (this.dateCompare(attachment[2]) < 60) {
+						if (this.dateCompare(attachment[2]) < 100) {
 							newAttachments.push(attachment);
 						} else {
 							newActions.push(attachment);
@@ -159,7 +159,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 	}
 
 	isClosed() {
-		return this.ticket.status_id <= 5;
+		return this.ticket.status_id >= 5;
 	}
 
 	hasOpenSolution() {

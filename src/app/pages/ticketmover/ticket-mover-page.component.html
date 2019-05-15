@@ -106,7 +106,7 @@
                         <tr *ngFor="let user of group.users">
                             <ng-container *ngIf="filterInObject(user, modal.filter)">
                                 <td>
-                                    <ngb-highlight [result]="'User'"
+                                    <ngb-highlight [result]="'ticket-global.user' | i18n"
                                                    [term]="modal.filter"></ngb-highlight>
                                 </td>
                                 <td>

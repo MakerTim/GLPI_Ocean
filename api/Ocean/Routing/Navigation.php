@@ -42,6 +42,7 @@ class Navigation extends RoutingBase {
 
 		$menuItems['ticket']['globalTicket'] = 'global/Ticket/';
 		$menuItems['ticket']['dashboard'] = 'dashboard/Ticket/';
+		$menuItems['ticket']['search'] = 'search/Ticket/';
 	}
 
 	/**

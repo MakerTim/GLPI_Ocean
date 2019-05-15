@@ -36,7 +36,7 @@ function plugin_init_ocean() {
 	Plugin::registerClass('PluginOceanConfig', ['addtabon' => 'Entity']);
 	$PLUGIN_HOOKS["menu_toadd"]['ocean'] = ['plugins' => 'PluginOceanConfig'];
 
-	$DB->$PLUGIN_HOOKS['config_page']['ocean'] = redirectUrlOcean();
+//	$DB->$PLUGIN_HOOKS['config_page']['ocean'] = redirectUrlOcean();
 }
 
 function redirectUrlOcean($withDir = false) {

@@ -54,8 +54,25 @@
         </svg>
     </div>
 
-    <div class="center">
-        <a [href]="glpiURL + '?front=login'" class="btn btn-outline-danger">
+    <div class="center blocks">
+
+        <a [routerLink]="'/concrete/Ticket'" class="block animated-3 animated-delay-1 fadeInUpLow">
+            <span>{{ 'home.createticket' | i18n }}</span>
+            <br>
+            <i class="fas fa-headset"></i>
+        </a>
+        <a [routerLink]="'/dashboard/Ticket/self'" class="block animated-3 animated-delay-2 fadeInUpLow">
+            <i class="fas fa-clipboard-list"></i>
+            <br>
+            <span>{{ 'home.mytickets' | i18n }}</span>
+        </a>
+        <a [routerLink]="'/search/Ticket'" class="block animated-3 animated-delay-3 fadeInUpLow">
+            <span>{{ 'home.search' | i18n }}</span>
+            <br>
+            <i class="fas fa-search"></i>
+        </a>
+
+        <a [href]="glpiURL + '?front=login'" class="bottombtn btn btn-outline-danger">
             {{ 'login.backglpi' | i18n }}
         </a>
     </div>

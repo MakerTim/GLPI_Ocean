@@ -269,6 +269,12 @@ class FastTicket extends FastModel {
 			} else {
 				$ticket['possibleSolutions'] = [];
 			}
+
+			$similars = $ticket['similar'];
+			$ticket['similar'] = [];
+			foreach ($similars as $similar) {
+				$ticket['similar'][] = $similar;
+			}
 		}
 	}
 

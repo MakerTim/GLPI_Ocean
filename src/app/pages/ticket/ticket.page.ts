@@ -28,13 +28,14 @@ export class TicketPage extends RefreshPage implements OnInit {
 	public aroundTickets: Ticket[];
 	public lookalikeTickets: Ticket[] = [];
 
+	public customFields = {};
 	public titleDescObject = {count: 0, name: undefined, content: undefined};
 
 	constructor(
 		private httpClient: HttpClient,
 		private route: ActivatedRoute,
 		private cRef: ChangeDetectorRef) {
-		super(30);
+		super(60);
 	}
 
 	ngOnInit() {
@@ -82,11 +83,20 @@ export class TicketPage extends RefreshPage implements OnInit {
 		if (withReload) {
 			this.lookalikeTickets = [];
 		}
+
+		const cloneTitleDescObject = JSON.parse(JSON.stringify(this.titleDescObject));
+		for (const field of Object.keys(this.customFields)) {
+			if (!cloneTitleDescObject.content) {
+				cloneTitleDescObject.content = '';
+			}
+			cloneTitleDescObject.content += '\n' + field + ': ' + this.customFields[field];
+		}
+
 		sendSecureHeader(headers => {
 			headers = headers
 				.set('Type', 'search');
 			this.httpClient.post<Ticket[]>(GLOBAL.api + '/Tickets',
-				this.titleDescObject,
+				cloneTitleDescObject,
 				{headers}).toPromise()
 				.then(tickets => this.lookalikeTickets = tickets)
 				.catch(console.error);
@@ -118,6 +128,13 @@ export class TicketPage extends RefreshPage implements OnInit {
 			this.titleDescObject.content = event.value;
 		} else if (event.field === 'title') {
 			this.titleDescObject.name = event.value;
+		} else if (event.field.indexOf('custom.') === 0) {
+			if (event.value == null || event.value === '') {
+				delete this.customFields[event.field.replace('custom.', '')];
+			} else {
+				this.customFields[event.field.replace('custom.', '')] = event.value;
+			}
+			return;
 		} else {
 			return;
 		}

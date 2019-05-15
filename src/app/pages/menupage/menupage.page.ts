@@ -13,6 +13,30 @@ export class MenupagePage implements OnInit {
 	public page = '';
 	public submenuItems = [];
 
+	public iconDB = {
+		ticketCreate: 'fas fa-headset',
+		globalTicket: 'fas fa-align-left',
+		dashboard: 'fas fa-columns',
+		search: 'fas fa-search',
+		computer: 'fas fa-laptop',
+		monitor: 'fas fa-desktop',
+		networkEquipment: 'fas fa-network-wired',
+		peripheral: 'fas fa-mobile-alt',
+		phone: 'fas fa-phone-square',
+		printer: 'fas fa-print',
+		software: 'fas fa-mail-bulk',
+		softwareLicense: 'fas fa-credit-card',
+		certificate: 'fas fa-lock',
+		line: 'fas fa-globe',
+		pDU: 'fas fa-calculator',
+		rack: 'fas fa-server',
+		enclosure: 'fas fa-door-open',
+		'ticket-form': 'fas fa-align-center',
+		logs: 'fas fa-receipt',
+		settings: 'fas fa-cogs',
+		users: 'fas fa-users',
+	};
+
 	constructor(
 		private route: ActivatedRoute) {
 	}
@@ -47,8 +71,19 @@ export class MenupagePage implements OnInit {
 			if (type === 'plugins') {
 				typesPage = 'plugin-' + typesPage.replace(/(^Plugin)|(Config$)/g, '');
 			}
-			this.submenuItems.push([typesPage, '/'  + pageObj[typesPage]]);
+			this.submenuItems.push([typesPage, '/' + pageObj[typesPage]]);
 		}
 	}
 
+	iconOf(icon: string) {
+		if (icon in this.iconDB) {
+			return this.iconDB[icon];
+		}
+		console.warn(icon);
+		return 'fas fa-paint-brush';
+	}
+
+	indexOf(submenuItems: any[], submenuItem: any) {
+		return submenuItems.indexOf(submenuItem);
+	}
 }

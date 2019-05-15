@@ -1,0 +1,93 @@
+<div class="search row">
+    <div class="col-3">
+        <div class="box searchbox">
+            <h2>{{ 'searching.title' | i18n }}</h2>
+
+            <b>{{ 'searching.subtitle' | i18n }}</b>
+            <div *ngFor="let field of fields">
+                <label>
+                    <input type="checkbox" [checked]="isSelectedField(fieldsName(field))"
+                           (change)="onFieldChange($event.target, field)">
+                    {{ 'searching.' + fieldsName(field) | i18n }}
+                </label>
+            </div>
+            <hr>
+
+            <b>{{ 'searching.filter' | i18n }}</b>
+            <div *ngFor="let filter of filters"
+                 [class]="((isValidFilter(fieldsName(filter)) || !isSelectedFilter(fieldsName(filter))) ? 'greatly' : 'faulty')">
+                <label>
+                    <input type="checkbox" [checked]="isSelectedFilter(fieldsName(filter))"
+                           (change)="onFilterChange($event.target, filter)">
+                    {{ 'searching.' + fieldsName(filter) | i18n }}
+                </label> <br>
+                <div *ngIf="isSelectedFilter(fieldsName(filter))">
+                    <label class="datefilter">
+                        <input class="form-control dateinput" type="date" [max]="today"
+                               [id]="'filter-s-' + fieldsName(filter)" (change)="updateFilter(filter)">
+                    </label> -
+                    <label class="datefilter">
+                        <input class="form-control dateinput" type="date" [max]="today"
+                               [id]="'filter-e-' + fieldsName(filter)" (change)="updateFilter(filter)">
+                    </label>
+                </div>
+            </div>
+            <hr>
+
+            <label style="width: 100%">
+                <input (keyup)="search($event.target.value)"
+                       (change)="search($event.target.value)"
+                       style="width: calc(100% - 30px); display: inline-block"
+                       type="text" class="form-control"
+                       [title]="'searching.inputhint' | i18n"
+                       placeholder="Searching for">
+                <span class="spin" style="width: 20px" *ngIf="isSearching">
+                    <i class="fas fa-spinner" style="width: 20px"></i>
+                </span>
+            </label>
+            <i [innerHTML]="'searching.inputhint' | i18n | br"></i>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="box foundbox">
+            <a target="_blank" [routerLink]="'/open/Ticket/' + ticket.id" class="ticketbox" *ngFor="let ticket of foundTickets">
+                <span [title]="ticket.name">{{ ticket.name | limit }}</span>
+                <hr [title]="ticket | debug">
+                <span class="ticketcontent" [title]="ticket.content | striphtml">
+                    {{ ticket.content | striphtml | limit }}
+                </span>
+                <div>
+                    <i class="far fa-user" [title]="'searching.users_id_recipient' | i18n"></i>
+                    <span>
+                        {{ ticket.users_id_recipient + ' ' + (ticket.users_id_recipient2 ? ticket.users_id_recipient2 : '') }}
+                    </span>
+                    <br>
+                    <i class="fas fa-hard-hat" [title]="'searching.users_id_lastupdater' | i18n"></i>
+                    <span>
+                        {{ (ticket.users_id_lastupdater ? ticket.users_id_lastupdater : '') + ' ' + (ticket.users_id_lastupdater2 ? ticket.users_id_lastupdater2 : '') }}
+                    </span>
+                    <br>
+                    <i class="fas fa-user-tag" [title]="'searching.assigned' | i18n"></i>
+                    <span *ngFor="let assigned of ticket.assigned_users">
+                        {{ assigned.assigned_users }}
+                    </span>
+                    <span *ngFor="let assigned of ticket.assigned_groups">
+                        {{ assigned.assigned_groups }}
+                    </span>
+                    <br>
+                    <i class="fas fa-user-clock" [title]="'searching.followed' | i18n"></i>
+                    <span *ngFor="let req of ticket.requested_users">
+                        {{ req.requested_users }}
+                    </span>
+                    <span *ngFor="let req of ticket.requested_groups">
+                        {{ req.requested_groups }}
+                    </span>
+                    <span *ngFor="let follow of ticket.followed_groups">
+                        {{ follow.followed_groups }}
+                    </span>
+                    <br>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

@@ -96,11 +96,11 @@ function drawTicketDialog($ticket) {
 		} else if ($i === 1) { // finished
 			$FA = '';
 		} else { // 2 working on
-			$FA = '';
+			$FA = '';
 		}
 
-		drawText18n($width / $stages * $stage + 40, 387, 20, $FA, $color, $fontFA);
-		drawText18n($width / $stages * $stage + 70, 385, 20, nameOfType(FastTicket::STATUS, $staged[$stage]), $color);
+		drawText18n($width / $stages * $stage + 37, 385, 20, $FA, $color, $fontFA);
+		drawText18n($width / $stages * $stage + 65, 385, 20, 'ticket.' . nameOfType(FastTicket::STATUS, $staged[$stage]), $color);
 		for ($i = 0; $i < 5; $i++) {
 			// top
 			imageline($img, $width / $stages * $stage + 30, 300 + $i, $width / $stages * ($stage + 1) - 30, 300 + $i, $color);

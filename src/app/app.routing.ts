@@ -15,6 +15,7 @@ import {TicketMoverPage} from './pages/ticketmover/ticket-mover-page.component';
 import {DashboardPage} from './pages/dashboard/dashboard.page';
 import {DashboardMenuPage} from './pages/dashboardmenu/dashboardmenu.page';
 import {RedirectPage} from './pages/redirect/redirect.page';
+import {SearchticketPage} from './pages/searchticket/searchticket.page';
 
 const appRoutes: Routes = [
 	{path: '', component: HomePage},
@@ -31,6 +32,8 @@ const appRoutes: Routes = [
 	{path: 'group/Ticket/:id', component: TicketMoverPage},
 	{path: 'dashboard/Ticket', component: DashboardMenuPage},
 	{path: 'dashboard/Ticket/:id', component: DashboardPage},
+	{path: 'dashboard/Ticket/user/:id', component: DashboardPage},
+	{path: 'search/Ticket', component: SearchticketPage},
 	{path: 'front/:redirect', component: RedirectPage},
 	{path: 'glpi/front/:redirect', component: RedirectPage},
 	{path: '**', component: NotfoundPage}

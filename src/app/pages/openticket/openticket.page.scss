@@ -49,6 +49,12 @@
     height: auto;
   }
 
+  > .row {
+    width: 100%;
+    margin: 0 0 3px 0;
+    border-radius: 3px;
+  }
+
   &.inner-block-center {
     min-height: 20%;
   }
@@ -75,7 +81,7 @@
   }
 
   & > div:not(.inner-block-center) {
-    padding: 5px 0 0 5px;
+    padding: 1px 0 0 1px;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
     width: 100%;
   }
@@ -118,8 +124,8 @@
 }
 
 .action-block {
-  margin: 10px 0 0;
-  border-radius: 5em;
+  margin: 0 0 3px 0;
+  border-radius: 3px;
 }
 
 .status-NA {
@@ -189,13 +195,13 @@
     width: 25px
   }
 
-  &.attachment-img {
-    height: 5em;
-  }
-
   background-color: var(--highlight);
-  border-radius: 5em;
-  margin: 10px 0 0;
+  border-radius: 3px;
+  margin: 0 0 3px 0;
+}
+
+.iconholder {
+  margin: 1px;
 }
 
 .btn-group-vert > .btn {

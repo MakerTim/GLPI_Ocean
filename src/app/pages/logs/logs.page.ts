@@ -27,7 +27,7 @@ export class LogsPage extends RefreshPage implements OnInit {
 
 	constructor(
 		private httpClient: HttpClient) {
-		super(100);
+		super(60);
 	}
 
 	ngOnInit() {

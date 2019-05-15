@@ -6,9 +6,13 @@ use PDO;
 
 class SQLBuilder {
 
+	public $select = 'SELECT';
 	public $selector = 't.*';
+	public $mainTableName = 't';
 	private $table;
-	private $where;
+	public $where;
+	private $group;
+	private $order;
 	private $limit;
 	private $internalParams = [];
 
@@ -18,22 +22,28 @@ class SQLBuilder {
 	/** @var \PDOStatement */
 	private $statement;
 
-	public function __construct($table, $where = '', $limit = '') {
+	public function __construct($table, $where = '', $limit = '', $group = '', $order = '') {
 		$this->table = $table;
 		$this->where = $where;
 		$this->limit = $limit;
+		$this->group = $group;
+		$this->order = $order;
+	}
+
+	public function buildSQL() {
+		return "$this->select $this->selector " . $this->selectsOverwrites . //
+			" FROM $this->table $this->mainTableName " . //
+			$this->joinOtherTables . ' ' . //
+			$this->where . ' ' . //
+			$this->group . ' ' . //
+			$this->order . ' ' . //
+			$this->limit;
 	}
 
 	private function prepare() {
 		/** @var PDO $DB */ global $DB;
 
-		$this->statement = $DB->prepare('' . //
-			"SELECT $this->selector " . $this->selectsOverwrites . //
-			' FROM ' . $this->table . ' t ' . //
-			$this->joinOtherTables . ' ' . //
-			$this->where . ' ' . //
-			$this->limit //
-		);
+		$this->statement = $DB->prepare($this->buildSQL());
 	}
 
 	private function execute() {
@@ -54,11 +64,18 @@ class SQLBuilder {
 	}
 
 	public function search($searchingFor = [], $inFields = [], $tablePK = 'id', $tableShort = 'x') {
-		$this->limit = ' GROUP BY t.id ORDER BY SUM(x.occ) DESC ' . $this->limit;
+		if (!$this->group) {
+			$this->group = ' GROUP BY';
+		}
+		$this->group = $this->group . ' t.id ';
+		if (!$this->order) {
+			$this->order = ' ORDER BY';
+		}
+		$this->order = $this->order . ' SUM(x.occ) DESC ';
 		if (count($searchingFor) === 0 //
 			|| (count($searchingFor) === 1 && empty($searchingFor[0])) ////
 			|| (count($searchingFor) === 2 && empty($searchingFor[0]) && empty($searchingFor[1]))) {
-			$this->joinOtherTables .= " INNER JOIN (SELECT '_' AS `$tablePK`, 0 as `occ`) as `$tableShort` ON t.$tablePK=x.$tablePK ";
+			$this->joinOtherTables .= " INNER JOIN (SELECT '_' AS `$tablePK`, 0 as `occ`) as `$tableShort` ON $this->mainTableName.$tablePK=x.$tablePK ";
 			return;
 		}
 		$joinString = 'INNER JOIN (' . PHP_EOL;
@@ -109,7 +126,7 @@ class SQLBuilder {
 			$as = $tableFK;
 		}
 		$this->selectsOverwrites .= ",$tableShort.$wanted as '$as' ";
-		$this->joinOtherTables .= "$joinType $otherTable $tableShort ON t.$tableFK = $tableShort.$tablePK ";
+		$this->joinOtherTables .= "$joinType $otherTable $tableShort ON $this->mainTableName.$tableFK = $tableShort.$tablePK ";
 		return $this;
 	}
 

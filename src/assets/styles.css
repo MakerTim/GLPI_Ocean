@@ -273,6 +273,12 @@ div.card, form.card {
     }
 }
 
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @keyframes fade_in {
     0% {
         opacity: 0;

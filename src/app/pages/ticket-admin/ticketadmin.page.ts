@@ -37,12 +37,13 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 	public hiddenPreview = false;
 	public debug = true;
 	public error: string;
+	public customField = '';
 
 	constructor(
 		private httpClient: HttpClient,
 		private modalService: NgbModal,
 		private snackbarService: SnackbarService) {
-		super(15);
+		super(60);
 	}
 
 	ngOnInit() {
@@ -405,6 +406,10 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 		});
 	}
 
+	fixName(input: string) {
+		return input.replace('ticket.', '').replace('custom.', '');
+	}
+
 	orderCat(screen) {
 		this.modalService
 			.open(screen, {centered: true});
@@ -430,5 +435,9 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 		console.log(category_i18n);
 		console.log(option);
 		console.log(this);
+	}
+
+	addCustomField(data: any) {
+		data['custom.' + this.customField] = ['empty'];
 	}
 }

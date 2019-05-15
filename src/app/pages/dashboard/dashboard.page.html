@@ -13,11 +13,13 @@
             <ng-container *ngFor="let ticket of sortPriority(tickets)">
                 <div *ngIf="state.indexOf(ticket.status) >= 0" [class]="'ticket ' + getPriority(ticket)">
                     <div class="ticketContent">
-                        <b><a [routerLink]="['/open/Ticket/' + ticket.id]">{{ ticket.name }}</a></b>
+                        <b><a [routerLink]="['/open/Ticket/' + ticket.id]" [title]="ticket | debug">{{ ticket.name }}</a></b>
                         <article>{{ ticket.content | striphtml | limit }}</article>
                         <u class="date" [innerHTML]="ticket.date.replace(' ', '<br>')"></u>
                         <br>
-                        <u>Paula</u>&nbsp;<i class="fas fa-sign-in-alt"></i>&nbsp;<i>Tim, Ivo, Bas</i>
+                        <u>{{ requested(ticket) }}</u>
+                        <i class="fas fa-sign-in-alt"></i>
+                        <i>{{ assigned(ticket) }}</i>
                     </div>
                 </div>
             </ng-container>

@@ -1,10 +1,8 @@
 <div class="ticket-block">
 	<div class="center animated-1 animated-delay-1 fadeInUpLower">
 		<form class="boxed" #form>
-			<b>{{ 'ticket.mainquestion' | i18n }}</b>
-			<hr>
-			<br>
 			<div class="boxed">
+                <h3>{{ 'ticket.mainquestion' | i18n }}</h3>
 				<label *ngIf="categories.length > 0">
 					{{ 'ticket.maincategorie' | i18n }} <br>
 					<select [(ngModel)]="selectedMainCategory" (change)="changeMainCategory()" class="form-control form-ignore" name="mainCat">
@@ -38,7 +36,7 @@
 				<div *ngIf="selectedSubCategory" class="animated-1 fadeInUpLower">
 					<div class="boxed fieldbox"
 						 *ngVar="nthKey(categories[selectedMainCategory].data[selectedSubCategory]) as subCategory">
-						<div *ngFor="let field of objectKeys(subCategory)">
+						<div *ngFor="let field of objectKeys(subCategory)" [class]="(subCategory[field][0] === 'pre' || subCategory[field][0] === 'empty') ? 'hidden' : ''">
 							<ticketinput (valueChange)="onValueInput(field, $event)" [debug]="debug" [label]="field"
 										 [typeArray]="subCategory[field]"></ticketinput>
 						</div>

@@ -37,7 +37,7 @@ export class TicketMoverPage extends RefreshPage implements OnInit {
 		private location: Location,
 		private modalService: NgbModal,
 		private route: ActivatedRoute) {
-		super(100);
+		super(60);
 	}
 
 	ngOnInit() {
@@ -199,7 +199,7 @@ export class TicketMoverPage extends RefreshPage implements OnInit {
 
 	moveSelf(id) {
 		this.move( //
-			this.dropListsIds[0], //
+			'unassigned', //
 			this.dropListsIds[1].replace('cdkList-', ''), //
 			id
 		);

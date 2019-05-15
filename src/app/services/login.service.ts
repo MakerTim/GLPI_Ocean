@@ -29,7 +29,12 @@ export function loginGLPI(httpClient: HttpClient, callback = null) {
 function waitForUser() {
 	sendSecureHeader(headers => {
 		user = client.get<User>(GLOBAL.api + '/GetSelf', {headers}).toPromise();
-		user.then(usr => rawUser = usr);
+		user
+			.then(usr => rawUser = usr)
+			.catch(_ => {
+				logout();
+				window.location.reload();
+			});
 	});
 }
 

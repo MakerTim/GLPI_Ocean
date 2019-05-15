@@ -38,6 +38,7 @@ import {EmptyPage} from './pages/emtpy/empty.page';
 import {DashboardPage} from './pages/dashboard/dashboard.page';
 import {DashboardMenuPage} from './pages/dashboardmenu/dashboardmenu.page';
 import {StripHtml} from './pipes/striphtml';
+import {SearchticketPage} from './pages/searchticket/searchticket.page';
 
 @NgModule({
 	declarations: [
@@ -64,6 +65,7 @@ import {StripHtml} from './pipes/striphtml';
 		TicketMoverPage,
 		DashboardPage,
 		DashboardMenuPage,
+		SearchticketPage,
 		AppComponent,
 		SwitchComponent,
 		TimeComponent,

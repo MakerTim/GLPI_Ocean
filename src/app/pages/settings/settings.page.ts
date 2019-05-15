@@ -23,7 +23,7 @@ export class SettingsPage extends RefreshPage implements OnInit {
 
 	constructor(
 		public httpClient: HttpClient) {
-		super(5);
+		super(60);
 		SettingsPage.http = httpClient;
 	}
 

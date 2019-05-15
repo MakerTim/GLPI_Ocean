@@ -83,7 +83,7 @@ class TicketForm extends RoutingBase {
 			$switchStatement->bindParam(':oldId', $switcheroo[0]);
 			$switchStatement->bindParam(':newId', $switcheroo[1]);
 			if (!$switchStatement->execute()) {
-//				$switchStatement->debugDumpParams();
+				//				$switchStatement->debugDumpParams();
 				sendError('Failed switching at: ' . json_encode($switcheroo) . PHP_EOL . json_encode($switcheroos));
 			}
 		}
@@ -251,6 +251,11 @@ class TicketForm extends RoutingBase {
 		if ($this->getFromObject($ticketData, 'description') === null //
 			|| empty($this->getFromObject($ticketData, 'description'))) {
 			sendError('Description empty');
+		}
+		foreach (get_object_vars($ticketData) as $property => $value) {
+			if (strpos($property, 'custom.') === 0) {
+				$ticketData->description .= PHP_EOL . str_replace('custom.', '', $property) . ': ' . $ticketData->$property;
+			}
 		}
 
 		$newTicket = FastTicket::createNewTicket($user, //

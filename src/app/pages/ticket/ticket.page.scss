@@ -10,6 +10,21 @@
     padding-top: 10px;
     padding-bottom: 10px;
   }
+
+  > * {
+    &:first-child {
+      padding-right: 0;
+    }
+
+    &:not(:first-child):not(:last-child) {
+      padding-right: 5px;
+      padding-left: 5px;
+    }
+
+    &:last-child {
+      padding-left: 0;
+    }
+  }
 }
 
 .home > .header {

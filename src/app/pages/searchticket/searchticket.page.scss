@@ -1,0 +1,103 @@
+.box {
+  margin: 3px 0 0;
+  border: solid 1px var(--main-3);
+  border-radius: 5px;
+  height: calc(100vh - 65px);
+  padding: 5px;
+  overflow: auto;
+
+  &.searchbox {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+  }
+
+  &.foundbox {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.ticketbox {
+  text-decoration: none;
+  color: var(--text);
+  background-color: var(--background-1);
+  display: inline-block;
+  width: calc(25% - 7px);
+  border: 3px solid var(--main-2);
+  margin: 3px;
+  overflow: hidden;
+
+  > span {
+    margin: 2px;
+    overflow: hidden;
+    word-wrap: break-word;
+
+    &:not(:first-child) {
+      font-size: 1.7vmin;
+    }
+
+    &:first-child {
+      display: block;
+      margin-top: 0;
+      height: 3em;
+      overflow: hidden;
+      font-size: small;
+      font-weight: bold;
+    }
+  }
+
+  > div {
+    padding-left: 4px;
+    font-size: 1.4vmin;
+    background-color: var(--main-3);
+    background-image: linear-gradient(315deg, var(--main-1), var(--main-3));
+    color: white;
+    height: 10vmin;
+  }
+
+  > hr {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.row {
+  > div:not(:first-child) {
+    padding-left: 2px;
+  }
+
+  > div:not(:last-child) {
+    padding-right: 2px;
+  }
+}
+
+.ticketcontent {
+  display: block;
+  height: 10vmin;
+}
+
+label {
+  margin-bottom: .1rem;
+  user-select: none;
+}
+
+.datefilter {
+  width: 45%;
+  min-width: 140px;
+}
+
+.dateinput {
+  padding: 0;
+}
+
+.greadly {
+  color: black;
+}
+
+.faulty {
+  color: red;
+}
+
+.spin > svg {
+  animation: spin 1s ease-in-out infinite;
+}

@@ -63,6 +63,10 @@ export class TicketInputComponent implements AfterViewInit, OnDestroy {
 		return TicketInputComponent.dictionary[key] = [];
 	}
 
+	fixName(input: string) {
+		return input.replace('ticket.', '').replace('custom.', '');
+	}
+
 	objectKeys(obj: any) {
 		return Object.keys(obj);
 	}
