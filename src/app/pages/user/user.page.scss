@@ -1,0 +1,94 @@
+* {
+  font-family: "Lato", sans-serif;
+}
+
+.header {
+  &:empty {
+    min-height: 72px;
+  }
+
+  position: relative;
+  background: linear-gradient(100deg, var(--main-background), var(--main-1) 25%, var(--main));
+  overflow: hidden;
+  max-width: 100%;
+  text-align: center;
+  font-size: 3em;
+  color: var(--background);
+  font-weight: 600;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.back {
+  border-bottom: 1px solid var(--main-2);
+  border-right: 1px solid var(--main-2);
+  border-bottom-right-radius: 5px;
+  background-color: var(--background-1);
+  color: var(--text);
+  width: 20vw;
+  height: 45px;
+  position: absolute;
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--main-3);
+    color: white;
+    background-image: linear-gradient(315deg, var(--main-1), var(--main-3));
+  }
+}
+
+.userDetails {
+  position: relative;
+  left: 20vw;
+  width: 60vw;
+  top: 10px;
+  border: 1px solid var(--main);
+  border-radius: 5px;
+  margin-top: 36px;
+
+  > label {
+    left: 1vw;
+    position: relative;
+    width: 30vw;
+  }
+
+  > img, > span > svg {
+    width: 20vmin;
+    height: 20vmin;
+    min-width: 20vmin;
+    min-height: 20vmin;
+    position: absolute;
+    top: 1vw;
+    left: 36vw;
+    border: 2px solid var(--highlight);
+    border-radius: 5px;
+    color: var(--text-sub);
+  }
+
+  > .tickets {
+    position: absolute;
+    top: 22vmin;
+    right: 4vw;
+    width: 20vw;
+  }
+
+  button {
+    width: 25vw;
+    height: 15vmin;
+    margin-left: 3vw;
+
+    border: 1px solid var(--main-2);
+    font-size: larger;
+    text-decoration: none;
+    background-color: var(--main-3);
+    background-image: linear-gradient(315deg, var(--main-1), var(--main-3));
+    overflow: hidden;
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 1vw;
+    color: white;
+
+    > span {
+      filter: drop-shadow(2px 2px var(--text));
+    }
+  }
+}

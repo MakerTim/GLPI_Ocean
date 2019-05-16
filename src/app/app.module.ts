@@ -39,6 +39,7 @@ import {DashboardPage} from './pages/dashboard/dashboard.page';
 import {DashboardMenuPage} from './pages/dashboardmenu/dashboardmenu.page';
 import {StripHtml} from './pipes/striphtml';
 import {SearchticketPage} from './pages/searchticket/searchticket.page';
+import {UserPage} from './pages/user/user.page';
 
 @NgModule({
 	declarations: [
@@ -66,6 +67,7 @@ import {SearchticketPage} from './pages/searchticket/searchticket.page';
 		DashboardPage,
 		DashboardMenuPage,
 		SearchticketPage,
+		UserPage,
 		AppComponent,
 		SwitchComponent,
 		TimeComponent,

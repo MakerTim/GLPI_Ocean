@@ -1,0 +1,59 @@
+<div class="header">{{ 'user.admin ' + (user ? user.name + '(' + user.id + ')' : '') | i18n }}</div>
+
+<button class="back" (click)="goBack()">
+    <span>
+        {{ 'ticket.goback' | i18n }} <br>
+    </span>
+</button>
+
+
+<div class="userDetails" *ngIf="user">
+    <ng-container *ngFor="let field of fields">
+        <label *ngIf="field.length > 0">
+            {{ 'user.' + field | i18n }}
+            <input class="form-control" type="text" [(ngModel)]="user[field]"
+                   [disabled]="contains(field, 'date') || contains(field, 'id')">
+        </label>
+        <br>
+        <br *ngIf="field.length === 0">
+    </ng-container>
+
+    <img *ngIf="user.picture" [src]="GLPI_URL + 'front/document.send.php?file=_pictures/' + user.picture"
+         alt="User Profile Picture">
+    <span *ngIf="!user.picture">
+        <i class="fas fa-user"></i>
+    </span>
+    <div class="tickets">
+        <b>{{ 'user.tickets' | i18n }}</b>
+        <div *ngFor="let ticket of subList(user.tickets, 5)">
+            {{ ticket.name }}
+            <a [routerLink]="'/open/Ticket/' + ticket.id">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+        <b>{{ 'user.groups' | i18n }}</b><br>
+        <span *ngFor="let group of user.groups">
+            {{ group.name }}
+            <a [routerLink]="'/dashboard/Ticket/' + group.id">
+                <i class="fas fa-columns"></i>
+            </a>
+        </span>
+    </div>
+
+    <a [routerLink]="'/dashboard/Ticket/user/' + user.id">
+        <button>
+            <span>
+                {{ 'user.dashboard' | i18n }} <br>
+                <i class="fas fa-columns"></i>
+            </span>
+        </button>
+    </a>
+    <a [href]="GLPI_URL + 'front/user.form.php?id=' + user.id">
+        <button>
+            <span>
+                {{ 'user.glpi' | i18n }} <br>
+                <i class="fas fa-external-link-alt"></i>
+            </span>
+        </button>
+    </a>
+</div>

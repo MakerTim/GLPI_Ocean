@@ -144,9 +144,8 @@
                             <a class="iconholder" [routerLink]="'/dashboard/Ticket/user/' + ticket[leftMenuItem + '_id']">
                                 <i class="fas fa-columns"></i>
                             </a>
-                            <a class="iconholder" target="_blank"
-                               [href]="glpiURL + 'front/user.form.php?id=' + ticket[leftMenuItem + '_id']">
-                                <i class="fas fa-external-link-alt"></i>
+                            <a class="iconholder" [routerLink]="'/admin/user/' + ticket[leftMenuItem + '_id']">
+                                <i class="fas fa-user"></i>
                             </a>
                         </ng-container>
                     </div>

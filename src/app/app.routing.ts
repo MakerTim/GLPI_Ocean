@@ -16,6 +16,7 @@ import {DashboardPage} from './pages/dashboard/dashboard.page';
 import {DashboardMenuPage} from './pages/dashboardmenu/dashboardmenu.page';
 import {RedirectPage} from './pages/redirect/redirect.page';
 import {SearchticketPage} from './pages/searchticket/searchticket.page';
+import {UserPage} from './pages/user/user.page';
 
 const appRoutes: Routes = [
 	{path: '', component: HomePage},
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
 	{path: 'page/:page', component: MenupagePage},
 	{path: 'concrete/Ticket', component: TicketPage},
 	{path: 'concrete/:page', component: ConcretePagePage},
+	{path: 'admin/user/:id', component: UserPage},
 	{path: 'admin/logs', component: LogsPage},
 	{path: 'admin/settings', component: SettingsPage},
 	{path: 'admin/ticket-form', component: TicketAdminPage},
