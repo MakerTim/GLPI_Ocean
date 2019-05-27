@@ -1,0 +1,14 @@
+<div class="spacer"></div>
+
+
+<div class="charts">
+	<div>
+		<canvas *ngIf="!loading" baseChart
+		        [datasets]="lineChartData"
+		        [options]="lineChartOptions"
+		        [plugins]="lineChartPlugins"
+		        [chartType]="'line'"
+		        [labels]="lineChartLabels">
+		</canvas>
+	</div>
+</div>

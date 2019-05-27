@@ -1,21 +1,64 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div style="text-align:center" class="no-print">
+	<h1>
+		Welcome to Kace Custom Reports
+	</h1>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<h2 *ngIf="!loggedIn" class="no-print">First login: </h2>
+<form (submit)="submit($event)" class="no-print" *ngIf="!loggedIn">
+	<label>
+		<span>Username:</span>
+		<input type="text" name="userName" ngModel required>
+	</label> <br>
+	<label>
+		<span>Password:</span>
+		<input type="password" name="password" ngModel required>
+	</label> <br>
+	<label *ngIf="!loggingIn">
+		<span>Login:</span>
+		<input type="submit">
+	</label>
+	<label *ngIf="loggingIn">
+		<span>Logging in</span>
+	</label>
+</form>
 
-<router-outlet></router-outlet>
+<div *ngIf="user" class="reports no-print">
+	<div>
+		<span>Ticket report</span> <br>
+		<a [routerLink]="'/report'">All Time</a><br>
+		<a [routerLink]="'/report'"
+		   [queryParams]="{filter: 'created>\'' + formatToday(true, 1) + '\'&&ticket.created<\'' + formatToday(true) + '\''}">
+			Last Month
+		</a>
+		<a [routerLink]="'/report'" [queryParams]="{filter: 'created>\'' + formatToday(true) + '\''}">
+			This Month
+		</a>
+
+	</div>
+	<div>
+		<span>Report</span> <br>
+		<br>
+		<a [routerLink]="'/'">Excel</a>
+	</div>
+	<div>
+		<span>Graph</span> <br>
+		<a [routerLink]="'/graph'">All time</a> <br>
+		<a [routerLink]="'/graph'"
+		   [queryParams]="{min: formatToday(true, 1), max: endOfMonth(1)}">
+			Last Month
+		</a>
+		<a [routerLink]="'/graph'"
+		   [queryParams]="{min: formatToday(true), max: endOfMonth()}">
+			This Month
+		</a>
+	</div>
+	<div>
+		<span>Logout</span> <br>
+		{{ user.loggedinFullName }}<br>
+		<a (click)="(user = null) || (loggedIn = null) || resetToken()" href="javascript:void(0)">Here</a>
+	</div>
+</div>
+
+<div style="overflow: hidden">
+	<router-outlet *ngIf="user"></router-outlet>
+</div>

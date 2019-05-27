@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  margin: 0;
+}
+
+footer {
+  position: fixed;
+  width: 100vw;
+  text-align: center;
+  color: gray;
+  bottom: 0;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(1px 1px rgba(0, 0, 0, 0.8));
+}
+
+.ht_master > .wtHolder {
+  //noinspection CssInvalidPropertyValue
+  overflow: overlay;
+  overflow-x: visible !important;
+  height: auto !important;
+}
+
+.htCore td {
+  height: 1.2em;
+  white-space: nowrap;
+}
+
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}

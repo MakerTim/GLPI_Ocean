@@ -1,0 +1,13 @@
+@import '~handsontable/dist/handsontable.full.css';
+
+.spacer {
+  height: 20px;
+}
+
+.charts {
+  & > div {
+    width: 100%;
+    height: 30%;
+    max-height: 30%;
+  }
+}
