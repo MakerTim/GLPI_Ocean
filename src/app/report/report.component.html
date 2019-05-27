@@ -1,0 +1,53 @@
+<div class="spacer"></div>
+
+<div class="btn-holder">
+	<button *ngFor="let item of data; let i = index" [attr.data-index]="i"
+	        (click)="selectedData = i" [class]="i === selectedData ? 'btn-selected' : 'no-print'">
+		<ng-container *ngIf="i === 0">Alle</ng-container>
+		<ng-container *ngIf="i > 0">{{ queueNames[i - 1] }}</ng-container>
+	</button>
+</div>
+<br>
+<br>
+
+<div #chartHolders class="stats">
+	<div>
+		<canvas baseChart *ngIf="!loading && selectedData === 0"
+		        [options]="pieOptions"
+		        [data]="queueQuota"
+		        [labels]="queueNames"
+		        [chartType]="doughnutChartType">
+		</canvas>
+		<canvas baseChart *ngIf="!loading && selectedData > 0"
+		        [options]="pieOptions"
+		        [data]="queueQueuedCategoryData[selectedData-1]"
+		        [labels]="queueQueuedCategory[selectedData-1]"
+		        [chartType]="doughnutChartType">
+		</canvas>
+		<img class="hidden" alt="" src="">
+	</div>
+	<div>
+		<canvas baseChart *ngIf="!loading"
+		        [options]="pieOptions"
+		        [data]="queueStatesData[selectedData]"
+		        [labels]="queueStates"
+		        [chartType]="doughnutChartType">
+		</canvas>
+		<img class="hidden" alt="" src="">
+	</div>
+	<div>
+		<canvas baseChart *ngIf="!loading"
+		        [options]="pieOptions"
+		        [data]="queueUsersData[selectedData]"
+		        [labels]="queueUsers[selectedData]"
+		        [chartType]="doughnutChartType">
+		</canvas>
+		<img class="hidden" alt="" src="">
+	</div>
+</div>
+
+<div class="table">
+	<hot-table *ngIf="refreshData" [settings]="settings" [contextMenu]="true" [data]="data[selectedData]"
+	           [colHeaders]="true"
+	           [rowHeaders]="true" #hotTableComponent></hot-table>
+</div>

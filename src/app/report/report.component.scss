@@ -1,0 +1,40 @@
+@import '~handsontable/dist/handsontable.full.css';
+
+.spacer {
+  height: 20px;
+}
+
+.btn-holder {
+  margin-left: 8px;
+
+  .btn-selected {
+    border: 2px solid lightskyblue;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.stats {
+  width: 100vw;
+  margin: 0 -14px;
+
+  > div {
+    display: inline-block;
+    width: 33%;
+    height: 20vw;
+
+    > canvas, img {
+      width: 100% !important;
+    }
+  }
+}
+
+.table {
+  width: 100vw;
+}
+
+.hidden {
+  display: none !important;
+}
