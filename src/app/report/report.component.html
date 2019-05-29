@@ -38,8 +38,8 @@
 	<div>
 		<canvas baseChart *ngIf="!loading"
 		        [options]="pieOptions"
-		        [data]="queueUsersData[selectedData]"
-		        [labels]="queueUsers[selectedData]"
+		        [data]="queueUsersFromData[selectedData]"
+		        [labels]="queueUsersFrom[selectedData]"
 		        [chartType]="doughnutChartType">
 		</canvas>
 		<img class="hidden" alt="" src="">

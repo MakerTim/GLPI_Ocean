@@ -18,17 +18,19 @@ export class ReportComponent implements OnInit {
 
     loggedIn: string = localStorage.getItem(AppComponent.loggedInKey);
     filter: string;
-    queues = {};
-    queueNames = [];
-    queueStates = [];
-    queueStatesData = [[[]]];
-    queueUsers = [[ReportComponent.none]];
-    queueUsersData = [[[0]]];
-    queueQuota = [[]];
-    queueQueuedCategory = [];
-    queueQueuedCategoryData = [];
-    data: any[][][] = [[ReportComponent.header]];
-    selectedData = 0;
+
+    queues: any;
+    queueNames: string[];
+    queueStates: string[];
+    queueStatesData: number[][][];
+    queueUsersFrom: string[][];
+    queueUsersFromData: number[][][];
+    queueQuota: number[][];
+    queueQueuedCategory: string[][];
+    queueQueuedCategoryData: number[][];
+    data: string[][][];
+    selectedData: number;
+
     pieOptions: ChartOptions = {
         legend: {position: 'left'}
     };
@@ -102,8 +104,8 @@ export class ReportComponent implements OnInit {
         this.queueNames = [];
         this.queueStates = [];
         this.queueStatesData = [[[]]];
-        this.queueUsers = [[ReportComponent.none]];
-        this.queueUsersData = [[[0]]];
+        this.queueUsersFrom = [[ReportComponent.none]];
+        this.queueUsersFromData = [[[0], [0]]];
         this.queueQuota = [[]];
         this.queueQueuedCategory = [];
         this.queueQueuedCategoryData = [];
@@ -122,13 +124,13 @@ export class ReportComponent implements OnInit {
             response.Queues.forEach(queue => {
                 const queueData = [ReportComponent.header];
                 const queueStatusData = [[]];
-                const queueUsersData = [[0]];
+                const queueUsersData = [[0], [0]];
                 this.data.push(queueData);
                 this.queueNames.push(queue.name);
 
                 this.queueStatesData.push(queueStatusData);
-                this.queueUsers.push([ReportComponent.none]);
-                this.queueUsersData.push(queueUsersData);
+                this.queueUsersFrom.push([ReportComponent.none]);
+                this.queueUsersFromData.push(queueUsersData);
                 this.queueQuota[0].push(0);
 
                 this.queueQueuedCategory.push([]);
@@ -190,21 +192,28 @@ export class ReportComponent implements OnInit {
                 this.queueStatesData[0][0][statusIndex]++;
                 this.queueStatesData[queueIndex + 1][0][statusIndex]++;
 
-                let userIndexGlobal = this.queueUsers[0].indexOf(ticket.owner);
-                if (userIndexGlobal === -1) {
-                    userIndexGlobal = this.queueUsers[0].length;
-                    this.queueUsers[0].push(ticket.owner);
-                    this.queueUsersData[0][0].push(0);
-                }
-                this.queueUsersData[0][0][userIndexGlobal]++;
+                const userList = [ticket.owner, ticket.submitter];
+                for (const i in userList) {
+                    let userIndexGlobal = this.queueUsersFrom[0].indexOf(userList[i]);
+                    if (userIndexGlobal === -1) {
+                        userIndexGlobal = 1;
+                        this.queueUsersFrom[0].splice(1, 0, userList[i]);
+                        for (const j in userList) {
+                            this.queueUsersFromData[0][j].splice(1, 0, 0);
+                        }
+                    }
+                    this.queueUsersFromData[0][i][userIndexGlobal]++;
 
-                let userIndexQueue = this.queueUsers[queueIndex + 1].indexOf(ticket.owner);
-                if (userIndexQueue === -1) {
-                    userIndexQueue = this.queueUsers[queueIndex + 1].length;
-                    this.queueUsers[queueIndex + 1].push(ticket.owner);
-                    this.queueUsersData[queueIndex + 1][0].push(0);
+                    let userIndexQueue = this.queueUsersFrom[queueIndex + 1].indexOf(userList[i]);
+                    if (userIndexQueue === -1) {
+                        userIndexQueue = this.queueUsersFrom[queueIndex + 1].length;
+                        this.queueUsersFrom[queueIndex + 1].push(userList[i]);
+                        for (const j in userList) {
+                            this.queueUsersFromData[queueIndex + 1][j].push(0);
+                        }
+                    }
+                    this.queueUsersFromData[queueIndex + 1][i][userIndexQueue]++;
                 }
-                this.queueUsersData[queueIndex + 1][0][userIndexQueue]++;
 
                 let categoryIndex = this.queueQueuedCategory[queueIndex].indexOf(ticket.category);
                 if (categoryIndex === -1) {
@@ -221,10 +230,22 @@ export class ReportComponent implements OnInit {
                 this.data[0].push(ticketArray);
                 queue[1].push(ticketArray);
             });
-            this.loading = false;
+            console.log(this.queueUsersFromData);
             this.cd.detectChanges();
             this.postData();
+            this.loading = false;
         });
+    }
+
+    loadFromData(ticket, headers) {
+        // TODO: return submitter label; for now return submitter name
+        const response = this.http.get(GLOBAL.kaceURL + 'api/users/' + ticket._submitter.id + '/permissions/', {
+            headers,
+            withCredentials: true
+        }).toPromise();
+
+        console.log(response);
+        return ticket.submitter;
     }
 
     filterTicket(ticket: any) {
