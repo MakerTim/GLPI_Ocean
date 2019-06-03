@@ -24,6 +24,11 @@
     display: inline-block;
     width: 33%;
     height: 20vw;
+    text-align: center;
+
+    > span {
+      padding-right: 22%;
+    }
 
     > canvas, img {
       width: 100% !important;

@@ -1,7 +1,22 @@
 <div class="spacer"></div>
 
+<div class="bigNumbers">
+	<ng-container *ngFor="let queue of lineChartData; let i = index">
+		<div *ngIf="i !== lineChartData.length - 1" [class]="'block-size-' + (lineChartData.length - 1)"
+		     [style]="sanitizer.bypassSecurityTrustStyle(
+		     'background-color: ' + queue.pointBackgroundColor + ';' +
+		     'border-color: rgba(0,0,0,0.2);'
+		     )">
+			<span>{{ queue.label }}</span>
+			<h1>
+				<ng-container *ngIf="!loading">{{ queue.data[queue.data.length - 1] }}</ng-container>
+				<ng-container *ngIf="loading">...</ng-container>
+			</h1>
+		</div>
+	</ng-container>
+</div>
 
-<div class="charts">
+<div class="charts" #graph>
 	<div>
 		<canvas *ngIf="!loading" baseChart
 		        [datasets]="lineChartData"
@@ -10,5 +25,6 @@
 		        [chartType]="'line'"
 		        [labels]="lineChartLabels">
 		</canvas>
+		<img class="hidden" alt="" src="">
 	</div>
 </div>

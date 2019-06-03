@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {ChartDataSets, ChartOptions} from 'chart.js';
@@ -6,6 +6,7 @@ import {AppComponent} from '../app.component';
 import {GLOBAL} from '../GLOBAL';
 import {Label} from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-graph',
@@ -15,7 +16,8 @@ import * as pluginAnnotations from 'chartjs-plugin-annotation';
 export class GraphComponent implements OnInit {
 
     constructor(private http: HttpClient,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                public sanitizer: DomSanitizer) {
     }
 
     private static oneDayInMillis = 86400000;
@@ -27,9 +29,16 @@ export class GraphComponent implements OnInit {
     public lineChartData: ChartDataSets[];
     public lineChartLabels: Label[];
     public lineChartPlugins = [pluginAnnotations];
-    public lineChartOptions: (ChartOptions & { annotation: any }) = {
+    public lineChartOptions: (ChartOptions & { annotation?: any, plugins?: any }) = {
         responsive: true,
         aspectRatio: 3,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
         annotation: {
             annotations: [{
                 type: 'line',
@@ -44,8 +53,27 @@ export class GraphComponent implements OnInit {
                     content: 'Today'
                 }
             }],
+        },
+        plugins: {
+            datalabels: {
+                color: 'rgba(0,0,0,1)',
+                formatter(value: number, ctx: any) {
+                    const dataMinusLast = ctx.dataset.data.slice(1, -1);
+                    const min = Math.min(...dataMinusLast);
+                    const max = Math.max(...dataMinusLast);
+                    const indexF = dataMinusLast.indexOf(max) + 1;
+                    const indexL = dataMinusLast.lastIndexOf(min) + 1;
+                    if ((ctx.dataIndex !== indexF && ctx.dataIndex !== indexL) ||
+                        ctx.dataIndex === 0 || ctx.dataIndex === ctx.dataset.data.length - 1) {
+                        return '';
+                    }
+                    return value === 0 ? '' : value;
+                }
+            }
         }
     };
+    @ViewChild('graph') graph;
+
 
     public ticketIds = [];
     public ticketQueue = {};
@@ -62,7 +90,7 @@ export class GraphComponent implements OnInit {
         } else {
             today = AppComponent.formatDate(endDate);
         }
-        let iteration = 100000;
+        let iteration = 10000;
         call(lastDate);
         while (lastDate < today && (iteration-- > 0)) {
             lastDateObj = new Date(new Date(lastDate).getTime() + this.oneDayInMillis);
@@ -78,6 +106,8 @@ export class GraphComponent implements OnInit {
             if (param.min) {
                 this.minDate = param.min;
                 this.scopeDate = param.min;
+            } else {
+                this.scopeDate = null;
             }
             if (param.max) {
                 this.maxDate = new Date(param.max);
@@ -106,7 +136,7 @@ export class GraphComponent implements OnInit {
                 this.queueIndex.push(queue.id);
                 this.lineChartData.push({
                     data: [],
-                    label: queue.name,
+                    label: queue.name
                 });
             });
             this.lineChartData.push({data: [], label: 'All'});
@@ -115,6 +145,7 @@ export class GraphComponent implements OnInit {
     }
 
     loadTickets(headers) {
+        const scopeOverride = this.scopeDate == null;
         this.http.get(GLOBAL.kaceURL + 'api/service_desk/tickets/' +
             '?paging=limit ALL', {headers, withCredentials: true}).subscribe((response: any) => {
             response.Tickets.forEach(ticket => {
@@ -123,6 +154,9 @@ export class GraphComponent implements OnInit {
                 const ticketDate = ticket.created.split(' ')[0];
                 if (ticketDate < this.minDate) {
                     this.minDate = ticketDate;
+                    if (scopeOverride) {
+                        this.scopeDate = ticketDate;
+                    }
                 }
             });
             this.prepareData();
@@ -154,27 +188,33 @@ export class GraphComponent implements OnInit {
     }
 
     async getTicketHistory(headers) {
+        // @ts-ignore
+        window.ticketDebug = {};
         for (const id of this.ticketIds) {
-            const ticketHistory: any = await this.http.get(GLOBAL.kaceURL + 'api/service_desk/tickets/' + id + '/changes', {
-                headers,
-                withCredentials: true
-            }).toPromise();
+            const ticketHistory: any =
+                await this.http.get(GLOBAL.kaceURL + 'api/service_desk/tickets/' + id + '/changes?shaping=status all', {
+                    headers,
+                    withCredentials: true
+                }).toPromise();
             const history = ticketHistory.Changes;
             const regexStatus = /("\w+") to ("\w+")\./;
 
             const createDate = history[0].timestamp.split(' ')[0];
             let closeDate = null;
             let queueIndex = -1;
+            // @ts-ignore
+            window.ticketDebug[id] = history;
             history.forEach(change => {
-                if (change.description.indexOf('Changed ticket Status') === 0) {
+                if (change.description.indexOf('Changed ticket Status') >= 0) {
                     const regexResult = regexStatus.exec(change.description);
                     if (regexResult[2] === '"Closed"' || regexResult[2] === '"Opgelost"') {
                         closeDate = change.timestamp.split(' ')[0];
+                    } else {
+                        closeDate = null;
                     }
                 }
                 queueIndex = this.queueIndex.indexOf(this.ticketQueue[change.hd_ticket_id]);
             });
-
 
             closeDate = closeDate ? new Date(new Date(closeDate).getTime() - GraphComponent.oneDayInMillis) : null;
 
@@ -186,5 +226,33 @@ export class GraphComponent implements OnInit {
             }, createDate, closeDate);
         }
         this.loading = false;
+    }
+
+    @HostListener('window:beforeprint', ['$event'])
+    onBeforePrint(event) {
+        this.graph.nativeElement.children.forEach(div => {
+            const img = div.querySelector('img');
+            const canvas = div.querySelector('canvas');
+            img.src = canvas.toDataURL();
+            img.classList.remove('hidden');
+            canvas.classList.add('hidden');
+        });
+        document.querySelectorAll('col').forEach(col => {
+            col.style.width = '75px';
+        });
+    }
+
+    @HostListener('window:afterprint', ['$event'])
+    onAfterPrint() {
+        this.graph.nativeElement.children.forEach(div => {
+            const img = div.querySelector('img');
+            const canvas = div.querySelector('canvas');
+            img.src = canvas.toDataURL();
+            img.classList.add('hidden');
+            canvas.classList.remove('hidden');
+        });
+        document.querySelectorAll('col').forEach(col => {
+            col.style.width = '';
+        });
     }
 }

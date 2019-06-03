@@ -16,18 +16,31 @@ h1 {
 }
 
 .reports {
-  margin: -8px;
+  margin-left: 5px;
   text-align: center;
-  width: 100vw;
+  width: calc(100vw - 10px);
+  filter: drop-shadow(0px 1px 1px gray);
 
   > div {
     padding: 2px 0;
-    width: 25vw;
+    width: 25%;
     background-color: lightskyblue;
     display: inline-block;
     text-align: center;
     box-sizing: border-box;
-    border: 1px solid gray;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+
+    &:not(:first-child) {
+      border-left: none;
+    }
+
+    &:last-child {
+      border-top-right-radius: 5px;
+    }
+
+    &:first-child {
+      border-top-left-radius: 5px;
+    }
 
     > a {
       display: inline-block;

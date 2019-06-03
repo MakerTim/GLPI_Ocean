@@ -17,6 +17,8 @@ footer {
   user-select: none;
   pointer-events: none;
   filter: drop-shadow(1px 1px rgba(0, 0, 0, 0.8));
+  font-size: 12px;
+  display: block !important;
 }
 
 .ht_master > .wtHolder {
@@ -34,5 +36,9 @@ footer {
 @media print {
   .no-print, .no-print * {
     display: none !important;
+  }
+
+  footer{
+    font-size: 8px;
   }
 }

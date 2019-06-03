@@ -4,6 +4,8 @@ import {GLOBAL} from '../GLOBAL';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ChartOptions, ChartType} from 'chart.js';
 import {ActivatedRoute} from '@angular/router';
+// @ts-ignore
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
     selector: 'app-report',
@@ -31,8 +33,17 @@ export class ReportComponent implements OnInit {
     data: string[][][];
     selectedData: number;
 
-    pieOptions: ChartOptions = {
-        legend: {position: 'left'}
+    piePlugins = [ChartDataLabels];
+    pieOptions: (ChartOptions & { plugins: any }) = {
+        legend: {position: 'left'},
+        plugins: {
+            datalabels: {
+                color: 'rgba(0,0,0,0.6)',
+                formatter(value) {
+                    return value === 0 ? '' : value;
+                }
+            }
+        }
     };
     settings = {
         autoColumnSize: false,
@@ -230,7 +241,6 @@ export class ReportComponent implements OnInit {
                 this.data[0].push(ticketArray);
                 queue[1].push(ticketArray);
             });
-            console.log(this.queueUsersFromData);
             this.cd.detectChanges();
             this.postData();
             this.loading = false;

@@ -61,6 +61,9 @@ $response = curl_exec($curl);
 $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 $response_headers = substr($response, 0, $header_size);
 $response = substr($response, $header_size);
+if (empty($response) && $errno = curl_errno($curl)) {
+	$response = json_encode(curl_strerror($errno));
+}
 
 $i = 0;
 
