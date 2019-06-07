@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
-import { ReportComponent } from './report/report.component';
+import {ReportComponent} from './report/report.component';
 import {HotTableModule} from '@handsontable/angular';
 import {Debug} from './debug';
 import {ChartsModule} from 'ng2-charts';

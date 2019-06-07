@@ -9,7 +9,9 @@
 		     )">
 			<span>{{ queue.label }}</span>
 			<h1>
-				<ng-container *ngIf="!loading">{{ queue.data[queue.data.length - 1] }}<span>ticket open</span></ng-container>
+				<ng-container *ngIf="!loading">
+					{{ queue.data[queue.data.length - 1] }}<span>ticket open</span>
+				</ng-container>
 				<ng-container *ngIf="loading">...</ng-container>
 			</h1>
 		</div>
