@@ -103,6 +103,7 @@
     "user.date_creation": "Date created",
     "user.date_mod": "Last time updated",
     "user.id": "ID",
+    "ticket.unassigned": "Unassigned",
     "ticket.header": "Servicedesk",
     "ticket.ticketTitle": "Ticket: ",
     "ticket.welcome": "Welcome",

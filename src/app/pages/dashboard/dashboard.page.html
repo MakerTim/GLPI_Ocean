@@ -1,6 +1,8 @@
 <div class="dashboard">
     <div class="header">
-        {{ 'dashboard.title ' | i18n }}
+        <a [routerLink]="'/group/Ticket/' + pageId">
+            {{ 'dashboard.title ' | i18n }}
+        </a>
     </div>
 
     <div class="row">

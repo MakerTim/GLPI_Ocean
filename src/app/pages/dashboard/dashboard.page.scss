@@ -4,6 +4,11 @@
 
 .dashboard {
   & > .header {
+
+    > a {
+      color: white;
+    }
+
     &:empty {
       min-height: 72px;
     }

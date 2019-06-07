@@ -147,7 +147,8 @@
     <div class="padding">
         <div class="main-block">
             <div class="unassigned">
-                <button (click)="goBack()" class="btn btn-outline-info">{{ 'ticket.goback' | i18n }}</button>
+                <button *ngIf="selectedType === 'global'" (click)="goBack()" class="btn btn-outline-info">{{ 'ticket.goback' | i18n }}</button>
+                <button *ngIf="selectedType === 'group'" [routerLink]="'/global/Ticket'" class="btn btn-outline-info">{{ 'ticket.unassigned' | i18n }}</button>
                 <h3 *ngIf="selectedType === 'global'">{{ 'ticket-global.unassigned' | i18n }}</h3>
                 <h3 *ngIf="selectedType === 'group'"><a
                         [routerLink]="['/dashboard/Ticket/' + group.id]">{{ group.completename }}</a></h3>

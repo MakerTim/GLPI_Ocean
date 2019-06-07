@@ -60,7 +60,7 @@ class Navigation extends RoutingBase {
 
 		$menuItems['assets'] = [];
 		foreach ($assets as $asset) {
-			$menuItems['assets'][$asset] = "listall/$asset";
+			$menuItems['assets'][$asset] = "assets/$asset";
 		}
 
 		$menuItems['ticket']['TicketCreate'] = 'concrete/Ticket';
