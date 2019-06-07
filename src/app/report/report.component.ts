@@ -1,8 +1,9 @@
+/* tslint:disable:forin */
 import {ChangeDetectorRef, Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {AppComponent} from '../app.component';
 import {GLOBAL} from '../GLOBAL';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ChartOptions, ChartType} from 'chart.js';
+import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -26,8 +27,8 @@ export class ReportComponent implements OnInit {
     queueStates: string[];
     queueStatesData: number[][][];
     queueUsersFrom: string[][];
-    queueUsersFromData: number[][][];
-    queueQuota: number[][];
+    queueUsersFromData: ChartDataSets[][];
+    queueQuotaData: ChartDataSets[];
     queueQueuedCategory: string[][];
     queueQueuedCategoryData: number[][];
     data: string[][][];
@@ -36,6 +37,14 @@ export class ReportComponent implements OnInit {
     piePlugins = [ChartDataLabels];
     pieOptions: (ChartOptions & { plugins: any }) = {
         legend: {position: 'left'},
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    stepSize: 2
+                }
+            }]
+        },
         plugins: {
             datalabels: {
                 color: 'rgba(0,0,0,0.6)',
@@ -43,6 +52,12 @@ export class ReportComponent implements OnInit {
                     return value === 0 ? '' : value;
                 }
             }
+        }
+    };
+    pieOptions2: (ChartOptions & { plugins: any }) = {
+        ...this.pieOptions,
+        legend: {
+            display: false
         }
     };
     settings = {
@@ -54,7 +69,7 @@ export class ReportComponent implements OnInit {
     };
     loading = true;
 
-    public doughnutChartType: ChartType = 'doughnut';
+    public doughnutChartType: ChartType = 'bar';
 
     @ViewChild('hotTableComponent') hot;
     @ViewChild('chartHolders') chartHolders;
@@ -116,8 +131,8 @@ export class ReportComponent implements OnInit {
         this.queueStates = [];
         this.queueStatesData = [[[]]];
         this.queueUsersFrom = [[ReportComponent.none]];
-        this.queueUsersFromData = [[[0], [0]]];
-        this.queueQuota = [[]];
+        this.queueUsersFromData = [[{data: [0], label: 'Owner'}, {data: [0], label: 'Submitter'}]];
+        this.queueQuotaData = [];
         this.queueQueuedCategory = [];
         this.queueQueuedCategoryData = [];
         this.data = [[ReportComponent.header]];
@@ -135,14 +150,14 @@ export class ReportComponent implements OnInit {
             response.Queues.forEach(queue => {
                 const queueData = [ReportComponent.header];
                 const queueStatusData = [[]];
-                const queueUsersData = [[0], [0]];
+                const queueUsersData = [{data: [0], label: 'Owner'}, {data: [0], label: 'Submitter'}];
                 this.data.push(queueData);
                 this.queueNames.push(queue.name);
 
                 this.queueStatesData.push(queueStatusData);
                 this.queueUsersFrom.push([ReportComponent.none]);
                 this.queueUsersFromData.push(queueUsersData);
-                this.queueQuota[0].push(0);
+                this.queueQuotaData.push({data: [0, 0], label: queue.name});
 
                 this.queueQueuedCategory.push([]);
                 this.queueQueuedCategoryData.push([]);
@@ -190,7 +205,8 @@ export class ReportComponent implements OnInit {
                     return;
                 }
 
-                this.queueQuota[0][queueIndex]++;
+                // @ts-ignore
+                (this.queueQuotaData[queueIndex].data)[0]++;
 
                 let statusIndex = this.queueStates.indexOf(ticket.status);
                 if (statusIndex === -1) {
@@ -203,27 +219,30 @@ export class ReportComponent implements OnInit {
                 this.queueStatesData[0][0][statusIndex]++;
                 this.queueStatesData[queueIndex + 1][0][statusIndex]++;
 
-                const userList = [ticket.owner, ticket.submitter];
+                const userList = [ticket.owner.substr(0, 10), ticket.submitter.substr(0, 10)];
                 for (const i in userList) {
                     let userIndexGlobal = this.queueUsersFrom[0].indexOf(userList[i]);
                     if (userIndexGlobal === -1) {
                         userIndexGlobal = 1;
                         this.queueUsersFrom[0].splice(1, 0, userList[i]);
                         for (const j in userList) {
-                            this.queueUsersFromData[0][j].splice(1, 0, 0);
+                            this.queueUsersFromData[0][j].data.splice(1, 0, 0);
                         }
                     }
-                    this.queueUsersFromData[0][i][userIndexGlobal]++;
+                    // @ts-ignore
+                    this.queueUsersFromData[0][i].data[userIndexGlobal]++;
 
                     let userIndexQueue = this.queueUsersFrom[queueIndex + 1].indexOf(userList[i]);
                     if (userIndexQueue === -1) {
                         userIndexQueue = this.queueUsersFrom[queueIndex + 1].length;
                         this.queueUsersFrom[queueIndex + 1].push(userList[i]);
                         for (const j in userList) {
-                            this.queueUsersFromData[queueIndex + 1][j].push(0);
+                            // @ts-ignore
+                            this.queueUsersFromData[queueIndex + 1][j].data.push(0);
                         }
                     }
-                    this.queueUsersFromData[queueIndex + 1][i][userIndexQueue]++;
+                    // @ts-ignore
+                    this.queueUsersFromData[queueIndex + 1][i].data[userIndexQueue]++;
                 }
 
                 let categoryIndex = this.queueQueuedCategory[queueIndex].indexOf(ticket.category);

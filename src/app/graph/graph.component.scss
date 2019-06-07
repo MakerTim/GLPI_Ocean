@@ -42,7 +42,12 @@
       width: 100 / $i - 0%;
 
       > h1 {
-        font-size: 200 / $i + 0px;
+        font-size: 100 / $i + 0px;
+
+        > span {
+          font-size: 12px;
+          font-weight: normal;
+        }
       }
     }
   }
@@ -56,6 +61,12 @@
 
     > canvas, img {
       width: 100% !important;
+    }
+
+    > span {
+      display: block;
+      width: 100%;
+      text-align: center;
     }
   }
 }

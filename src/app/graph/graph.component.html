@@ -9,7 +9,7 @@
 		     )">
 			<span>{{ queue.label }}</span>
 			<h1>
-				<ng-container *ngIf="!loading">{{ queue.data[queue.data.length - 1] }}</ng-container>
+				<ng-container *ngIf="!loading">{{ queue.data[queue.data.length - 1] }}<span>ticket open</span></ng-container>
 				<ng-container *ngIf="loading">...</ng-container>
 			</h1>
 		</div>
@@ -17,9 +17,21 @@
 </div>
 
 <div class="charts" #graph>
-	<div>
+	<div *ngIf="!loading">
+		<span>Tickets open</span>
 		<canvas *ngIf="!loading" baseChart
 		        [datasets]="lineChartData"
+		        [options]="lineChartOptions"
+		        [plugins]="lineChartPlugins"
+		        [chartType]="'line'"
+		        [labels]="lineChartLabels">
+		</canvas>
+		<img class="hidden" alt="" src="">
+	</div>
+	<div *ngIf="!loading">
+		<span>Tickets closed</span>
+		<canvas *ngIf="!loading" baseChart
+		        [datasets]="lineChartDataClosed"
 		        [options]="lineChartOptions"
 		        [plugins]="lineChartPlugins"
 		        [chartType]="'line'"

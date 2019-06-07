@@ -27,6 +27,7 @@ export class GraphComponent implements OnInit {
     public loading = true;
     public queueIndex;
     public lineChartData: ChartDataSets[];
+    public lineChartDataClosed: ChartDataSets[];
     public lineChartLabels: Label[];
     public lineChartPlugins = [pluginAnnotations];
     public lineChartOptions: (ChartOptions & { annotation?: any, plugins?: any }) = {
@@ -122,6 +123,7 @@ export class GraphComponent implements OnInit {
         this.scopeDate = AppComponent.formatDate(new Date(), true);
         this.queueIndex = [];
         this.lineChartData = [];
+        this.lineChartDataClosed = [];
         this.lineChartLabels = [];
         this.ticketIds = [];
         this.ticketQueue = {};
@@ -138,8 +140,13 @@ export class GraphComponent implements OnInit {
                     data: [],
                     label: queue.name
                 });
+                this.lineChartDataClosed.push({
+                    data: [],
+                    label: queue.name
+                });
             });
             this.lineChartData.push({data: [], label: 'All'});
+            this.lineChartDataClosed.push({data: [], label: 'All'});
             this.loadTickets(headers);
         });
     }
@@ -153,6 +160,9 @@ export class GraphComponent implements OnInit {
                 this.ticketQueue[ticket.id] = ticket.hd_queue_id;
                 const ticketDate = ticket.created.split(' ')[0];
                 if (ticketDate < this.minDate) {
+                    if (scopeOverride) {
+                        // TODO: ticketDate -1dag
+                    }
                     this.minDate = ticketDate;
                     if (scopeOverride) {
                         this.scopeDate = ticketDate;
@@ -173,6 +183,9 @@ export class GraphComponent implements OnInit {
             if (date >= this.scopeDate) {
                 this.lineChartLabels.push(date);
                 this.lineChartData.forEach(dataSet => {
+                    (dataSet.data as number[]).push(0);
+                });
+                this.lineChartDataClosed.forEach(dataSet => {
                     (dataSet.data as number[]).push(0);
                 });
             }
@@ -209,6 +222,11 @@ export class GraphComponent implements OnInit {
                     const regexResult = regexStatus.exec(change.description);
                     if (regexResult[2] === '"Closed"' || regexResult[2] === '"Opgelost"') {
                         closeDate = change.timestamp.split(' ')[0];
+
+                        const index = this.lineChartLabels.indexOf(closeDate);
+
+                        (this.lineChartDataClosed[queueIndex].data as number[])[index]++;
+                        (this.lineChartDataClosed[this.lineChartDataClosed.length - 1].data as number[])[index]++;
                     } else {
                         closeDate = null;
                     }

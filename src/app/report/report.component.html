@@ -12,17 +12,17 @@
 
 <div #chartHolders class="stats">
 	<div>
-		<span *ngIf="selectedData === 0">Desk</span>
+		<span *ngIf="selectedData === 0">Each desk</span>
 		<canvas baseChart *ngIf="!loading && selectedData === 0"
 		        [options]="pieOptions"
-		        [data]="queueQuota"
-		        [labels]="queueNames"
+		        [datasets]="queueQuotaData"
+		        [labels]="['new tickets']"
 		        [plugins]="piePlugins"
-		        [chartType]="doughnutChartType">
+		        [chartType]="'bar'">
 		</canvas>
 		<span *ngIf="selectedData > 0">Category</span>
 		<canvas baseChart *ngIf="!loading && selectedData > 0"
-		        [options]="pieOptions"
+		        [options]="pieOptions2"
 		        [data]="queueQueuedCategoryData[selectedData-1]"
 		        [labels]="queueQueuedCategory[selectedData-1]"
 		        [plugins]="piePlugins"
@@ -31,9 +31,9 @@
 		<img class="hidden" alt="" src="">
 	</div>
 	<div>
-		<span>Status</span>
+		<span>Status of tickets</span>
 		<canvas baseChart *ngIf="!loading"
-		        [options]="pieOptions"
+		        [options]="pieOptions2"
 		        [data]="queueStatesData[selectedData]"
 		        [labels]="queueStates"
 		        [plugins]="piePlugins"
@@ -42,10 +42,10 @@
 		<img class="hidden" alt="" src="">
 	</div>
 	<div>
-		<span>Owners & Submitters</span>
+		<span>Tickets from and for</span>
 		<canvas baseChart *ngIf="!loading"
 		        [options]="pieOptions"
-		        [data]="queueUsersFromData[selectedData]"
+		        [datasets]="queueUsersFromData[selectedData]"
 		        [labels]="queueUsersFrom[selectedData]"
 		        [plugins]="piePlugins"
 		        [chartType]="doughnutChartType">
