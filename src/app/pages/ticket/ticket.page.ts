@@ -70,7 +70,7 @@ export class TicketPage extends RefreshPage implements OnInit {
 			this.from = atob(this.from);
 		} else {
 			getUser(user => {
-				thiz.from = user.realname + ' ' + user.firstname;
+				thiz.from = user.loggedinFullName;
 				thiz.cRef.markForCheck();
 				thiz.cRef.detectChanges();
 			});
@@ -105,6 +105,7 @@ export class TicketPage extends RefreshPage implements OnInit {
 
 	requestTicketList(type: 'open' | 'closed' | 'around', callback: (ticketlist: Ticket[]) => void) {
 		const thiz = this;
+		return;
 		sendSecureHeader(headers => {
 			headers = headers
 				.set('Type', type);

@@ -62,10 +62,10 @@ export class AppComponent implements OnInit, DoCheck {
 		loginKace(this.httpClient, () => {
 			thiz.ngDoCheck();
 		});
-		sendSecureHeader((headers: HttpHeaders) => {
-			thiz.httpClient.get(GLOBAL.api + '/Navigation', {headers}).toPromise()
-				.then(nav => setNav({...thiz.navigationItems, ...nav}));
-		});
+		// sendSecureHeader((headers: HttpHeaders) => {
+		// 	thiz.httpClient.get(GLOBAL.api + '/Navigation', {headers}).toPromise()
+		// 		.then(nav => setNav({...thiz.navigationItems, ...nav}));
+		// });
 		navItemListener((nav: any) => {
 			thiz.navigationItems = nav;
 		});

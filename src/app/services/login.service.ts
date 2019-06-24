@@ -1,14 +1,14 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {getFromStorage, getURLParam, setToStorage} from './mappingUtil';
 import {GLOBAL} from './global';
-import {User} from '../models/User';
+import {SelfRequest} from '../models/User';
 
 // @ts-ignore, always string
 let personalToken = getFromStorage('personal-token', '');
 const callbackList = [];
 
 let client: HttpClient;
-let user: Promise<User> = null;
+let user: Promise<SelfRequest> = null;
 let rawUser = null;
 let loggingIn = false;
 let loginError = '';
@@ -28,7 +28,7 @@ export function loginKace(httpClient: HttpClient, callback = null) {
 
 function waitForUser() {
 	sendSecureHeader(headers => {
-		user = client.get<User>(GLOBAL.api + '/GetSelf', {headers}).toPromise();
+		user = client.get<SelfRequest>(GLOBAL.api + '/users/me/', {headers, withCredentials: true}).toPromise();
 		user
 			.then(usr => rawUser = usr)
 			.catch(_ => {
@@ -53,7 +53,7 @@ export function isLoggedIn() {
 	return personalToken.length !== 0;
 }
 
-export function getUser(callback: (user: User) => void) {
+export function getUser(callback: (user: SelfRequest) => void) {
 	sendSecureHeader(_ => {
 		user.then(callback);
 	});
@@ -68,13 +68,17 @@ export function sendSecureHeader(callback: (headers: HttpHeaders) => void, heade
 		console.error('Callback should be function ', callback);
 		return;
 	}
+	header = header.set('x-dell-csrf-token', personalToken)
+		.set('Accept', 'application/json')
+		.set('Content-Type', 'application/json')
+		.set('x-dell-api-version', '1');
 	if (!isLoggedIn()) {
 		callbackList.push(() => {
-			callback(header.set('personal-token', personalToken));
+			callback(header);
 		});
 		return;
 	}
-	callback(header.set('personal-token', personalToken));
+	callback(header);
 }
 
 function setPersonalToken(token: string) {
@@ -92,8 +96,8 @@ function setPersonalToken(token: string) {
 	callbackList.length = 0;
 }
 
-export function loginBasic(httpClient: HttpClient, username: string, password: string, callbackError: (error: string) => void) {
-	if (username.length === 0) {
+export function loginBasic(httpClient: HttpClient, userName: string, password: string, callbackError: (error: string) => void) {
+	if (userName.length === 0) {
 		callbackError('login.noUsername');
 		return;
 	}
@@ -102,13 +106,21 @@ export function loginBasic(httpClient: HttpClient, username: string, password: s
 		return;
 	}
 	loggingIn = true;
-	httpClient.get(GLOBAL.api + '/Login', {
+	httpClient.post(GLOBAL.ams + '/shared/api/security/login', {
+		userName,
+		password
+	}, {
 		headers: {
-			'Authorization': 'Basic ' + btoa(username + ':' + password),
-		}
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+			'x-dell-api-version': '1',
+		},
+		withCredentials: true,
+		observe: 'response'
 	}).toPromise()
 		.then(response => {
-			setPersonalToken(response['personal-token']);
+			console.log(response.headers.get('x-dell-csrf-token'));
+			setPersonalToken(response.headers.get('x-dell-csrf-token'));
 			callbackError('');
 		})
 		.catch(err => {
