@@ -13,7 +13,7 @@ let rawUser = null;
 let loggingIn = false;
 let loginError = '';
 
-export function loginGLPI(httpClient: HttpClient, callback = null) {
+export function loginKace(httpClient: HttpClient, callback = null) {
 	client = httpClient;
 	waitForUser();
 	if (!isLoggedIn()) {

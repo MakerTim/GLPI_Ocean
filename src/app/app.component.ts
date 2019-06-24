@@ -3,7 +3,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {GLOBAL} from './services/global';
 import {navItemListener, setNav} from './services/nav';
-import {isLoggedIn, isLoggingIn, loginBasic, loginGLPI, logout as logoutFunction, sendSecureHeader} from './services/login.service';
+import {isLoggedIn, isLoggingIn, loginBasic, loginKace, logout as logoutFunction, sendSecureHeader} from './services/login.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, DoCheck {
 		this.ngDoCheck();
 		this.checkForDarkMode();
 
-		loginGLPI(this.httpClient, () => {
+		loginKace(this.httpClient, () => {
 			thiz.ngDoCheck();
 		});
 		sendSecureHeader((headers: HttpHeaders) => {

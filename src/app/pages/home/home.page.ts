@@ -13,6 +13,6 @@ export class HomePage {
 	@ViewChild('user') userElement: ElementRef;
 	@ViewChild('pass') passElement: ElementRef;
 
-	public glpiURL = GLOBAL.glpiUrl;
+	public kaceURL = GLOBAL.kaceUrl;
 
 }

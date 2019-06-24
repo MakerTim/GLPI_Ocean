@@ -19,7 +19,7 @@ export class UserPage extends RefreshPage implements OnInit {
 
 	public id: string;
 	public user: User;
-	public GLPI_URL = GLOBAL.glpiUrl;
+	public kaceURL = GLOBAL.kaceUrl;
 	public fields = ['id', 'name', 'firstname', 'realname', '', 'date_creation', 'date_mod', ''];
 
 	constructor(

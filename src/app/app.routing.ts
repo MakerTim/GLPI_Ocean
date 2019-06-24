@@ -37,7 +37,7 @@ const appRoutes: Routes = [
 	{path: 'dashboard/Ticket/user/:id', component: DashboardPage},
 	{path: 'search/Ticket', component: SearchticketPage},
 	{path: 'front/:redirect', component: RedirectPage},
-	{path: 'glpi/front/:redirect', component: RedirectPage},
+	{path: 'kace/front/:redirect', component: RedirectPage},
 	{path: '**', component: NotfoundPage}
 ];
 

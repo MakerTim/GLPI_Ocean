@@ -71,7 +71,7 @@ export class TicketBlockComponent implements OnInit, OnDestroy {
 	registerDocument() {
 		const thiz = this;
 		this.title = document.title;
-		document.title = 'GLPI Ocean Ticketing';
+		document.title = 'KACE Ocean Ticketing';
 		document.onpaste = (event: any) => {
 			const items = (event.clipboardData || event.originalEvent.clipboardData).items;
 			for (const item of items) {

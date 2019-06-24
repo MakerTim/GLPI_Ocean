@@ -27,7 +27,7 @@ import {RefreshPage} from '../../models/RefreshPage';
 
 export class OpenTicketPage extends RefreshPage implements OnInit {
 
-	public glpiURL = GLOBAL.glpiUrl;
+	public kaceURL = GLOBAL.kaceUrl;
 
 	public leftMenuItems = [ //
 		['date_creation'], ['date_mod'], ['closedate'], [], //

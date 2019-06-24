@@ -15,9 +15,9 @@ function scaleList() {
 export function fields() {
 	return {
 		'type': ['dropdown', '1', {'ticket.incident': '1'}, {'ticket.request': '2'}],
-		'category': ['field', 'glpi_itilcategories', 'completename', false],
-		'assignedToUser': ['field', 'glpi_users', 'name', false],
-		'assignedToGroup': ['field', 'glpi_groups', 'name', false],
+		'category': ['field', 'kace_itilcategories', 'completename', false],
+		'assignedToUser': ['field', 'kace_users', 'name', false],
+		'assignedToGroup': ['field', 'kace_groups', 'name', false],
 		'status': ['dropdown', '1',
 			{'ticket.incoming': '1'}, {'ticket.assigned': '2'},
 			{'ticket.planned': '3'}, {'ticket.waiting': '4'},
@@ -29,11 +29,11 @@ export function fields() {
 		'urgency': [...['dropdown'], ...scaleList()],
 		'impact': [...['dropdown'], ...scaleList()],
 		'priority': [...['dropdown'], ...scaleList()],
-		'source': ['field', 'glpi_requesttypes', 'name', false],
+		'source': ['field', 'kace_requesttypes', 'name', false],
 		'SLA-max-time': timeDropdownArray(),
 		'title': ['input', 'text'],
 		'description': ['text'],
-		'other-ticket': ['field', 'glpi_tickets', 'name', false],
+		'other-ticket': ['field', 'kace_tickets', 'name', false],
 		'file': ['file'],
 	};
 }

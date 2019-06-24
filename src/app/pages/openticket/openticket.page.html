@@ -159,7 +159,7 @@
                                 </a>
                                 <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
                                    target="_blank"
-                                   [href]="glpiURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
+                                   [href]="kaceURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
                             </ng-container>
@@ -178,8 +178,8 @@
                     <br *ngIf="leftMenuItem.length === 0">
                 </ng-container>
                 <div>
-                    <a [href]="glpiURL + 'front/ticket.form.php?id=' + ticket.id" target="_blank">
-                        {{ 'ticket.open-glpi' | i18n }}
+                    <a [href]="kaceURL + 'front/ticket.form.php?id=' + ticket.id" target="_blank">
+                        {{ 'ticket.open-kace' | i18n }}
                     </a>
                 </div>
             </div>
@@ -198,7 +198,7 @@
                         <b>{{ 'ticket.attachments' | i18n }}:</b><br>
                         <ng-container *ngFor="let attachment of attachments">
                             <div class="attachment-block" *ngIf="attachment.length === 3">
-                                <a target="_blank" [href]="glpiURL + attachment[1].substr(1)">
+                                <a target="_blank" [href]="kaceURL + attachment[1].substr(1)">
                                     <i class="fa fa-download" aria-hidden="true"></i><br>
                                     {{ attachment[0] }}
                                 </a>
@@ -207,7 +207,7 @@
                                 <img (click)="toggleFixed($event.target)" [alt]="attachment[0]"
                                      [src]="'data:image/png;base64,' + attachment[3]"><br>
                                 <a target="_blank"
-                                   [href]="glpiURL + attachment[1].substr(1)">{{ attachment[0] }}</a>
+                                   [href]="kaceURL + attachment[1].substr(1)">{{ attachment[0] }}</a>
                             </div>
                         </ng-container>
                         <span *ngIf="attachments.length === 0">None</span>
@@ -270,13 +270,13 @@
                             <ng-container *ngIf="action.status == 'N/A'">
                                 <div [class]="'action-block row status-' + toCssClass(action.status)">
                                     <div class="col-3 center person-box">
-                                        <a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
+                                        <a [href]="kaceURL + 'front/user.form.php?id=' + action.users_id.id"
                                            target="_blank">
                                             <i *ngIf="!action.users_id.picture"
                                                class="fas fa-user"></i>
                                             <img *ngIf="action.users_id.picture" alt="profile"
                                                  style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
-                                                 [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
+                                                 [src]="kaceURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
                                             <br>
                                             {{ action.users_id.firstname }} {{ action.users_id.realname }}
                                         </a>
@@ -300,13 +300,13 @@
                                         <span [innerHTML]="action.content | br"></span>
                                     </div>
                                     <div class="col-3 center person-box">
-                                        <a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
+                                        <a [href]="kaceURL + 'front/user.form.php?id=' + action.users_id.id"
                                            target="_blank">
                                             <i *ngIf="!action.users_id.picture"
                                                class="fas fa-user"></i>
                                             <img *ngIf="action.users_id.picture" alt="profile"
                                                  style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
-                                                 [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
+                                                 [src]="kaceURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
                                             <br>
                                             {{ action.users_id.firstname }} {{ action.users_id.realname }}
                                         </a>
@@ -319,7 +319,7 @@
                                 <div class="attachment-date action-date">
                                     <span>{{ action[2] }}</span>
                                 </div>
-                                <a target="_blank" [href]="glpiURL + action[1].substr(1)">
+                                <a target="_blank" [href]="kaceURL + action[1].substr(1)">
                                     <i class="fa fa-download" aria-hidden="true"></i><br>
                                     {{ action[0] }}
                                 </a>
@@ -332,7 +332,7 @@
                                 <img (click)="toggleFixed($event.target)" [alt]="action[0]" style="max-height: 75%"
                                      [src]="'data:image/png;base64,' + action[3]"><br>
                                 <a target="_blank"
-                                   [href]="glpiURL + action[1].substr(1)">{{ action[0] }}</a>
+                                   [href]="kaceURL + action[1].substr(1)">{{ action[0] }}</a>
                             </div>
                         </ng-container>
                     </ng-container>
@@ -345,7 +345,7 @@
                     <b>{{ 'ticket.solution.assigned' | i18n }}</b><br><br>
                     <p *ngIf="ticket.solutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
                     <p *ngFor="let solution of ticket.solutions" [title]="solution.answer | striphtml">
-                        <a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
+                        <a [href]="kaceURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
                             <i class="far fa-hand-point-right"></i>
                         </a>
                         {{ solution.name | striphtml }}
@@ -355,7 +355,7 @@
                     <b>{{ 'ticket.solution.suggested' | i18n }}</b><br><br>
                     <p *ngIf="ticket.possibleSolutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
                     <p *ngFor="let solution of ticket.possibleSolutions" [title]="solution.answer | striphtml">
-                        <a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
+                        <a [href]="kaceURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
                             <i class="far fa-hand-point-right"></i>
                         </a>
                         {{ solution.name | striphtml }}
@@ -365,7 +365,7 @@
                     <b>{{ 'ticket.solution.similar' | i18n }}</b><br><br>
                     <p *ngIf="ticket.similar.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
                     <p *ngFor="let ticketSim of ticket.similar" [title]="ticketSim.content | striphtml">
-                        <a [href]="glpiURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
+                        <a [href]="kaceURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
                             <i class="far fa-hand-point-right"></i>
                         </a>
                         {{ ticketSim.name | striphtml }}

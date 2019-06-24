@@ -18,7 +18,7 @@
         <br *ngIf="field.length === 0">
     </ng-container>
 
-    <img *ngIf="user.picture" [src]="GLPI_URL + 'front/document.send.php?file=_pictures/' + user.picture"
+    <img *ngIf="user.picture" [src]="kaceURL + 'front/document.send.php?file=_pictures/' + user.picture"
          alt="User Profile Picture">
     <span *ngIf="!user.picture">
         <i class="fas fa-user"></i>
@@ -48,10 +48,10 @@
             </span>
         </button>
     </a>
-    <a [href]="GLPI_URL + 'front/user.form.php?id=' + user.id">
+    <a [href]="kaceURL + 'front/user.form.php?id=' + user.id">
         <button>
             <span>
-                {{ 'user.glpi' | i18n }} <br>
+                {{ 'user.kace' | i18n }} <br>
                 <i class="fas fa-external-link-alt"></i>
             </span>
         </button>

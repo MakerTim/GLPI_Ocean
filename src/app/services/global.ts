@@ -1,5 +1,5 @@
 export let GLOBAL = {
-	glpiUrl: '//192.168.12.139/glpi/',
+	kaceUrl: '//192.168.12.139/glpi/',
 	url: '//192.168.12.139/glpi/plugins/ocean/',
 	api: '//192.168.12.139/glpi/plugins/ocean/api/fastAPI.php',
 	urlInternal: document.getElementsByTagName('base')[0].href,

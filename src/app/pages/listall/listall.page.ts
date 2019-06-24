@@ -96,7 +96,7 @@ export class ListallPage extends RefreshPage implements OnInit {
 		} else {
 			this.properties.splice(this.properties.indexOf(param), 1);
 		}
-		setToStorage('glpi-property-list-' + this.page, JSON.stringify(this.properties));
+		setToStorage('kace-property-list-' + this.page, JSON.stringify(this.properties));
 	}
 
 	hasProperty(key: string) {
@@ -110,13 +110,13 @@ export class ListallPage extends RefreshPage implements OnInit {
 	}
 
 	urlOfItem(id: number) {
-		return GLOBAL.glpiUrl + 'front/' + this.page.toLowerCase() + '.form.php?id=' + id;
+		return GLOBAL.kaceUrl + 'front/' + this.page.toLowerCase() + '.form.php?id=' + id;
 	}
 
 	setPage(page) {
 		this.page = page.page;
-		this.filter = JSON.parse(getFromStorage('glpi-filter-list-' + this.page, '[]'));
-		this.properties = JSON.parse(getFromStorage('glpi-property-list-' + this.page, '[]'));
+		this.filter = JSON.parse(getFromStorage('kace-filter-list-' + this.page, '[]'));
+		this.properties = JSON.parse(getFromStorage('kace-property-list-' + this.page, '[]'));
 		this.loadTable();
 	}
 

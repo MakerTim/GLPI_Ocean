@@ -100,13 +100,13 @@ export class LogsPage extends RefreshPage implements OnInit {
 		if (type.endsWith('s')) {
 			type = type.substr(0, event.type.length - 1);
 		}
-		return this.glpiURL()
+		return this.kaceURL()
 			+ 'front/' + type
 			+ '.form.php?id=' + event.items_id;
 	}
 
-	glpiURL() {
-		return GLOBAL.glpiUrl;
+	kaceURL() {
+		return GLOBAL.kaceUrl;
 	}
 
 	getUserId(log: Log) {
