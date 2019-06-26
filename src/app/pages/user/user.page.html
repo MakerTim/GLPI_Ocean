@@ -1,4 +1,4 @@
-<div class="header">{{ 'user.admin ' + (user ? user.name + '(' + user.id + ')' : '') | i18n }}</div>
+<!--<div class="header">{{ 'user.admin ' + (user ? user.name + '(' + user.id + ')' : '') | i18n }}</div>-->
 
 <button class="back" (click)="goBack()">
     <span>
@@ -18,21 +18,21 @@
         <br *ngIf="field.length === 0">
     </ng-container>
 
-    <img *ngIf="user.picture" [src]="kaceURL + 'front/document.send.php?file=_pictures/' + user.picture"
+    <img *ngIf="user" [src]="kaceURL + 'front/document.send.php?file=_pictures/' + user"
          alt="User Profile Picture">
-    <span *ngIf="!user.picture">
+    <span *ngIf="!user">
         <i class="fas fa-user"></i>
     </span>
     <div class="tickets">
         <b>{{ 'user.tickets' | i18n }}</b>
-        <div *ngFor="let ticket of subList(user.tickets, 5)">
+        <div *ngFor="let ticket of subList(user, 5)">
             {{ ticket.name }}
             <a [routerLink]="'/open/Ticket/' + ticket.id">
                 <i class="fas fa-external-link-alt"></i>
             </a>
         </div>
         <b>{{ 'user.groups' | i18n }}</b><br>
-        <span *ngFor="let group of user.groups">
+        <span *ngFor="let group of user">
             {{ group.name }}
             <a [routerLink]="'/dashboard/Ticket/' + group.id">
                 <i class="fas fa-columns"></i>
@@ -40,7 +40,7 @@
         </span>
     </div>
 
-    <a [routerLink]="'/dashboard/Ticket/user/' + user.id">
+    <a [routerLink]="'/dashboard/Ticket/user/'">
         <button>
             <span>
                 {{ 'user.dashboard' | i18n }} <br>
@@ -48,7 +48,7 @@
             </span>
         </button>
     </a>
-    <a [href]="kaceURL + 'front/user.form.php?id=' + user.id">
+    <a [href]="kaceURL + 'front/user.form.php?id='">
         <button>
             <span>
                 {{ 'user.kace' | i18n }} <br>

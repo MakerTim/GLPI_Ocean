@@ -8,7 +8,7 @@ let personalToken = getFromStorage('personal-token', '');
 const callbackList = [];
 
 let client: HttpClient;
-let user: Promise<SelfRequest> = null;
+let user: Promise<SelfRequest & { errorCode: any }> = null;
 let rawUser = null;
 let loggingIn = false;
 let loginError = '';
@@ -28,9 +28,16 @@ export function loginKace(httpClient: HttpClient, callback = null) {
 
 function waitForUser() {
 	sendSecureHeader(headers => {
-		user = client.get<SelfRequest>(GLOBAL.api + '/users/me/', {headers, withCredentials: true}).toPromise();
+		user = client.get<SelfRequest & { errorCode: any }>(GLOBAL.api + '/users/me/', {headers, withCredentials: true}).toPromise();
 		user
-			.then(usr => rawUser = usr)
+			.then(usr => {
+				if (usr.errorCode) {
+					logout();
+					window.location.reload();
+					return;
+				}
+				rawUser = usr;
+			})
 			.catch(_ => {
 				logout();
 				window.location.reload();
@@ -74,7 +81,7 @@ export function sendSecureHeader(callback: (headers: HttpHeaders) => void, heade
 		.set('x-dell-api-version', '1');
 	if (!isLoggedIn()) {
 		callbackList.push(() => {
-			callback(header);
+			callback(header.set('x-dell-csrf-token', personalToken));
 		});
 		return;
 	}

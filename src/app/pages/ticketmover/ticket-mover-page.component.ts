@@ -207,9 +207,10 @@ export class TicketMoverPage extends RefreshPage implements OnInit {
 
 	moveGroup(id) {
 		getUser(user => {
-			user.groups.forEach(group => {
-				this.move('unassigned', 'group_' + group, id);
-			});
+			// TODO
+			// user.groups.forEach(group => {
+			// 	this.move('unassigned', 'group_' + group, id);
+			// });
 		});
 	}
 

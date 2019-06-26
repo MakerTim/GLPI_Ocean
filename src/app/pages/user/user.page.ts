@@ -3,7 +3,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {RefreshPage} from '../../models/RefreshPage';
-import {User} from '../../models/User';
+import {SelfRequest} from '../../models/User';
 import {GLOBAL} from '../../services/global';
 import {sendSecureHeader} from '../../services/login.service';
 import {ActivatedRoute} from '@angular/router';
@@ -18,7 +18,7 @@ import {Location} from '@angular/common';
 export class UserPage extends RefreshPage implements OnInit {
 
 	public id: string;
-	public user: User;
+	public user: SelfRequest;
 	public kaceURL = GLOBAL.kaceUrl;
 	public fields = ['id', 'name', 'firstname', 'realname', '', 'date_creation', 'date_mod', ''];
 
@@ -59,7 +59,7 @@ export class UserPage extends RefreshPage implements OnInit {
 	retrieveUser() {
 		sendSecureHeader(headers => {
 			headers = headers.set('id', this.id);
-			this.httpClient.get<User>(GLOBAL.api + '/User', {headers}).toPromise()
+			this.httpClient.get<SelfRequest>(GLOBAL.api + '/User', {headers}).toPromise() //TODO
 				.then(user => {
 						this.user = user;
 					}

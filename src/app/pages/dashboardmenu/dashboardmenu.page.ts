@@ -22,15 +22,16 @@ export class DashboardMenuPage implements OnInit {
 
 	ngOnInit() {
 		getUser(user => {
-			if (user.groups.length === 1) {
-				this.router.navigateByUrl('dashboard/Ticket/' + user.groups[0]);
-			} else {
-				user.groups.forEach(groupId => {
-					const index = this.submenuItems.push([groupId, groupId]);
-
-					this.getGroup(index, groupId);
-				});
-			}
+			// TODO
+			// if (user.groups.length === 1) {
+			// 			// 	this.router.navigateByUrl('dashboard/Ticket/' + user.groups[0]);
+			// 			// } else {
+			// 			// 	user.groups.forEach(groupId => {
+			// 			// 		const index = this.submenuItems.push([groupId, groupId]);
+			// 			//
+			// 			// 		this.getGroup(index, groupId);
+			// 			// 	});
+			// 			// }
 		});
 	}
 
