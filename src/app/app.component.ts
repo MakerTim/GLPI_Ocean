@@ -5,6 +5,7 @@ import {GLOBAL} from './services/global';
 import {navItemListener, setNav} from './services/nav';
 import {isLoggedIn, isLoggingIn, loginBasic, loginGLPI, logout as logoutFunction, sendSecureHeader} from './services/login.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {LighthouseService} from './services/lighthouse.service';
 
 @Component({
 	selector: 'app-root',

@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
@@ -40,6 +40,7 @@ import {DashboardMenuPage} from './pages/dashboardmenu/dashboardmenu.page';
 import {StripHtml} from './pipes/striphtml';
 import {SearchticketPage} from './pages/searchticket/searchticket.page';
 import {UserPage} from './pages/user/user.page';
+import {LighthouseService} from './services/lighthouse.service';
 
 @NgModule({
 	declarations: [
@@ -87,7 +88,11 @@ import {UserPage} from './pages/user/user.page';
 		ScrollToModule.forRoot()
 	],
 	providers: [
-		appRoutingProviders
+		appRoutingProviders,
+		{
+			provide: ErrorHandler,
+			useClass: LighthouseService
+		}
 	],
 	bootstrap: [AppComponent],
 	schemas: [VarDirective]
