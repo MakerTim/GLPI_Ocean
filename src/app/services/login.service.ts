@@ -8,7 +8,7 @@ let personalToken = getFromStorage('personal-token', '');
 const callbackList = [];
 
 let client: HttpClient;
-let user: Promise<SelfRequest & { errorCode: any }> = null;
+let user: Promise<SelfRequest & { errorCode: any, errorDescription: any }> = null;
 let rawUser = null;
 let loggingIn = false;
 let loginError = '';
@@ -28,12 +28,14 @@ export function loginKace(httpClient: HttpClient, callback = null) {
 
 function waitForUser() {
 	sendSecureHeader(headers => {
-		user = client.get<SelfRequest & { errorCode: any }>(GLOBAL.api + '/users/me/', {headers, withCredentials: true}).toPromise();
+		user = client.get<SelfRequest & { errorCode: any, errorDescription: any }>(GLOBAL.api + '/users/me/', {
+			headers,
+			withCredentials: true
+		}).toPromise();
 		user
 			.then(usr => {
 				if (usr.errorCode) {
-					logout();
-					window.location.reload();
+					console.error(usr.errorDescription);
 					return;
 				}
 				rawUser = usr;
