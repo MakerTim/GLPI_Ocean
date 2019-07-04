@@ -1,55 +1,74 @@
 <div class="home">
-	<div class="header">{{ 'nav.' + saveI18n(page) | i18n }}</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-2 col-md-1"></div>
-			<div class="col-lg-8 col-md-10" *ngIf="loading">
-				Loading...
-			</div>
-			<div class="col-lg-8 col-md-10" *ngIf="!loading">
-				<div class="listBlock" *ngIf="items.length > 0">
-					<h3>{{ 'listall.filter' | i18n }}</h3>
-					<div class="listBlock-body">
-						<label>
-							{{ 'listall.filter.show' | i18n}}
-							<select class="selectpicker" #filterElement multiple>
-								<ng-container *ngFor="let property of allProperties">
-									<option *ngIf="isSelectedProperties(property)"
-											[value]="property" selected>
-										{{ 'listall.property.' + property | i18n }}
-									</option>
-									<option *ngIf="!isSelectedProperties(property)"
-											[value]="property">
-										{{ 'listall.property.' + property | i18n }}
-									</option>
-								</ng-container>
-							</select>
-						</label>
-					</div>
-				</div>
+    <div class="header">{{ 'nav.' + saveI18n(page) | i18n }}</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2 col-md-1"></div>
+            <div class="col-lg-8 col-md-10" *ngIf="loading">
+                Loading...
+            </div>
+            <div class="col-lg-8 col-md-10" *ngIf="!loading">
+                <div class="listBlock" *ngIf="items.length > 0">
+                    <h3>{{ 'listall.filter' | i18n }}</h3>
+                    <div class="listBlock-body">
+                        <label>
+                            {{ 'listall.filter.show' | i18n }}
+                            <select class="selectpicker" #filterElement multiple>
+                                <ng-container *ngFor="let property of allProperties">
+                                    <option *ngIf="isSelectedProperties(property)"
+                                            [value]="property" selected>
+                                        {{ 'listall.property.' + property | i18n }}
+                                    </option>
+                                    <option *ngIf="!isSelectedProperties(property)"
+                                            [value]="property">
+                                        {{ 'listall.property.' + property | i18n }}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </label>
+                        <span class="search-desc" *ngIf="searches">
+                            <span>{{ 'listall.filter.searchfield' | i18n }}</span>
+                            <span>{{ 'listall.filter.searching' | i18n }}</span>
+                            <span>{{ 'listall.filter.searchcase' | i18n }}</span>
+                            <span>{{ 'listall.filter.searchremove' | i18n }}</span>
+                        </span>
+                        <label *ngFor="let searching of searches" [class]="searching.field && (searching.search || !searching.ignoreCase) ? '' : 'grayed'" >
+                            <select class="form-control" [(ngModel)]="searching.field">
+                                <option *ngFor="let property of allProperties" [value]="property" selected>
+                                    {{ 'listall.property.' + property | i18n }}
+                                </option>
+                            </select>
+                            <input type="text" class="form-control" [(ngModel)]="searching.search">
+                            <input type="checkbox" class="form-control" [(ngModel)]="searching.ignoreCase">
+                            <button class="btn btn-outline-warning" (click)="remove(searching, searches)">X</button>
+                        </label>
+                        <button class="btn btn-outline-primary" (click)="addSearch()">{{ 'listall.filter.addsearch' | i18n }}</button>
+                    </div>
+                </div>
 
-				<div class="row">
-					<div class="col-lg-6" *ngFor="let item of items">
-						<div class="listBlock">
-							<a [href]="urlOfItem(item.id)" target="_blank">
-								<h3 *ngIf="hasProperty('name')">{{ item.name }}<i class="fas fa-external-link-alt"></i></h3>
-								<h3 *ngIf="!hasProperty('name')">{{ page + '-' + item.id }}<i class="fas fa-external-link-alt"></i></h3>
-							</a>
-							<div class="listBlock-body">
-								<div *ngFor="let property of properties">
-									<b>{{ 'listall.property.' + property | i18n }}</b>:
-									<span *ngIf="checkForBoolean(property, item[property]); else nameProperty">
+                <div class="row">
+                    <div class="col-lg-6" *ngFor="let item of getItems()">
+                        <div class="listBlock">
+                            <a [href]="urlOfItem(item.id)" target="_blank">
+                                <h3 *ngIf="hasProperty('name')">{{ item.name }}<i class="fas fa-external-link-alt"></i>
+                                </h3>
+                                <h3 *ngIf="!hasProperty('name')">{{ page + '-' + item.id }}<i
+                                        class="fas fa-external-link-alt"></i></h3>
+                            </a>
+                            <div class="listBlock-body">
+                                <div *ngFor="let property of properties">
+                                    <b>{{ 'listall.property.' + property | i18n }}</b>:
+                                    <span *ngIf="checkForBoolean(property, item[property]); else nameProperty">
 										{{ 'listall.value.bool.' + item[property] | i18n }}
 									</span>
-									<ng-template #nameProperty>
-										{{ item[property] }}
-									</ng-template>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                    <ng-template #nameProperty>
+                                        {{ item[property] }}
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

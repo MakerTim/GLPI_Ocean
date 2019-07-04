@@ -35,6 +35,10 @@ export class ListallPage extends RefreshPage implements OnInit {
 	public pageNr = 1;
 	public limit = 50;
 
+	public searches: { field: string, search: string, ignoreCase: boolean }[] = [
+		{field: '', search: '', ignoreCase: true}
+	];
+
 	@ViewChild('filterElement') filterElement: ElementRef;
 
 	constructor(
@@ -84,6 +88,49 @@ export class ListallPage extends RefreshPage implements OnInit {
 				}
 			});
 		}
+	}
+
+	getItems() {
+		let hasFilter = false;
+
+		for (const search of this.searches) {
+			if (search.field && (search.search || !search.ignoreCase)) {
+				hasFilter = true;
+				break;
+			}
+		}
+
+		if (hasFilter) {
+			return this.items.filter(item => {
+				let matches = true;
+				for (const search of this.searches) {
+					if (search.field && (search.search || !search.ignoreCase)) {
+						const field = item[search.field];
+						if (field === undefined || field == null) {
+							matches = search.search === '' && !search.ignoreCase;
+							continue;
+						}
+						if (search.ignoreCase) {
+							if (field.toLocaleLowerCase().indexOf(search.search.toLocaleLowerCase()) < 0) {
+								matches = false;
+							}
+						} else {
+							if (search.search === '') {
+								if (field) {
+									matches = false;
+								}
+							} else {
+								if (field.indexOf(search.search) < 0) {
+									matches = false;
+								}
+							}
+						}
+					}
+				}
+				return matches;
+			});
+		}
+		return this.items;
 	}
 
 	isSelectedProperties(property: string) {
@@ -145,5 +192,13 @@ export class ListallPage extends RefreshPage implements OnInit {
 
 	saveI18n(input: string) {
 		return input.substr(0, 1).toLocaleLowerCase() + input.substr(1).replace(/\s+/g, '');
+	}
+
+	addSearch() {
+		this.searches.push({field: '', search: '', ignoreCase: true});
+	}
+
+	remove(searching: any, searches: any[]) {
+		searches.splice(searches.indexOf(searching), 1);
 	}
 }
