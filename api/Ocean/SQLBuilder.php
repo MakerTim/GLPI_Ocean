@@ -47,9 +47,12 @@ class SQLBuilder {
 	}
 
 	private function execute() {
-		if (!$this->statement->execute()) {
+		try {
+			if (!$this->statement->execute()) {
+				sendError('Can\'t find in ' . $this->table);
+			}
+		} catch (\Exception $e) {
 			$this->statement->debugDumpParams();
-			sendError('Can\'t find in ' . $this->table);
 		}
 	}
 
@@ -125,7 +128,20 @@ class SQLBuilder {
 		if ($as === null) {
 			$as = $tableFK;
 		}
-		$this->selectsOverwrites .= ",$tableShort.$wanted as '$as' ";
+		if (is_array($wanted)) {
+			$wanteds = $wanted;
+			$wanted = 'CONCAT(';
+
+			$separator = '," ",';
+			foreach ($wanteds as $concatWanted) {
+				$wanted .= "$tableShort.$concatWanted$separator";
+			}
+			$wanted = rtrim($wanted, $separator) . ')';
+
+			$this->selectsOverwrites .= ",$wanted as '$as' ";
+		} else {
+			$this->selectsOverwrites .= ",$tableShort.$wanted as '$as' ";
+		}
 		$this->joinOtherTables .= "$joinType $otherTable $tableShort ON $this->mainTableName.$tableFK = $tableShort.$tablePK ";
 		return $this;
 	}

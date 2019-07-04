@@ -182,14 +182,14 @@ class GetAllItems extends RoutingBase {
 
 	private function SQL_user($requestedType, $tableShort, $allowedTypes = [], $on = 'users_id') {
 		if ($this->isAllowedType($requestedType, $allowedTypes)) {
-			return ['glpi_users', $on, 'name', $tableShort, null, null];
+			return ['glpi_users', $on, ['name', 'firstname', 'realname'], '' . $tableShort, null, null];
 		}
 		return false;
 	}
 
 	private function SQL_user_not($requestedType, $tableShort, $allowedTypes = [], $on = 'users_id') {
 		if ($this->isNotAllowedType($requestedType, $allowedTypes)) {
-			return ['glpi_users', $on, 'name', $tableShort, null, null];
+			return ['glpi_users', $on, ['name', 'firstname', 'realname'], $tableShort, null, null];
 		}
 		return false;
 	}
