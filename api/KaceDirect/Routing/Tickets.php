@@ -25,10 +25,10 @@ class Tickets extends RoutingBase {
 				ON t.HD_STATUS_ID = s.ID ";
 
 			$searchFields = [];
-			if ($fields['name']) {
+			if (array_key_exists('name', $fields) && $fields['name']) {
 				$searchFields = array_merge($searchFields, explode(' ', $fields['name']));
 			}
-			if ($fields['content']) {
+			if (array_key_exists('content', $fields) && $fields['content']) {
 				$fields['content'] = str_replace("\n", ' ', $fields['content']);
 				$searchFields = array_merge($searchFields, explode(' ', $fields['content']));
 			}
@@ -39,6 +39,8 @@ class Tickets extends RoutingBase {
 					$statement .= " t.TITLE LIKE '%$searchField%' OR t.SUMMARY LIKE '%$searchField%' OR";
 				}
 				$statement = rtrim($statement, 'OR');
+			} else {
+				return [];
 			}
 
 			return $DB->query($statement)->fetchAll();
