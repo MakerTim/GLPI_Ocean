@@ -125,7 +125,7 @@ export function retrieveTicketLayout(httpClient: HttpClient,
 	}) {
 	const thiz = this;
 	sendSecureHeader((headers: HttpHeaders) => {
-		httpClient.get<TicketCategory[]>(GLOBAL.api + '/TicketForm', {headers}).toPromise()
+		httpClient.get<TicketCategory[]>(GLOBAL.custom + '/TicketForm', {headers, withCredentials: true}).toPromise()
 			.then(categories => {
 				TicketCategory.fixData(categories);
 				then(categories);

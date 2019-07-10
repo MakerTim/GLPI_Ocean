@@ -44,7 +44,7 @@ export class TicketPage extends RefreshPage implements OnInit {
 		this.route.params.subscribe(page => thiz.setPage(page));
 	}
 
-	onRefresh() {
+	onRefresh() {return;
 		this.leftMenu();
 		this.findMatchingTickets(false);
 	}
@@ -77,6 +77,7 @@ export class TicketPage extends RefreshPage implements OnInit {
 			this.from = '';
 		}
 		this.leftMenu();
+		this.findMatchingTickets();
 	}
 
 	findMatchingTickets(withReload = true) {
@@ -95,7 +96,7 @@ export class TicketPage extends RefreshPage implements OnInit {
 		sendSecureHeader(headers => {
 			headers = headers
 				.set('Type', 'search');
-			this.httpClient.post<Ticket[]>(GLOBAL.api + '/Tickets',
+			this.httpClient.post<Ticket[]>(GLOBAL.custom + '/Tickets',
 				cloneTitleDescObject,
 				{headers}).toPromise()
 				.then(tickets => this.lookalikeTickets = tickets)
@@ -104,13 +105,15 @@ export class TicketPage extends RefreshPage implements OnInit {
 	}
 
 	requestTicketList(type: 'open' | 'closed' | 'around', callback: (ticketlist: Ticket[]) => void) {
-		const thiz = this;
-		return;
 		sendSecureHeader(headers => {
 			headers = headers
 				.set('Type', type);
-			thiz.httpClient.get<Ticket[]>(GLOBAL.api + '/Tickets',
-				{headers}).toPromise()
+			this.httpClient.get<Ticket[]>(GLOBAL.custom + '/Tickets', {
+				headers,
+				withCredentials: true
+			}).toPromise()
+				// .then(() => {
+				// })
 				.then(callback)
 				.catch(console.error);
 		});

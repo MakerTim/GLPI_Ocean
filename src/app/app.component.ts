@@ -1,9 +1,8 @@
 import {Component, DoCheck, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {GLOBAL} from './services/global';
+import {HttpClient} from '@angular/common/http';
 import {navItemListener, setNav} from './services/nav';
-import {isLoggedIn, isLoggingIn, loginBasic, loginKace, logout as logoutFunction, sendSecureHeader} from './services/login.service';
+import {getUser, isLoggedIn, isLoggingIn, loginBasic, loginKace, logout as logoutFunction} from './services/login.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -62,10 +61,25 @@ export class AppComponent implements OnInit, DoCheck {
 		loginKace(this.httpClient, () => {
 			thiz.ngDoCheck();
 		});
-		// sendSecureHeader((headers: HttpHeaders) => {
-		// 	thiz.httpClient.get(GLOBAL.api + '/Navigation', {headers}).toPromise()
-		// 		.then(nav => setNav({...thiz.navigationItems, ...nav}));
-		// });
+		getUser(usr => {
+			if (usr && usr.permissions && usr.permissions.helpdesk === 'WRITE') {
+				setNav({
+					...this.navigationItems, ...{
+						'ticket': {
+							'TicketCreate': 'concrete\/Ticket',
+							'globalTicket': 'global\/Ticket\/',
+							'dashboard': 'dashboard\/Ticket\/',
+							'search': 'search\/Ticket\/'
+						},
+						'admin': {
+							'settings': 'admin\/settings',
+							'ticket-form': 'admin\/ticket-form',
+							'logs': 'admin\/logs',
+						}
+					}
+				});
+			}
+		});
 		navItemListener((nav: any) => {
 			thiz.navigationItems = nav;
 		});

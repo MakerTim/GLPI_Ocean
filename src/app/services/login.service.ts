@@ -35,6 +35,16 @@ function waitForUser() {
 		user
 			.then(usr => {
 				if (usr.errorCode) {
+					const reLogErrors = [
+						'No Current Organization Selected',
+						'Invalid CSRF Token'
+					];
+					if (reLogErrors.indexOf(usr.errorDescription) >= 0) {
+						console.warn('Logged Off Because \n' + usr.errorDescription);
+						logout();
+						window.location.reload();
+						return;
+					}
 					console.error(usr.errorDescription);
 					return;
 				}
@@ -128,7 +138,7 @@ export function loginBasic(httpClient: HttpClient, userName: string, password: s
 		observe: 'response'
 	}).toPromise()
 		.then(response => {
-			console.log(response.headers.get('x-dell-csrf-token'));
+			console.log(response.headers.get('x-dell-csrf-token').substr(-10));
 			setPersonalToken(response.headers.get('x-dell-csrf-token'));
 			callbackError('');
 		})

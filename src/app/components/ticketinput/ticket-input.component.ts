@@ -51,7 +51,7 @@ export class TicketInputComponent implements AfterViewInit, OnDestroy {
 			headers = headers.set('Type', 'options')
 				.set('Table', table)
 				.set('Field', field);
-			this.httpClient.get<IdValue[]>(GLOBAL.api + '/TicketForm', {headers}).toPromise()
+			this.httpClient.get<IdValue[]>(GLOBAL.custom + '/TicketForm', {headers}).toPromise()
 				.then(values => {
 					TicketInputComponent.dictionary[key] = values;
 					if (values.length > 0) {

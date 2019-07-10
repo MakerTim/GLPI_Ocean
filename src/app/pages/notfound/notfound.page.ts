@@ -22,6 +22,7 @@ export class NotfoundPage extends RefreshPage implements OnInit, OnDestroy {
 	ngOnInit() {
 		super.ngOnInit();
 		document.getElementsByTagName('body')[0].style.overflow = 'none';
+		throw new Error(window.location.href);
 	}
 
 	ngOnDestroy() {

@@ -80,7 +80,7 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 		const thiz = this;
 		sendSecureHeader((headers: HttpHeaders) => {
 			headers = headers.set('Type', 'database');
-			this.httpClient.get(GLOBAL.api + '/TicketForm', {headers}).toPromise()
+			this.httpClient.get(GLOBAL.custom + '/TicketForm', {headers}).toPromise()
 				.then(tables => {
 					thiz.databaseStructure = tables;
 				})
@@ -227,7 +227,7 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 	save() {
 		sendSecureHeader(headers => {
 			headers = headers.set('Type', 'save');
-			this.httpClient.post(GLOBAL.api + '/TicketForm', this.categories[this.page - 1], {headers}).toPromise()
+			this.httpClient.post(GLOBAL.custom + '/TicketForm', this.categories[this.page - 1], {headers}).toPromise()
 				.then(success => {
 					if (success === true) {
 						this.popup('ticket-admin.saved');
