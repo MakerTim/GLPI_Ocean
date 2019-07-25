@@ -140,8 +140,10 @@
                         </ng-container>
                         <ng-container
                                 *ngIf="ticket[leftMenuItem + '2']">{{ ticket[leftMenuItem + '2'] }} </ng-container>
-                        <ng-container *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'">
-                            <a class="iconholder" [routerLink]="'/dashboard/Ticket/user/' + ticket[leftMenuItem + '_id']">
+                        <ng-container
+                                *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'">
+                            <a class="iconholder"
+                               [routerLink]="'/dashboard/Ticket/user/' + ticket[leftMenuItem + '_id']">
                                 <i class="fas fa-columns"></i>
                             </a>
                             <a class="iconholder" [routerLink]="'/admin/user/' + ticket[leftMenuItem + '_id']">
@@ -152,24 +154,16 @@
                     <div *ngIf="leftMenuItem.length === 2 && ticket[leftMenuItem[0]]?.length > 0">
                         <b>{{ 'ticket.' + leftMenuItem[0] | i18n }}:</b><br>
                         <ng-container *ngFor="let item of ticket[leftMenuItem[0]]">
-                            &nbsp;{{ item[leftMenuItem[0]] }}
+                            {{ item['FULL_NAME'] }}
                             <ng-container *ngIf="leftMenuItem[1] !== 'group'">
-                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()" [routerLink]="'/dashboard/Ticket/user/' + item['id']">
+                                <a class="iconholder" *ngIf="item['ID'] && userIsAssigned()"
+                                   [routerLink]="'/dashboard/Ticket/user/' + item['ID']">
                                     <i class="fas fa-columns"></i>
                                 </a>
-                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
+                                <a class="iconholder" *ngIf="item['ID'] && userIsAssigned()"
                                    target="_blank"
-                                   [href]="kaceURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
+                                   [href]="kaceURL + 'adminui/user.php?ID=' + item['ID'] + '#associated_tickets_table'">
                                     <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            </ng-container>
-                            <ng-container *ngIf="leftMenuItem[1] === 'group'">
-                                <a class="iconholder" [routerLink]="'/dashboard/Ticket/' + item['id']">
-                                    <i class="fas fa-columns"></i>
-                                </a>
-                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
-                                   [routerLink]="['/group/Ticket/' + item['id']]">
-                                    <i class="fas fa-stream"></i>
                                 </a>
                             </ng-container>
                             <br>
@@ -178,7 +172,7 @@
                     <br *ngIf="leftMenuItem.length === 0">
                 </ng-container>
                 <div>
-                    <a [href]="kaceURL + 'front/ticket.form.php?id=' + ticket.id" target="_blank">
+                    <a [href]="kaceURL + getPlatformURL() + '/ticket.php?ID=' + ticket.id" target="_blank">
                         {{ 'ticket.open-kace' | i18n }}
                     </a>
                 </div>
@@ -266,73 +260,63 @@
                         </div>
                     </div>
                     <ng-container *ngFor="let action of actions">
-                        <ng-container *ngIf="!isArray(action)">
-                            <ng-container *ngIf="action.status == 'N/A'">
+                        <ng-container *ngIf="action.attachments.length === 0">
+                            <ng-container *ngIf="!action.owners_only">
                                 <div [class]="'action-block row status-' + toCssClass(action.status)">
                                     <div class="col-3 center person-box">
-                                        <a [href]="kaceURL + 'front/user.form.php?id=' + action.users_id.id"
+                                        <a [href]="kaceURL + 'adminui/user.php?ID=' + action.user.id"
                                            target="_blank">
-                                            <i *ngIf="!action.users_id.picture"
+                                            <i *ngIf="!action.user.picture"
                                                class="fas fa-user"></i>
-                                            <img *ngIf="action.users_id.picture" alt="profile"
+                                            <img *ngIf="action.user.picture" alt="profile"
                                                  style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
-                                                 [src]="kaceURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
+                                                 [src]="kaceURL + 'front/document.send.php?file=_pictures/' + action.user.picture">
                                             <br>
-                                            {{ action.users_id.firstname }} {{ action.users_id.realname }}
+                                            {{ action.user.full_name }}
                                         </a>
                                     </div>
                                     <div class="col-7">
                                         {{ 'ticket.attach.note' | i18n }}<br>
-                                        <span [innerHTML]="action.content | br"></span>
+                                        <span [innerHTML]="action.comment | safeHtml"></span>
                                     </div>
                                     <div class="col-2 action-date">
-                                        <span>{{ action.date_mod }}</span>
+                                        <span>{{ action.timestamp }}</span>
                                     </div>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="action.status != 'N/A'">
+                            <ng-container *ngIf="action.owners_only">
                                 <div [class]="'action-block row status-' + toCssClass(action.status)">
                                     <div class="col-2 action-date">
-                                        <span>{{ action.date_mod }}</span>
+                                        <span>{{ action.timestamp }}</span>
                                     </div>
                                     <div class="col-7">
                                         {{ 'ticket.feedback.note' | i18n }}<br>
-                                        <span [innerHTML]="action.content | br"></span>
+                                        <span [innerHTML]="action.comment | safeHtml"></span>
                                     </div>
                                     <div class="col-3 center person-box">
-                                        <a [href]="kaceURL + 'front/user.form.php?id=' + action.users_id.id"
+                                        <a [href]="kaceURL + 'adminui/user.php?ID=' + action.user.id"
                                            target="_blank">
-                                            <i *ngIf="!action.users_id.picture"
+                                            <i *ngIf="!action.user.picture"
                                                class="fas fa-user"></i>
-                                            <img *ngIf="action.users_id.picture" alt="profile"
+                                            <img *ngIf="action.user.picture" alt="profile"
                                                  style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
                                                  [src]="kaceURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
                                             <br>
-                                            {{ action.users_id.firstname }} {{ action.users_id.realname }}
+                                            {{ action.user.full_name }}
                                         </a>
                                     </div>
                                 </div>
                             </ng-container>
                         </ng-container>
-                        <ng-container *ngIf="isArray(action)">
-                            <div class="attachment-block attachment-block-delay center" *ngIf="action.length === 3">
+                        <ng-container *ngFor="let attachment of action.attachments">
+                            <div class="attachment-block attachment-block-delay attachment-img center">
                                 <div class="attachment-date action-date">
-                                    <span>{{ action[2] }}</span>
+                                    <span>{{ attachment.timestamp }}</span>
                                 </div>
-                                <a target="_blank" [href]="kaceURL + action[1].substr(1)">
-                                    <i class="fa fa-download" aria-hidden="true"></i><br>
-                                    {{ action[0] }}
-                                </a>
-                            </div>
-                            <div class="attachment-block attachment-block-delay attachment-img center"
-                                 *ngIf="action.length === 4">
-                                <div class="attachment-date action-date">
-                                    <span>{{ action[2] }}</span>
-                                </div>
-                                <img (click)="toggleFixed($event.target)" [alt]="action[0]" style="max-height: 75%"
-                                     [src]="'data:image/png;base64,' + action[3]"><br>
-                                <a target="_blank"
-                                   [href]="kaceURL + action[1].substr(1)">{{ action[0] }}</a>
+                                <span [innerHTML]="action.comment"></span>
+                                <img (click)="toggleFixed($event.target)" [alt]="attachment.file_name" style="max-height: 500px"
+                                     [src]="getImage(action.id, attachment.id) | async"><br>
+                                <a target="_blank" style="color: dodgerblue; text-decoration: underline; cursor: pointer;" (click)="openImageInNewWindow(action.id, attachment.id)">{{ attachment.file_name }}</a>
                             </div>
                         </ng-container>
                     </ng-container>

@@ -10,21 +10,25 @@ function open(modalService: NgbModal, followupHTML, options: NgbModalOptions = {
 	return modalService.open(followupHTML, options);
 }
 
-export function followup(modalService: NgbModal, followupHTML, httpClient: HttpClient, ticket: Ticket, triggerPost) {
+export function followup(modalService: NgbModal, followupHTML, httpClient: HttpClient, queue: number, ticket: number, triggerPost) {
 	open(modalService, followupHTML).result
 		.then(result => {
 			if (!result || result.toString().trim().length === 0) {
-				followup(modalService, followupHTML, httpClient, ticket, triggerPost);
+				followup(modalService, followupHTML, httpClient, queue, ticket, triggerPost);
 				return;
 			}
 
 			sendSecureHeader(headers => {
-				headers = headers.set('Type', 'followup')
-					.set('id', ticket.id.toString());
-				if (ticket.closedate !== null && ticket.closedate.length > 0) {
-					headers = headers.set('Reopen', '1');
-				}
-				httpClient.post(GLOBAL.api + '/Ticket', result, {headers}).toPromise()
+				// TODO: voeg notitie toe
+				httpClient.post(GLOBAL.custom + '/ajax_update_ticket.php', {
+						QUEUE_ID: queue,
+						TICKET_ID: ticket,
+						UPDATE_TYPE: 'add_comment',
+						COMMENT: result,
+						SCREENSHOT_DATA: '',
+						OWNERS_ONLY: 0
+					},
+					{headers, withCredentials: true}).toPromise()
 					.then(ticketResult => triggerPost(ticketResult));
 			});
 		})

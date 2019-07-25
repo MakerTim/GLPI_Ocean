@@ -9,7 +9,7 @@ const callbackList = [];
 
 let client: HttpClient;
 let user: Promise<SelfRequest & { errorCode: any, errorDescription: any }> = null;
-let rawUser = null;
+let rawUser: SelfRequest & { errorCode: any, errorDescription: any } = null;
 let loggingIn = false;
 let loginError = '';
 

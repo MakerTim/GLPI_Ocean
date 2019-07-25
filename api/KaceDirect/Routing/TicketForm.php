@@ -15,25 +15,25 @@ class TicketForm extends RoutingBase {
 
 		if (array_key_exists('HTTP_TYPE', $_SERVER)) {
 			if ($_SERVER['HTTP_TYPE'] === 'database') {
-				return $this->getTableStructure($user);
+				return $this->getTableStructure();
 			}
 			if ($_SERVER['HTTP_TYPE'] === 'options') {
-				return $this->getOptions($user);
+				return $this->getOptions();
 			}
 			if ($_SERVER['HTTP_TYPE'] === 'save') {
-				return $this->save($user);
+				return $this->save();
 			}
 			if ($_SERVER['HTTP_TYPE'] === 'create') {
-				return $this->create($user);
+				return $this->create();
 			}
 			if ($_SERVER['HTTP_TYPE'] === 'mainpost') {
-				return $this->mainPost($user);
+				return $this->mainPost();
 			}
 			if ($_SERVER['HTTP_TYPE'] === 'attachment') {
-				return $this->attachment($user);
+				return $this->attachment();
 			}
 			if ($_SERVER['HTTP_TYPE'] === 'switch') {
-				return $this->switchOrder($user);
+				return $this->switchOrder();
 			}
 		}
 
@@ -45,11 +45,10 @@ class TicketForm extends RoutingBase {
 		return $statement->fetchAll();
 	}
 
-
 	/**
 	 * @return mixed
 	 */
-	private function switchOrder($user) {
+	private function switchOrder() {
 		/** @var PDO $DB */ global $DB;
 
 		if (!array_key_exists('HTTP_ID1', $_SERVER)) {
@@ -83,10 +82,9 @@ class TicketForm extends RoutingBase {
 	}
 
 	/**
-	 * @param $user
 	 * @return mixed
 	 */
-	private function getOptions($user) {
+	private function getOptions() {
 		/** @var PDO $DB */ global $DB;
 
 		$assetClass = array_key_exists('HTTP_FIELD', $_SERVER) ? $_SERVER['HTTP_FIELD'] : '';
@@ -129,11 +127,10 @@ class TicketForm extends RoutingBase {
 	}
 
 	/**
-	 * @param FastUser $user
 	 * @return mixed
 	 */
-	private function attachment($user) {
-		sendError(500);
+	private function attachment() {
+		sendError('ASDF Not supported yet TicketForm->attachment', 500);
 		/** @var PDO $DB */ global $DB;
 
 		// Get file from request
@@ -227,10 +224,10 @@ class TicketForm extends RoutingBase {
 	}
 
 	/**
-	 * @param FastUser $user
 	 * @return mixed
 	 */
-	private function mainPost($user) {
+	private function mainPost() {
+		sendError('ASDF => Not implemented TicketForm->mainPost');
 		/** @var PDO $DB */ global $DB;
 
 		$ticketData = json_decode(file_get_contents('php://input'));
@@ -249,23 +246,23 @@ class TicketForm extends RoutingBase {
 			}
 		}
 
-		$newTicket = FastTicket::createNewTicket($user, //
-			$this->getFromObject($ticketData, 'type'), //
-			$this->getFromObject($ticketData, 'category'), //
-			$this->getFromObject($ticketData, 'status'), //
-			$this->getFromObject($ticketData, 'urgency'), //
-			$this->getFromObject($ticketData, 'impact'), //
-			$this->getFromObject($ticketData, 'priority'), //
-			$this->getFromObject($ticketData, 'source'), //
-			$this->getFromObject($ticketData, 'SLA-max-time'), //
-			$this->getFromObject($ticketData, 'title'), //
-			$this->getFromObject($ticketData, 'description'), //
-			$this->getFromObject($ticketData, 'other-ticket'), //
-			$this->getFromObject($ticketData, 'assignedToUser'), //
-			$this->getFromObject($ticketData, 'assignedToGroup') //
-		);
+//		$newTicket = FastTicket::createNewTicket($user, //
+//			$this->getFromObject($ticketData, 'type'), //
+//			$this->getFromObject($ticketData, 'category'), //
+//			$this->getFromObject($ticketData, 'status'), //
+//			$this->getFromObject($ticketData, 'urgency'), //
+//			$this->getFromObject($ticketData, 'impact'), //
+//			$this->getFromObject($ticketData, 'priority'), //
+//			$this->getFromObject($ticketData, 'source'), //
+//			$this->getFromObject($ticketData, 'SLA-max-time'), //
+//			$this->getFromObject($ticketData, 'title'), //
+//			$this->getFromObject($ticketData, 'description'), //
+//			$this->getFromObject($ticketData, 'other-ticket'), //
+//			$this->getFromObject($ticketData, 'assignedToUser'), //
+//			$this->getFromObject($ticketData, 'assignedToGroup') //
+//		);
 
-		return $newTicket;
+//		return $newTicket;
 	}
 
 	private function getFromObject(\stdClass $class, $property, $default = null) {
@@ -277,10 +274,9 @@ class TicketForm extends RoutingBase {
 	}
 
 	/**
-	 * @param FastUser $user
 	 * @return mixed
 	 */
-	private function create($user) {
+	private function create() {
 		/** @var PDO $DB */ global $DB;
 
 		$categoryName = file_get_contents('php://input');
@@ -303,7 +299,7 @@ class TicketForm extends RoutingBase {
 	 * @param $user
 	 * @return mixed
 	 */
-	private function save($user) {
+	private function save() {
 		/** @var PDO $DB */ global $DB;
 
 		$categoryObject = json_decode(file_get_contents('php://input'));
@@ -323,7 +319,7 @@ class TicketForm extends RoutingBase {
 	/**
 	 * @return mixed
 	 */
-	private function getTableStructure($user) {
+	private function getTableStructure() {
 		/** @var PDO $DB */ global $DB;
 
 		$returnArray = [];

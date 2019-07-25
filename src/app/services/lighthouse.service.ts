@@ -59,8 +59,12 @@ export class LighthouseService implements ErrorHandler {
 					console.log('Error with screenshot', e);
 				}
 
-				const Message = error.message;
+				let Message = error.message;
 				const stack = error.stack;
+
+				if (Message) {
+					Message = Message.split('\n')[0];
+				}
 
 				const Type = stack.split(':')[0];
 				const File = /\s+at.+?\/([^\s]+)\s/.exec(stack)[1];
@@ -92,7 +96,7 @@ export class LighthouseService implements ErrorHandler {
 						const idParsed = atob(id);
 						console.warn('An error has occurred!\n   Reference id = ' + id + ' (' + idParsed + ')');
 					} catch (e) {
-						console.warn('An error has occurred!\n' + response);
+						console.warn('An error has occurred!\n' + JSON.stringify(response));
 					}
 				}).catch(ex => {
 					console.error('An error has occurred! But is not logged!', ex);

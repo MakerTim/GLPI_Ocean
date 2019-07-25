@@ -18,6 +18,7 @@ import {
 } from '../../services/ticket.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RefreshPage} from '../../models/RefreshPage';
+import {Observable} from 'rxjs';
 
 @Component({
 	selector: 'open-ticket',
@@ -36,7 +37,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 		['assigned_users', 'user'], ['assigned_groups', 'group'], [], //
 
 		['status'], ['urgency'], ['impact'], ['priority'], //
-		['itilcategories_id'], ['requesttypes_id'], ['global_validation'], ['locations_id'], [], //
+		['itilcategories_id'], ['locations_id'], [], //
 
 		['id'],
 	];
@@ -52,6 +53,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 
 	public solutionDirectories: any[] = [];
 	public solutions: any[] = [];
+	public imgCache = {};
 
 	constructor(
 		private httpClient: HttpClient,
@@ -71,6 +73,14 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 		this.refreshContent();
 	}
 
+	getPlatformURL() {
+		if (getUserRaw() && getUserRaw().permissions.helpdesk === 'WRITE') {
+			return 'adminui';
+		} else {
+			return 'userui';
+		}
+	}
+
 	goBack() {
 		this.location.back();
 	}
@@ -87,21 +97,21 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 	refreshContent() {
 		sendSecureHeader(headers => {
 			headers = headers.set('id', this.page.id);
-			this.httpClient.get<Ticket>(GLOBAL.api + '/Ticket', {headers}).toPromise()
-				.then(ticket => this.ticket = ticket);
-			headers = headers.set('type', 'attachments');
-			this.httpClient.get<[any]>(GLOBAL.api + '/Ticket', {headers}).toPromise()
-				.then(attachments => {
-					const newAttachments = [];
-					const newActions = [];
-					for (const attachment of attachments) {
-						if (this.dateCompare(attachment[2]) < 100) {
-							newAttachments.push(attachment);
-						} else {
-							newActions.push(attachment);
-						}
-					}
-					this.refreshContentPhase2(headers, newAttachments, newActions);
+			this.httpClient.get<Ticket>(GLOBAL.custom + '/Ticket', {headers}).toPromise()
+				.then(ticket => {
+					this.ticket = ticket;
+					this.httpClient.get<any>
+					(GLOBAL.api + '/service_desk/tickets/' + this.page.id + '/changes?shaping=hd_ticket_change regular,attachments regular,user limited', {
+						headers,
+						withCredentials: true
+					}).toPromise()
+						.then(changes => {
+							changes.Changes.shift();
+							if (!this.sortActionsAscending) {
+								changes.Changes = changes.Changes.reverse();
+							}
+							this.actions = changes.Changes;
+						});
 				});
 		});
 	}
@@ -120,38 +130,26 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 
 	userIsPoster() {
 		const user = getUserRaw();
-		if (user == null || user.groups == null ||
-			this.ticket == null || this.ticket.requested_users == null || this.ticket.requested_groups == null) {
+		if (user == null || this.ticket == null || this.ticket.requested_users == null) {
 			return false;
 		}
 		let contains = false;
 		for (const requestUser of this.ticket.requested_users) {
-			if (requestUser.id === user.id) {
+			if (requestUser.ID === user.userId) {
 				contains = true;
 			}
 		}
-		for (const requestedGroups of this.ticket.requested_groups) {
-			if (user.groups.indexOf(requestedGroups.id) >= 0) {
-				contains = true;
-			}
-		}
-		return contains || user.id === this.ticket.users_id_recipient_id;
+		return contains || user.userId === this.ticket.users_id_recipient_id;
 	}
 
 	userIsAssigned() {
 		const user = getUserRaw();
-		if (user == null || user.groups == null ||
-			this.ticket == null || this.ticket.assigned_users == null || this.ticket.assigned_groups == null) {
+		if (user == null || this.ticket == null || this.ticket.assigned_users == null) {
 			return false;
 		}
 		let contains = false;
 		for (const assignedUser of this.ticket.assigned_users) {
-			if (assignedUser.id === user.id) {
-				contains = true;
-			}
-		}
-		for (const assignedGroups of this.ticket.assigned_groups) {
-			if (user.groups.indexOf(assignedGroups.id) >= 0) {
+			if (assignedUser.ID === user.userId) {
 				contains = true;
 			}
 		}
@@ -192,7 +190,10 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 	}
 
 	toCssClass(input: string) {
-		return input.replace(/[^a-zA-Z0-9 -]/, '');
+		if (input) {
+			return input.replace(/[^a-zA-Z0-9 -]/, '');
+		}
+		return '';
 	}
 
 	isArray(obj: any) {
@@ -200,26 +201,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 	}
 
 	sortActions() {
-		this.actions.sort((a, b) => {
-			let dateA;
-			let dateB;
-			if (this.isArray(a)) {
-				dateA = a[2];
-			} else {
-				dateA = a.date_mod;
-			}
-			if (this.isArray(b)) {
-				dateB = b[2];
-			} else {
-				dateB = b.date_mod;
-			}
-
-			if (this.sortActionsAscending) {
-				return new Date(dateA).getTime() - new Date(dateB).getTime();
-			} else {
-				return new Date(dateB).getTime() - new Date(dateA).getTime();
-			}
-		});
+		this.actions = this.actions.reverse();
 	}
 
 	dateCompare(date: string) {
@@ -234,7 +216,8 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 	}
 
 	followup(followupHTML) {
-		followup(this.modalService, followupHTML, this.httpClient, this.ticket, () => {
+		// @ts-ignore
+		followup(this.modalService, followupHTML, this.httpClient, this.ticket.HD_QUEUE_ID, this.ticket.ID, () => {
 			this.refresh();
 		});
 	}
@@ -339,6 +322,52 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 					modal.privateObject = foundSolution;
 					modal.private = foundSolution.answer;
 				});
+		});
+	}
+
+	openImageInNewWindow(actionId: number, attachmentId: number) {
+		let placeholder = true;
+		this.getImage(actionId, attachmentId).subscribe(img => {
+			if (placeholder) {
+				placeholder = false;
+				return;
+			}
+			const win = window.open();
+			win.document.write(
+				'<iframe src="' + img +
+				'" style="border:0;top:0;left:0;bottom:0;right:0;width: calc(100% + 16px);' +
+				'height: calc(100% + 16px);margin: -8px -8px;" allowfullscreen></iframe>');
+
+			const obj = {Page: 'imgage ' + actionId + ':' + attachmentId, Url: './' + this.page.id};
+			win.window.history.pushState(obj, obj.Page, obj.Url);
+			win.window.document.title = 'Image from ticket ' + this.page.id +
+				' - ' + actionId + ':' + attachmentId;
+		});
+	}
+
+	getImage(actionId: number, attachmentId: number): Observable<any> {
+		const key = actionId + '-' + attachmentId;
+		if (Object.keys(this.imgCache).indexOf(key) >= 0) {
+			return this.imgCache[key];
+		}
+		return this.imgCache[key] = new Observable(observer => {
+			observer.next('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+			sendSecureHeader(headers => {
+				this.httpClient.get<any>(GLOBAL.api + '/service_desk/tickets/' + this.page.id +
+					'/changes/' + actionId + '/attachments/' + attachmentId, {
+					headers,
+					withCredentials: true,
+					// @ts-ignore
+					responseType: 'blob'
+				}).subscribe(sub => {
+					const reader = new FileReader();
+					reader.addEventListener('load', () => {
+						observer.next(reader.result);
+						observer.complete();
+					});
+					reader.readAsDataURL(sub);
+				});
+			});
 		});
 	}
 }

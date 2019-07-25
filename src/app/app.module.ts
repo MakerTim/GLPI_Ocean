@@ -41,11 +41,13 @@ import {StripHtml} from './pipes/striphtml';
 import {SearchticketPage} from './pages/searchticket/searchticket.page';
 import {UserPage} from './pages/user/user.page';
 import {LighthouseService} from './services/lighthouse.service';
+import {SafeHtmlPipe} from './pipes/savehtml';
 
 @NgModule({
 	declarations: [
 		I18n,
 		Debug,
+		SafeHtmlPipe,
 		Dump,
 		BR,
 		StripHtml,

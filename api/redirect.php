@@ -6,7 +6,7 @@ if (!array_key_exists('redirect', $_GET)) {
 	exit();
 }
 
-$redirect = $_GET['redirect'];
+$redirect = str_replace(' ', '%20', $_GET['redirect']);
 $requestedHeaders = [];
 foreach (getallheaders() as $headerName => $headerValue) {
 	$requestedHeaders[] = "$headerName: $headerValue";
@@ -53,5 +53,9 @@ header('Access-control-expose-headers: ' . join(', ', $exposedHeaders));
 if ($err) {
 	echo json_encode($err);
 } else {
-	echo json_encode(json_decode($response), JSON_PRETTY_PRINT);
+	if (strpos($headerString, 'Content-Type: image/')) {
+		echo $response;
+	} else {
+		echo json_encode(json_decode($response), JSON_PRETTY_PRINT);
+	}
 }

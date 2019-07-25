@@ -149,6 +149,16 @@ div.card, form.card {
     word-wrap: break-word;
 }
 
+.fr-emoticon.fr-deletable.fr-emoticon-img {
+    background-repeat: no-repeat !important;
+    height: 1em;
+    width: 1em;
+    min-height: 20px;
+    min-width: 20px;
+    display: inline-block;
+    line-height: 1;
+}
+
 .quote {
     padding: 4px 2px 2px 4px;
     border-bottom: 5px solid var(--highlight);
