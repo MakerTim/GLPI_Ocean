@@ -1,7 +1,7 @@
 /* tslint:disable */
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {isLoggedIn, isLoggingIn, sendSecureHeader} from '../../services/login.service';
+import {getUserRaw, isLoggedIn, isLoggingIn, sendSecureHeader} from '../../services/login.service';
 import {GLOBAL} from '../../services/global';
 import {statsToJson} from '../../services/cmd';
 import {retrieveTicketLayout, TicketCategory} from '../../models/Ticket';
@@ -176,6 +176,9 @@ export class TicketBlockComponent implements OnInit, OnDestroy {
 					continue;
 				}
 				input.name = input.name.replace('attach:', '').replace('[]', '');
+				if (input.name.indexOf('|') >= 0) {
+					input.name = input.name.substr(0, input.name.indexOf('|'));
+				}
 
 				if (element.name.indexOf('attach:') === 0) {
 					appendTo = attachments;
@@ -194,6 +197,9 @@ export class TicketBlockComponent implements OnInit, OnDestroy {
 			}
 		}
 
+		if (getUserRaw().permissions.helpdesk === 'WRITE') {
+			fieldsToSend['submitter'] = getUserRaw().userId;
+		}
 		this.submitMainTicket(fieldsToSend, attachments);
 	}
 
@@ -227,12 +233,29 @@ export class TicketBlockComponent implements OnInit, OnDestroy {
 		sendSecureHeader(headers => {
 			const mainHeaders = headers.set('Type', 'mainpost');
 			this.progressbarAdd(5); // 15
-			this.httpClient.post<any>(GLOBAL.api + '/TicketForm', fieldsToSend, {headers: mainHeaders}).toPromise()
+			this.httpClient.post<any>(GLOBAL.api + '/service_desk/tickets',
+				{'Tickets': [fieldsToSend]}, {
+					headers: mainHeaders,
+					withCredentials: true
+				}).toPromise()
 				.then(response => {
+					if (response.errorDescription) {
+						this.progressbarAdd(85);
+						this.stageType = 'danger';
+						this.stage = 'Error ' + response.errorDescription;
+						return;
+					}
+					if (!response.IDs || response.IDs.length === 0) {
+						this.progressbarAdd(85);
+						this.stageType = 'danger';
+						this.stage = 'Error failed No-ID';
+						return;
+					}
 					this.progressbarAdd(10); // 25
 					this.stageType = 'success';
-					this.lastTicketId = response.id;
-					this.submitSubTicket(headers, response.id, attachments);
+					this.lastTicketId = response.IDs[0];
+					this.progressbarAdd(75);
+					this.finishTicket();
 				})
 				.catch(response => {
 					this.setErrorProgress('Error ' + response.error);

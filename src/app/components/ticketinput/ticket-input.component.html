@@ -18,7 +18,7 @@
 		<ng-container [ngSwitch]="typeArray[0]">
 			<ng-container *ngSwitchCase="'dropdown'">
 				<select #theInput class="custom-select" (change)="onChange($event.target.value)" [id]="'FormId' + label"
-						[title]="typeArray[1]" [value]="typeArray[1]" [name]="label" [required]="['title', 'description'].indexOf(label) >= 0">
+						[value]="typeArray[1]" [name]="label" [required]="['title', 'description'].indexOf(label) >= 0">
 					<option
 						*ngFor="let option of subArray(subArray(typeArray))"
 						[value]="option[objectKeys(option)[0]]"
@@ -29,7 +29,7 @@
 			</ng-container>
 			<ng-container *ngSwitchCase="'field'">
 				<select #theInput class="custom-select" (change)="onChange($event.target.value)" [id]="'FormId' + label"
-						[name]="label" [required]="['title', 'description'].indexOf(label) >= 0">
+						[name]="label" [required]="['title', 'summary'].indexOf(label) >= 0">
 					<option *ngFor="let option of getDatabaseOptions(typeArray[1], typeArray[2])"
 							[value]="typeArray[3] ? option['value'] : option['id']">
 						{{ option['value'] | i18n }}{{ debug ? ': ' + (typeArray[3] ? option['value'] : option['id']) : '' }}

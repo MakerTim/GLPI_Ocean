@@ -52,6 +52,9 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 
 	getTicketCount(state) {
 		let count = 0;
+		if (!this.tickets || !this.tickets.filter) {
+			return count;
+		}
 		this.tickets
 			.filter(ticket => state.indexOf(ticket.status) >= 0)
 			.forEach(ticket => {
@@ -125,6 +128,9 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 	}
 
 	sortPriority(tickets: Ticket[]) {
+		if (!tickets || !tickets.sort) {
+			return [];
+		}
 		return tickets.sort((a, b) => {
 			const indexA = this.priorityClassScale.indexOf(this.getPriority(a));
 			const indexB = this.priorityClassScale.indexOf(this.getPriority(b));

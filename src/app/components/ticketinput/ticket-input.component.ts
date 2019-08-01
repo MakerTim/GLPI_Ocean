@@ -64,6 +64,9 @@ export class TicketInputComponent implements AfterViewInit, OnDestroy {
 	}
 
 	fixName(input: string) {
+		if (input.indexOf('|')) {
+			return input.substr(input.indexOf('|') + 1);
+		}
 		return input.replace('ticket.', '').replace('custom.', '');
 	}
 

@@ -1,4 +1,4 @@
-import {sendSecureHeader} from '../services/login.service';
+import {getUserRaw, sendSecureHeader} from '../services/login.service';
 import {GLOBAL} from '../services/global';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 
@@ -14,27 +14,21 @@ function scaleList() {
 
 export function fields() {
 	return {
-		'type': ['dropdown', '1', {'ticket.incident': '1'}, {'ticket.request': '2'}],
-		'category': ['field', 'kace_itilcategories', 'completename', false],
-		'assignedToUser': ['field', 'kace_users', 'name', false],
-		'assignedToGroup': ['field', 'kace_groups', 'name', false],
-		'status': ['dropdown', '1',
-			{'ticket.incoming': '1'}, {'ticket.assigned': '2'},
-			{'ticket.planned': '3'}, {'ticket.waiting': '4'},
-			{'ticket.solved': '5'}, {'ticket.closed': '6'},
-			{'ticket.accepted': '7'}, {'ticket.observed': '8'},
-			{'ticket.evaluation': '9'}, {'ticket.approval': '10'},
-			{'ticket.test': '11'}, {'ticket.qualification': '12'}
-		],
-		'urgency': [...['dropdown'], ...scaleList()],
-		'impact': [...['dropdown'], ...scaleList()],
-		'priority': [...['dropdown'], ...scaleList()],
-		'source': ['field', 'kace_requesttypes', 'name', false],
-		'SLA-max-time': timeDropdownArray(),
 		'title': ['input', 'text'],
-		'description': ['text'],
-		'other-ticket': ['field', 'kace_tickets', 'name', false],
-		'file': ['file'],
+		'summary': ['text'],
+		'hd_queue_id|Desk': ['dropdown', '3', {'ICT support': '3'}, {'Applicatie beheer': '2'}, {'Business Intelligence': '4'}],
+		'impact': ['dropdown', '5',
+			{'Hele afdeling staat vast': '5'},
+			{'Hele afdeling ondervind hinder': '6'},
+			{'Deel afdeling staat vast': '17'},
+			{'Deel afdeling ondervind hinder': '18'},
+			{'1 persoon staat vast': '7'},
+			{'1 persoon ondervind hinder': '8'},
+			{'Overig: 1 persoon': '24'},
+			{'Overig: deel afdeling': '25'},
+			{'Overig: hele afdeling': '26'},
+		],
+		'owner|Wijs aan': ['field', 'User', 'FULL_NAME', false],
 	};
 }
 

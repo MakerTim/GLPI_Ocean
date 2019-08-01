@@ -21,6 +21,15 @@ class Tickets extends RoutingBase {
 			$fields = json_decode(file_get_contents('php://input'), true);
 			$statement = "$select
 				FROM HD_TICKET t
+				JOIN (
+					SELECT t.ID AS `s`, GROUP_CONCAT(c.`COMMENT`) AS `c`
+					FROM HD_TICKET t
+					JOIN HD_TICKET_CHANGE c
+						ON t.ID = c.HD_TICKET_ID
+					WHERE c.`COMMENT` <> ''
+					GROUP BY t.ID
+				) c
+				ON c.s = t.ID
 				JOIN HD_STATUS s
 				ON t.HD_STATUS_ID = s.ID ";
 
@@ -32,11 +41,14 @@ class Tickets extends RoutingBase {
 				$fields['content'] = str_replace("\n", ' ', $fields['content']);
 				$searchFields = array_merge($searchFields, explode(' ', $fields['content']));
 			}
-			if (count($searchFields) > 0) {
+			if (count($searchFields) > 0 && !empty($searchFields[0])) {
 				$statement .= 'WHERE ';
 				foreach ($searchFields as $searchField) {
+					if (empty($searchField)) {
+						continue;
+					}
 					$searchField = str_replace("'", "''", $searchField);
-					$statement .= " t.TITLE LIKE '%$searchField%' OR t.SUMMARY LIKE '%$searchField%' OR";
+					$statement .= " t.TITLE LIKE '%$searchField%' OR t.SUMMARY LIKE '%$searchField%' OR c.c LIKE '%$searchField%' OR";
 				}
 				$statement = rtrim($statement, 'OR');
 			} else {

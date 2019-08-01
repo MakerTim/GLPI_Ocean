@@ -88,7 +88,12 @@ class TicketForm extends RoutingBase {
 		/** @var PDO $DB */ global $DB;
 
 		$assetClass = array_key_exists('HTTP_FIELD', $_SERVER) ? $_SERVER['HTTP_FIELD'] : '';
-		if ($assetClass === 'NAME') {
+		$assetTable = array_key_exists('HTTP_TABLE', $_SERVER) ? $_SERVER['HTTP_TABLE'] : '';
+		if ($assetTable === 'User') {
+			$statement = $DB->prepare("SELECT ID, " . $assetClass . " AS NAME
+				FROM USER u");
+			$statement->execute();
+		} else if ($assetClass === 'NAME') {
 			$assetType = array_key_exists('HTTP_TABLE', $_SERVER) ? $_SERVER['HTTP_TABLE'] : '';
 			$statement = $DB->prepare("SELECT ID, NAME
 				FROM ASSET A
@@ -246,23 +251,23 @@ class TicketForm extends RoutingBase {
 			}
 		}
 
-//		$newTicket = FastTicket::createNewTicket($user, //
-//			$this->getFromObject($ticketData, 'type'), //
-//			$this->getFromObject($ticketData, 'category'), //
-//			$this->getFromObject($ticketData, 'status'), //
-//			$this->getFromObject($ticketData, 'urgency'), //
-//			$this->getFromObject($ticketData, 'impact'), //
-//			$this->getFromObject($ticketData, 'priority'), //
-//			$this->getFromObject($ticketData, 'source'), //
-//			$this->getFromObject($ticketData, 'SLA-max-time'), //
-//			$this->getFromObject($ticketData, 'title'), //
-//			$this->getFromObject($ticketData, 'description'), //
-//			$this->getFromObject($ticketData, 'other-ticket'), //
-//			$this->getFromObject($ticketData, 'assignedToUser'), //
-//			$this->getFromObject($ticketData, 'assignedToGroup') //
-//		);
+		//		$newTicket = FastTicket::createNewTicket($user, //
+		//			$this->getFromObject($ticketData, 'type'), //
+		//			$this->getFromObject($ticketData, 'category'), //
+		//			$this->getFromObject($ticketData, 'status'), //
+		//			$this->getFromObject($ticketData, 'urgency'), //
+		//			$this->getFromObject($ticketData, 'impact'), //
+		//			$this->getFromObject($ticketData, 'priority'), //
+		//			$this->getFromObject($ticketData, 'source'), //
+		//			$this->getFromObject($ticketData, 'SLA-max-time'), //
+		//			$this->getFromObject($ticketData, 'title'), //
+		//			$this->getFromObject($ticketData, 'description'), //
+		//			$this->getFromObject($ticketData, 'other-ticket'), //
+		//			$this->getFromObject($ticketData, 'assignedToUser'), //
+		//			$this->getFromObject($ticketData, 'assignedToGroup') //
+		//		);
 
-//		return $newTicket;
+		//		return $newTicket;
 	}
 
 	private function getFromObject(\stdClass $class, $property, $default = null) {
@@ -281,7 +286,7 @@ class TicketForm extends RoutingBase {
 
 		$categoryName = file_get_contents('php://input');
 
-		$insert = $DB->prepare("INSERT INTO glpi_plugin_ocean_category (category_i18n, data) VALUES (:catName, '[]');");
+		$insert = $DB->prepare("INSERT INTO test.glpi_plugin_ocean_category (category_i18n, data) VALUES (:catName, '[]');");
 		$insert->bindParam(':catName', $categoryName);
 		if (!$insert->execute()) {
 			sendError('Failed creating');
@@ -322,7 +327,7 @@ class TicketForm extends RoutingBase {
 	private function getTableStructure() {
 		/** @var PDO $DB */ global $DB;
 
-		$returnArray = [];
+		$returnArray = ['User' => ['USER_NAME', 'EMAIL', 'FULL_NAME', 'ID']];
 
 		foreach ($DB->query('SELECT `ID`, `NAME` FROM ASSET_TYPE')->fetchAll() as $type) {
 			$returnArray[$type['NAME']] = ['NAME'];

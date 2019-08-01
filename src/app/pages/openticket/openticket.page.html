@@ -261,7 +261,7 @@
                     </div>
                     <ng-container *ngFor="let action of actions">
                         <ng-container *ngIf="action.attachments.length === 0">
-                            <ng-container *ngIf="!action.owners_only">
+                            <ng-container *ngIf="!action.owners_only && action.comment">
                                 <div [class]="'action-block row status-' + toCssClass(action.status)">
                                     <div class="col-3 center person-box">
                                         <a [href]="kaceURL + 'adminui/user.php?ID=' + action.user.id"
@@ -284,7 +284,7 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="action.owners_only">
+                            <ng-container *ngIf="action.owners_only && action.comment">
                                 <div [class]="'action-block row status-' + toCssClass(action.status)">
                                     <div class="col-2 action-date">
                                         <span>{{ action.timestamp }}</span>

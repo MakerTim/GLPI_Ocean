@@ -356,7 +356,7 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 				}
 				sendSecureHeader(headers => {
 					headers = headers.set('Type', 'create');
-					this.httpClient.post(GLOBAL.api + '/TicketForm', result, {headers}).toPromise()
+					this.httpClient.post(GLOBAL.custom + '/TicketForm', result, {headers}).toPromise()
 						.then(success => {
 							if (typeof success === 'number' && success >= 1) {
 								thiz.popup('ticket-admin.catname-created');
@@ -393,7 +393,9 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 			headers = headers.set('Type', 'switch')
 				.set('ID1', id1)
 				.set('ID2', id2);
-			this.httpClient.get(GLOBAL.api + '/TicketForm', {headers}).toPromise()
+			this.httpClient.get(GLOBAL.custom + '/TicketForm', {
+				headers, withCredentials: true
+			}).toPromise()
 				.then(success => {
 					this.onRefresh();
 					this.page = this.indexOf(this.categories, selectedPage) + 1;
@@ -438,6 +440,6 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 	}
 
 	addCustomField(data: any) {
-		data['custom.' + this.customField] = ['empty'];
+		data[this.customField] = ['empty'];
 	}
 }

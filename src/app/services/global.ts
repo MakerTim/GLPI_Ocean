@@ -1,9 +1,9 @@
 export const GLOBAL = {
 	kaceUrl: 'http://kace/',
 	url: 'http://kace/',
-	custom: 'http://localhost/ocean/api/fastAPI.php',
-	api: 'http://localhost/ocean/api/redirect.php?redirect=http://kace/api',
-	ams: 'http://localhost/ocean/api/redirect.php?redirect=http://kace/ams',
+	custom: 'http://192.168.12.139/ocean/api/fastAPI.php',
+	api: 'http://192.168.12.139/ocean/api/redirect.php?redirect=http://kace/api',
+	ams: 'http://192.168.12.139/ocean/api/redirect.php?redirect=http://kace/ams',
 	urlInternal: document.getElementsByTagName('base')[0].href,
 	lang: localStorage.getItem('locale')
 		|| languageFromString(navigator.language),
