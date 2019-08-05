@@ -33,7 +33,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 		['date_creation'], ['date_mod'], ['closedate'], [], //
 
 		['users_id_recipient'], ['requested_users', 'user'], ['requested_groups', 'group'], ['users_id_lastupdater'], //
-		['assigned_users', 'user'], ['assigned_groups', 'group'], [], //
+		['assigned_users', 'user'], ['assigned_groups', 'group'], ['assign_self', 'button', this.assignSelf], [], //
 
 		['status'], ['urgency'], ['impact'], ['priority'], //
 		['itilcategories_id'], ['requesttypes_id'], ['global_validation'], ['locations_id'], [], //
@@ -84,6 +84,22 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 		return super.isHalting() || this.modalService.hasOpenModals();
 	}
 
+	assignSelf(thiz, remove = false) {
+		sendSecureHeader(headers => {
+			headers = headers.set('Type', 'assignTo');
+			const user = 'user_' + getUserRaw().id;
+			const unassigned = 'unassigned';
+			thiz.httpClient.post(GLOBAL.api + '/GlobalTicket', {
+				oldContainer: remove ? user : unassigned,
+				newContainer: remove ? unassigned : user,
+				id: thiz.ticket.id
+			}, {headers}).toPromise()
+				.then(_ => {
+					thiz.onRefresh();
+				});
+		});
+	}
+
 	refreshContent() {
 		sendSecureHeader(headers => {
 			headers = headers.set('id', this.page.id);
@@ -118,7 +134,7 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 			});
 	}
 
-	userIsPoster() {
+	userIsPoster(includeGroup = true) {
 		const user = getUserRaw();
 		if (user == null || user.groups == null ||
 			this.ticket == null || this.ticket.requested_users == null || this.ticket.requested_groups == null) {
@@ -130,15 +146,17 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 				contains = true;
 			}
 		}
-		for (const requestedGroups of this.ticket.requested_groups) {
-			if (user.groups.indexOf(requestedGroups.id) >= 0) {
-				contains = true;
+		if (includeGroup) {
+			for (const requestedGroups of this.ticket.requested_groups) {
+				if (user.groups.indexOf(requestedGroups.id) >= 0) {
+					contains = true;
+				}
 			}
 		}
 		return contains || user.id === this.ticket.users_id_recipient_id;
 	}
 
-	userIsAssigned() {
+	userIsAssigned(includeGroup = true) {
 		const user = getUserRaw();
 		if (user == null || user.groups == null ||
 			this.ticket == null || this.ticket.assigned_users == null || this.ticket.assigned_groups == null) {
@@ -150,12 +168,18 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 				contains = true;
 			}
 		}
-		for (const assignedGroups of this.ticket.assigned_groups) {
-			if (user.groups.indexOf(assignedGroups.id) >= 0) {
-				contains = true;
+		if (includeGroup) {
+			for (const assignedGroups of this.ticket.assigned_groups) {
+				if (user.groups.indexOf(assignedGroups.id) >= 0) {
+					contains = true;
+				}
 			}
 		}
 		return contains;
+	}
+
+	getUser() {
+		return getUserRaw();
 	}
 
 	isClosed() {
