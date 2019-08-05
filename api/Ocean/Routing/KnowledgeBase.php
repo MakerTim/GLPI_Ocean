@@ -97,7 +97,7 @@ class KnowledgeBase extends RoutingBase {
 			$_SERVER['HTTP_ID'] = intval($id->fetchAll()[0]['id']);
 		}
 
-		$linkedStatement = $DB->prepare("INSERT INTO glpi_knowbaseitems_items (`knowbaseitems_id`, `itemtype`, `items_id`, `date_creation`, `date_mod`) VALUES (:id, 'Ticket', :ticketId, :date, :date)");
+		$linkedStatement = $DB->prepare("INSERT IGNORE INTO glpi_knowbaseitems_items (`knowbaseitems_id`, `itemtype`, `items_id`, `date_creation`, `date_mod`) VALUES (:id, 'Ticket', :ticketId, :date, :date)");
 		$linkedStatement->bindParam(':id', $_SERVER['HTTP_ID']);
 		$linkedStatement->bindParam(':ticketId', $_SERVER['HTTP_TICKETID']);
 		$linkedStatement->bindParam(':date', $date);
@@ -105,6 +105,10 @@ class KnowledgeBase extends RoutingBase {
 			$linkedStatement->debugDumpParams();
 			sendError('Failed linking knowbaseitem');
 		}
+		$statementId = $_SERVER['HTTP_ID'];
+		$_SERVER['HTTP_ID'] = $_SERVER['HTTP_TICKETID'];
+		(new Ticket())->close($user, false);
+		$_SERVER['HTTP_ID'] = $statementId;
 		return $this->solution();
 	}
 }
