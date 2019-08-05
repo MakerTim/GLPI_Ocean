@@ -53,6 +53,9 @@ class GlobalTicket extends RoutingBase {
 			$statement->bindParam(':ticketId', $ticketId);
 			$statement->bindParam(':assigned', $id);
 
+			if ($this->isDupe($toTable, $type, 2, $ticketId, $id)) {
+				return true;
+			}
 			if ($type === 'user') {
 				FastTicket::setTicketStatus($ticketId, FastTicket::ASSIGNED, FastTicket::INCOMING);
 			}
@@ -88,7 +91,7 @@ class GlobalTicket extends RoutingBase {
 			$statement->bindParam(':id', $ticketId);
 			$statement->bindParam(':assigned', $id);
 			if (!$statement->execute()) {
-//				$statement->debugDumpParams();
+				//				$statement->debugDumpParams();
 				sendError('Error moving ticket ' . json_encode($content));
 			}
 
@@ -96,6 +99,9 @@ class GlobalTicket extends RoutingBase {
 			$id = $new[1];
 			$toTable = $new[2];
 
+			if ($this->isDupe($toTable, $type, 2, $ticketId, $id)) {
+				return true;
+			}
 			$statement = $DB->prepare("INSERT IGNORE INTO $toTable (tickets_id, " . $type . "s_id, type) VALUES (:ticketId, :assigned, 2)");
 			$statement->bindParam(':ticketId', $ticketId);
 			$statement->bindParam(':assigned', $id);
@@ -105,7 +111,7 @@ class GlobalTicket extends RoutingBase {
 		}
 
 		if (!$statement->execute()) {
-//			$statement->debugDumpParams();
+			//			$statement->debugDumpParams();
 			sendError('Error moving ticket ' . json_encode($content));
 		}
 
@@ -125,6 +131,18 @@ class GlobalTicket extends RoutingBase {
 			sendError('New container type not supported');
 		}
 		return $values;
+	}
+
+	private function isDupe($toTable, $type, $typeNum, $ticketId, $assigned) {
+		/** @var PDO $DB */ global $DB;
+
+		$statement = $DB->prepare("SELECT * FROM $toTable WHERE tickets_id=:ticketId AND " . $type . "s_id=:assigned AND type=:type");
+		$statement->bindParam(':ticketId', $ticketId);
+		$statement->bindParam(':assigned', $assigned);
+		$statement->bindParam(':type', $typeNum);
+		$statement->execute();
+
+		return $statement->rowCount() > 0;
 	}
 
 	/**
