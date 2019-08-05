@@ -1,377 +1,390 @@
 <ng-template #newCategoryHTML let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">{{ 'ticket.internal.category' | i18n }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form>
-            <div class="form-group">
-                <label for="z">{{ 'ticket.internal.category' | i18n }}</label>
-                <div class="input-group">
-                    <input ngbAutofocus [(ngModel)]="modal.content" name="content" id="z"
-                           class="form-control" type="text">
-                </div>
-            </div>
-            {{ modal.content | striphtml }}
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark"
-                (click)="modal.close(modal.content)">{{ 'ticket.post' | i18n }}</button>
-    </div>
+	<div class="modal-header">
+		<h4 class="modal-title">{{ 'ticket.internal.category' | i18n }}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form>
+			<div class="form-group">
+				<label for="z">{{ 'ticket.internal.category' | i18n }}</label>
+				<div class="input-group">
+					<input ngbAutofocus [(ngModel)]="modal.content" name="content" id="z"
+						   class="form-control" type="text">
+				</div>
+			</div>
+			{{ modal.content | striphtml }}
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark"
+				(click)="modal.close(modal.content)">{{ 'ticket.post' | i18n }}</button>
+	</div>
 </ng-template>
 
 <ng-template #followupHTML let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">{{ 'ticket.message' | i18n }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form>
-            <div class="form-group">
-                <label for="content">{{ 'ticket.message' | i18n }}</label>
-                <div class="input-group">
+	<div class="modal-header">
+		<h4 class="modal-title">{{ 'ticket.message' | i18n }}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form>
+			<div class="form-group">
+				<label for="content">{{ 'ticket.message' | i18n }}</label>
+				<div class="input-group">
                     <textarea ngbAutofocus [(ngModel)]="modal.content" name="content" id="content"
-                              class="form-control"></textarea>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark"
-                (click)="modal.close(modal.content)">{{ 'ticket.post' | i18n }}</button>
-    </div>
+							  class="form-control"></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark"
+				(click)="modal.close(modal.content)">{{ 'ticket.post' | i18n }}</button>
+	</div>
 </ng-template>
 
 <ng-template #solutionHTML let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">{{ 'ticket.solution' | i18n }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body noPadding">
-        <div class="row noMargin">
-            <div class="col-6 public-solution">
-                <div class="form-group">
-                    <h5>{{ 'ticket.solution.public.title' | i18n }}</h5>
-                    <label for="solution">{{ 'ticket.solution.public' | i18n }}</label>
-                    <div class="input-group">
+	<div class="modal-header">
+		<h4 class="modal-title">{{ 'ticket.solution' | i18n }}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body noPadding">
+		<div class="row noMargin">
+			<div class="col-6 public-solution">
+				<div class="form-group">
+					<h5>{{ 'ticket.solution.public.title' | i18n }}</h5>
+					<label for="solution">{{ 'ticket.solution.public' | i18n }}</label>
+					<div class="input-group">
                     <textarea ngbAutofocus [(ngModel)]="modal.content" name="content" id="solution"
-                              style="height: 132px" class="form-control"></textarea>
-                    </div>
-                    <div><b>{{ 'ticket.solution.preview' | i18n }}</b></div>
-                    <div [innerHTML]="modal.content | br"></div>
-                </div>
-            </div>
-            <div class="col-6 private-solution">
-                <div class="form-group">
-                    <h5>{{ 'ticket.solution.private.title' | i18n }}</h5>
-                    <label for="navigateSolutionDir">{{ 'ticket.solution.find' | i18n }}</label>
-                    <button class="btn btn-sm btn-danger" (click)="createNewCategory(newCategoryHTML)">+</button>
-                    <select (change)="selectSolutionDir($event.target.value, modal)" class="form-control"
-                            id="navigateSolutionDir">
-                        <option [value]="null" selected>{{ 'ticket.solution.none' | i18n }}</option>
-                        <option *ngFor="let solutionDirectory of solutionDirectories"
-                                [value]="solutionDirectory.id">
-                            {{ solutionDirectory.name }}
-                        </option>
-                    </select>
-                    <ng-container *ngIf="solutions.length > 0 && !modal.privateTitle">
-                        <label for="navigateSolution">{{ 'ticket.solution.select' | i18n }}</label>
-                        <select [(ngModel)]="modal.internalSelected"
-                                (change)="selectSolution($event.target.value, modal)" class="form-control"
-                                id="navigateSolution">
-                            <option [value]="null" selected>{{ 'ticket.solution.none' | i18n }}</option>
-                            <option *ngFor="let solution of solutions"
-                                    [value]="solutions.indexOf(solution)">
-                                {{ solution.name }}
-                            </option>
-                        </select>
-                    </ng-container>
+							  style="height: 132px" class="form-control"></textarea>
+					</div>
+					<div><b>{{ 'ticket.solution.preview' | i18n }}</b></div>
+					<div [innerHTML]="modal.content | br"></div>
+				</div>
+			</div>
+			<div class="col-6 private-solution">
+				<div class="form-group">
+					<h5>{{ 'ticket.solution.private.title' | i18n }}</h5>
+					<label for="navigateSolutionDir">{{ 'ticket.solution.find' | i18n }}</label>
+					<button class="btn btn-sm btn-danger" (click)="createNewCategory(newCategoryHTML)">+</button>
+					<select (change)="selectSolutionDir($event.target.value, modal)" class="form-control"
+							id="navigateSolutionDir">
+						<option [value]="null" selected>{{ 'ticket.solution.none' | i18n }}</option>
+						<option *ngFor="let solutionDirectory of solutionDirectories"
+								[value]="solutionDirectory.id">
+							{{ solutionDirectory.name }}
+						</option>
+					</select>
+					<ng-container *ngIf="solutions.length > 0 && !modal.privateTitle">
+						<label for="navigateSolution">{{ 'ticket.solution.select' | i18n }}</label>
+						<select [(ngModel)]="modal.internalSelected"
+								(change)="selectSolution($event.target.value, modal)" class="form-control"
+								id="navigateSolution">
+							<option [value]="null" selected>{{ 'ticket.solution.none' | i18n }}</option>
+							<option *ngFor="let solution of solutions"
+									[value]="solutions.indexOf(solution)">
+								{{ solution.name }}
+							</option>
+						</select>
+					</ng-container>
 
-                    <ng-container *ngIf="modal.category != null && modal.category != 'null'">
-                        <div *ngIf="solutions.length > 0 && !modal.privateObject && !modal.privateTitle"> {{ 'ticket.solution.or' | i18n }}</div>
-                        <label *ngIf="!modal.privateObject">
-                            {{ 'ticket.solution.newTitle' | i18n }}
-                            <input style="width: auto;display: inline-block;max-width: 100%;"
-                                   class="form-control" type="text" [(ngModel)]="modal.privateTitle" name="tickettitle">
-                        </label>
-                    </ng-container>
-                    <label for="procedure">{{ 'ticket.solution.private' | i18n }}</label>
-                    <div class="input-group">
+					<ng-container *ngIf="modal.category != null && modal.category != 'null'">
+						<div
+							*ngIf="solutions.length > 0 && !modal.privateObject && !modal.privateTitle"> {{ 'ticket.solution.or' | i18n }}</div>
+						<label *ngIf="!modal.privateObject">
+							{{ 'ticket.solution.newTitle' | i18n }}
+							<input style="width: auto;display: inline-block;max-width: 100%;"
+								   class="form-control" type="text" [(ngModel)]="modal.privateTitle" name="tickettitle">
+						</label>
+					</ng-container>
+					<label for="procedure">{{ 'ticket.solution.private' | i18n }}</label>
+					<div class="input-group">
                         <textarea [(ngModel)]="modal.private" name="content" id="procedure"
-                                  class="form-control"></textarea>
-                    </div>
-                    <div><b>{{ 'ticket.solution.preview' | i18n }}</b></div>
-                    <div [innerHTML]="modal.private | br"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark"
-                [disabled]="!modal.content || modal.content.length === 0 || modal.category == null || modal.category == 'null' || (!modal.privateObject && !modal.private)"
-                (click)="modal.close([modal.content, modal.privateObject ? modal.privateObject : modal.private, modal])">{{ 'ticket.post' | i18n }}</button>
-    </div>
+								  class="form-control"></textarea>
+					</div>
+					<div><b>{{ 'ticket.solution.preview' | i18n }}</b></div>
+					<div [innerHTML]="modal.private | br"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark"
+				[disabled]="!modal.content || modal.content.length === 0 || modal.category == null || modal.category == 'null' || (!modal.privateObject && !modal.private)"
+				(click)="modal.close([modal.content, modal.privateObject ? modal.privateObject : modal.private, modal])">{{ 'ticket.post' | i18n }}</button>
+	</div>
 </ng-template>
 
 <div class="home">
-    <div class="header" [title]="ticket.name">
-        {{ 'ticket.ticketTitle' | i18n }}
-        {{ ticket.name }}
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-lg-3" style="padding-right: 0 !important;">
-            <div class="inner-block inner-block-left">
-                <button (click)="goBack()" class="btn btn-outline-info max-width">
-                    {{ 'ticket.goback' | i18n }}
-                </button>
-                <ng-container *ngFor="let leftMenuItem of leftMenuItems">
-                    <div *ngIf="leftMenuItem.length === 1">
-                        <b>{{ 'ticket.' + leftMenuItem | i18n }}:</b>
-                        <ng-container *ngIf="ticket[leftMenuItem]">
-                            {{ ('ticket.' + ticket[leftMenuItem] | i18n)?.replace('ticket.', '') }}
-                        </ng-container>
-                        <ng-container
-                                *ngIf="ticket[leftMenuItem + '2']">{{ ticket[leftMenuItem + '2'] }} </ng-container>
-                        <ng-container *ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'">
-                            <a class="iconholder" [routerLink]="'/dashboard/Ticket/user/' + ticket[leftMenuItem + '_id']">
-                                <i class="fas fa-columns"></i>
-                            </a>
-                            <a class="iconholder" [routerLink]="'/admin/user/' + ticket[leftMenuItem + '_id']">
-                                <i class="fas fa-user"></i>
-                            </a>
-                        </ng-container>
-                    </div>
-                    <div *ngIf="leftMenuItem.length === 2 && ticket[leftMenuItem[0]]?.length > 0">
-                        <b>{{ 'ticket.' + leftMenuItem[0] | i18n }}:</b><br>
-                        <ng-container *ngFor="let item of ticket[leftMenuItem[0]]">
-                            &nbsp;{{ item[leftMenuItem[0]] }}
-                            <ng-container *ngIf="leftMenuItem[1] !== 'group'">
-                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()" [routerLink]="'/dashboard/Ticket/user/' + item['id']">
-                                    <i class="fas fa-columns"></i>
-                                </a>
-                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
-                                   target="_blank"
-                                   [href]="glpiURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            </ng-container>
-                            <ng-container *ngIf="leftMenuItem[1] === 'group'">
-                                <a class="iconholder" [routerLink]="'/dashboard/Ticket/' + item['id']">
-                                    <i class="fas fa-columns"></i>
-                                </a>
-                                <a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
-                                   [routerLink]="['/group/Ticket/' + item['id']]">
-                                    <i class="fas fa-stream"></i>
-                                </a>
-                            </ng-container>
-                            <br>
-                        </ng-container>
-                    </div>
-                    <br *ngIf="leftMenuItem.length === 0">
-                </ng-container>
-                <div>
-                    <a [href]="glpiURL + 'front/ticket.form.php?id=' + ticket.id" target="_blank">
-                        {{ 'ticket.open-glpi' | i18n }}
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div style="padding: 0 !important;" [class]="userIsAssigned() ? 'col-lg-7': 'col-lg-9'">
-            <div class="inner-block inner-block-center inner-block-main">
-                <div class="inner-block inner-block-center">
-                    <ng-container *ngFor="let centerItem of centerTopMenuItems">
-                        <div *ngIf="centerItem" class="center">
-                            <b>{{ 'ticket.' + centerItem | i18n }}:</b><br>
-                            <span [innerHTML]="ticket[centerItem] | br"></span>
-                        </div>
-                        <br *ngIf="!centerItem">
-                    </ng-container>
-                    <div class="center">
-                        <b>{{ 'ticket.attachments' | i18n }}:</b><br>
-                        <ng-container *ngFor="let attachment of attachments">
-                            <div class="attachment-block" *ngIf="attachment.length === 3">
-                                <a target="_blank" [href]="glpiURL + attachment[1].substr(1)">
-                                    <i class="fa fa-download" aria-hidden="true"></i><br>
-                                    {{ attachment[0] }}
-                                </a>
-                            </div>
-                            <div class="attachment-block attachment-img" *ngIf="attachment.length === 4">
-                                <img (click)="toggleFixed($event.target)" [alt]="attachment[0]"
-                                     [src]="'data:image/png;base64,' + attachment[3]"><br>
-                                <a target="_blank"
-                                   [href]="glpiURL + attachment[1].substr(1)">{{ attachment[0] }}</a>
-                            </div>
-                        </ng-container>
-                        <span *ngIf="attachments.length === 0">None</span>
-                    </div>
-                    <br>
-                </div>
-                <div class="inner-block inner-block-center">
+	<div class="header" [title]="ticket.name">
+		{{ 'ticket.ticketTitle' | i18n }}
+		{{ ticket.name }}
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-3" style="padding-right: 0 !important;">
+			<div class="inner-block inner-block-left">
+				<button (click)="goBack()" class="btn btn-outline-info max-width">
+					{{ 'ticket.goback' | i18n }}
+				</button>
+				<ng-container *ngFor="let leftMenuItem of leftMenuItems">
+					<div *ngIf="leftMenuItem.length === 1">
+						<b>{{ 'ticket.' + leftMenuItem | i18n }}:</b>
+						<ng-container *ngIf="ticket[leftMenuItem]">
+							{{ ('ticket.' + ticket[leftMenuItem] | i18n)?.replace('ticket.', '') }}
+						</ng-container>
+						<ng-container
+							*ngIf="ticket[leftMenuItem + '2']">{{ ticket[leftMenuItem + '2'] }} </ng-container>
+						<ng-container
+							*ngIf="ticket[leftMenuItem + '_id'] && userIsAssigned() && leftMenuItem != 'status'">
+							<a class="iconholder"
+							   [routerLink]="'/dashboard/Ticket/user/' + ticket[leftMenuItem + '_id']">
+								<i class="fas fa-columns"></i>
+							</a>
+							<a class="iconholder" [routerLink]="'/admin/user/' + ticket[leftMenuItem + '_id']">
+								<i class="fas fa-user"></i>
+							</a>
+						</ng-container>
+					</div>
+					<div *ngIf="leftMenuItem.length === 2 && ticket[leftMenuItem[0]]?.length > 0">
+						<b>{{ 'ticket.' + leftMenuItem[0] | i18n }}:</b><br>
+						<ng-container *ngFor="let item of ticket[leftMenuItem[0]]">
+							&nbsp;{{ item[leftMenuItem[0]] }}
+							<ng-container *ngIf="leftMenuItem[1] !== 'group'">
+								<a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
+								   [routerLink]="'/dashboard/Ticket/user/' + item['id']">
+									<i class="fas fa-columns"></i>
+								</a>
+								<a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
+								   target="_blank"
+								   [href]="glpiURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
+									<i class="fas fa-external-link-alt"></i>
+								</a>
+								<a class="iconholder" *ngIf="getUser() && getUser().id === item['id'] && leftMenuItem[0] === 'assigned_users'"
+								   target="_blank" style="color: red; cursor: pointer"
+								   (click)="assignSelf(this, true)">
+									<i class="far fa-trash-alt"></i>
+								</a>
+							</ng-container>
+							<ng-container *ngIf="leftMenuItem[1] === 'group'">
+								<a class="iconholder" [routerLink]="'/dashboard/Ticket/' + item['id']">
+									<i class="fas fa-columns"></i>
+								</a>
+								<a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
+								   [routerLink]="['/group/Ticket/' + item['id']]">
+									<i class="fas fa-stream"></i>
+								</a>
+							</ng-container>
+							<br>
+						</ng-container>
+					</div>
+					<div *ngIf="leftMenuItem.length === 3 && leftMenuItem[1] === 'button'
+							&& !userIsAssigned(false) && userIsAssigned(true)">
+						<button (click)="leftMenuItem[2](this)" class="btn btn-sm btn-info">{{ 'ticket.' + leftMenuItem[0] | i18n }}</button>
+					</div>
+					<br *ngIf="leftMenuItem.length === 0">
+				</ng-container>
+				<div>
+					<a [href]="glpiURL + 'front/ticket.form.php?id=' + ticket.id" target="_blank">
+						{{ 'ticket.open-glpi' | i18n }}
+					</a>
+				</div>
+			</div>
+		</div>
+		<div style="padding: 0 !important;" [class]="userIsAssigned() ? 'col-lg-7': 'col-lg-9'">
+			<div class="inner-block inner-block-center inner-block-main">
+				<div class="inner-block inner-block-center">
+					<ng-container *ngFor="let centerItem of centerTopMenuItems">
+						<div *ngIf="centerItem" class="center">
+							<b>{{ 'ticket.' + centerItem | i18n }}:</b><br>
+							<span [innerHTML]="ticket[centerItem] | br"></span>
+						</div>
+						<br *ngIf="!centerItem">
+					</ng-container>
+					<div class="center">
+						<b>{{ 'ticket.attachments' | i18n }}:</b><br>
+						<ng-container *ngFor="let attachment of attachments">
+							<div class="attachment-block" *ngIf="attachment.length === 3">
+								<a target="_blank" [href]="glpiURL + attachment[1].substr(1)">
+									<i class="fa fa-download" aria-hidden="true"></i><br>
+									{{ attachment[0] }}
+								</a>
+							</div>
+							<div class="attachment-block attachment-img" *ngIf="attachment.length === 4">
+								<img (click)="toggleFixed($event.target)" [alt]="attachment[0]"
+									 [src]="'data:image/png;base64,' + attachment[3]"><br>
+								<a target="_blank"
+								   [href]="glpiURL + attachment[1].substr(1)">{{ attachment[0] }}</a>
+							</div>
+						</ng-container>
+						<span *ngIf="attachments.length === 0">None</span>
+					</div>
+					<br>
+				</div>
+				<div class="inner-block inner-block-center">
 					<span class="center" style="display: block;">
 						<b>{{ 'ticket.actions' | i18n }}</b>
 					</span>
-                    <div class="row">
-                        <div class="col-xl-4 margin-bottom">
-                            <b *ngIf="userIsPoster()">{{ 'ticket.useroptions' | i18n }}:</b>
-                            <div *ngIf="userIsPoster() && !isClosed()" class="btn-group-vert">
-                                <button (click)="followup(followupHTML)"
-                                        class="btn btn-sm btn-highlight max-width">{{ 'ticket.action_followup' | i18n }}</button>
-                                <label class="btn btn-sm btn-success max-width">
-                                    <input type="file" (change)="attach($event.target)"
-                                           class="custom-file-input">{{ 'ticket.action_document' | i18n }}
-                                </label>
-                                <button (click)="preCloseTicket()" [disabled]="ticket.status === 'closed'"
-                                        class="btn btn-sm btn-dark max-width">{{ 'ticket.close' | i18n }}</button>
-                            </div>
-                            <div *ngIf="userIsPoster() && isClosed()">
-                                <button (click)="followup(followupHTML)"
-                                        class="btn btn-sm btn-outline-warning max-width">{{ 'ticket.action_followup_open' | i18n }}</button>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 center">
-                            {{ 'ticket.sort' | i18n }}:
-                            {{ 'ticket.sort.' + (sortActionsAscending ? 'asc' : 'desc') | i18n }}
-                            <span class="btn btn-outline-primary btn-sm"
-                                  (click)="sortActionsAscending = !sortActionsAscending; sortActions()"><i
-                                    class="fas fa-sort"></i></span><br>
-                            <b *ngIf="userIsPoster() && hasOpenSolution() && !isClosed()">{{ 'ticket.closeoptions' | i18n }}
-                                :</b>
-                            <div *ngIf="userIsPoster() && hasOpenSolution() && !isClosed()" class="btn-group-vert">
-                                <button (click)="markSolution(followupHTML, true)"
-                                        class="btn btn-sm btn-outline-success max-width">{{ 'ticket.action_accept' | i18n }}</button>
-                                <button (click)="markSolution(followupHTML, false)"
-                                        class="btn btn-sm btn-outline-danger max-width">{{ 'ticket.action_failed' | i18n }}</button>
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <b *ngIf="userIsAssigned() && !isClosed()">{{ 'ticket.supportoptions' | i18n }}:</b>
-                            <div *ngIf="userIsAssigned() && !isClosed()" class="btn-group-vert">
-                                <button (click)="followup(followupHTML)"
-                                        class="btn btn-sm btn-highlight max-width">{{ 'ticket.action_feedback' | i18n }}</button>
-                                <label class="btn btn-sm btn-success max-width">
-                                    <input type="file" (change)="attach($event.target)"
-                                           class="custom-file-input">{{ 'ticket.action_document' | i18n }}
-                                </label>
-                                <button (click)="proposeSolution(solutionHTML)"
-                                        class="btn btn-sm btn-primary max-width">{{ 'ticket.action_solution' | i18n }}</button>
-                            </div>
-                        </div>
-                    </div>
-                    <ng-container *ngFor="let action of actions">
-                        <ng-container *ngIf="!isArray(action)">
-                            <ng-container *ngIf="action.status == 'N/A'">
-                                <div [class]="'action-block row status-' + toCssClass(action.status)">
-                                    <div class="col-3 center person-box">
-                                        <a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
-                                           target="_blank">
-                                            <i *ngIf="!action.users_id.picture"
-                                               class="fas fa-user"></i>
-                                            <img *ngIf="action.users_id.picture" alt="profile"
-                                                 style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
-                                                 [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
-                                            <br>
-                                            {{ action.users_id.firstname }} {{ action.users_id.realname }}
-                                        </a>
-                                    </div>
-                                    <div class="col-7">
-                                        {{ 'ticket.attach.note' | i18n }}<br>
-                                        <span [innerHTML]="action.content | br"></span>
-                                    </div>
-                                    <div class="col-2 action-date">
-                                        <span>{{ action.date_mod }}</span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="action.status != 'N/A'">
-                                <div [class]="'action-block row status-' + toCssClass(action.status)">
-                                    <div class="col-2 action-date">
-                                        <span>{{ action.date_mod }}</span>
-                                    </div>
-                                    <div class="col-7">
-                                        {{ 'ticket.feedback.note' | i18n }}<br>
-                                        <span [innerHTML]="action.content | br"></span>
-                                    </div>
-                                    <div class="col-3 center person-box">
-                                        <a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
-                                           target="_blank">
-                                            <i *ngIf="!action.users_id.picture"
-                                               class="fas fa-user"></i>
-                                            <img *ngIf="action.users_id.picture" alt="profile"
-                                                 style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
-                                                 [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
-                                            <br>
-                                            {{ action.users_id.firstname }} {{ action.users_id.realname }}
-                                        </a>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="isArray(action)">
-                            <div class="attachment-block attachment-block-delay center" *ngIf="action.length === 3">
-                                <div class="attachment-date action-date">
-                                    <span>{{ action[2] }}</span>
-                                </div>
-                                <a target="_blank" [href]="glpiURL + action[1].substr(1)">
-                                    <i class="fa fa-download" aria-hidden="true"></i><br>
-                                    {{ action[0] }}
-                                </a>
-                            </div>
-                            <div class="attachment-block attachment-block-delay attachment-img center"
-                                 *ngIf="action.length === 4">
-                                <div class="attachment-date action-date">
-                                    <span>{{ action[2] }}</span>
-                                </div>
-                                <img (click)="toggleFixed($event.target)" [alt]="action[0]" style="max-height: 75%"
-                                     [src]="'data:image/png;base64,' + action[3]"><br>
-                                <a target="_blank"
-                                   [href]="glpiURL + action[1].substr(1)">{{ action[0] }}</a>
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-2" style="padding: 0 !important;" *ngIf="userIsAssigned()">
-            <div class="inner-block inner-block-right">
-                <div>
-                    <b>{{ 'ticket.solution.assigned' | i18n }}</b><br><br>
-                    <p *ngIf="ticket.solutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
-                    <p *ngFor="let solution of ticket.solutions" [title]="solution.answer | striphtml">
-                        <a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
-                            <i class="far fa-hand-point-right"></i>
-                        </a>
-                        {{ solution.name | striphtml }}
-                    </p>
-                </div>
-                <div>
-                    <b>{{ 'ticket.solution.suggested' | i18n }}</b><br><br>
-                    <p *ngIf="ticket.possibleSolutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
-                    <p *ngFor="let solution of ticket.possibleSolutions" [title]="solution.answer | striphtml">
-                        <a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
-                            <i class="far fa-hand-point-right"></i>
-                        </a>
-                        {{ solution.name | striphtml }}
-                    </p>
-                </div>
-                <div>
-                    <b>{{ 'ticket.solution.similar' | i18n }}</b><br><br>
-                    <p *ngIf="ticket.similar.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
-                    <p *ngFor="let ticketSim of ticket.similar" [title]="ticketSim.content | striphtml">
-                        <a [href]="glpiURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
-                            <i class="far fa-hand-point-right"></i>
-                        </a>
-                        {{ ticketSim.name | striphtml }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+					<div class="row">
+						<div class="col-xl-4 margin-bottom">
+							<b *ngIf="userIsPoster()">{{ 'ticket.useroptions' | i18n }}:</b>
+							<div *ngIf="userIsPoster() && !isClosed()" class="btn-group-vert">
+								<button (click)="followup(followupHTML)"
+										class="btn btn-sm btn-highlight max-width">{{ 'ticket.action_followup' | i18n }}</button>
+								<label class="btn btn-sm btn-success max-width">
+									<input type="file" (change)="attach($event.target)"
+										   class="custom-file-input">{{ 'ticket.action_document' | i18n }}
+								</label>
+								<button (click)="preCloseTicket()" [disabled]="ticket.status === 'closed'"
+										class="btn btn-sm btn-dark max-width">{{ 'ticket.close' | i18n }}</button>
+							</div>
+							<div *ngIf="userIsPoster() && isClosed()">
+								<button (click)="followup(followupHTML)"
+										class="btn btn-sm btn-outline-warning max-width">{{ 'ticket.action_followup_open' | i18n }}</button>
+							</div>
+						</div>
+						<div class="col-xl-4 center">
+							{{ 'ticket.sort' | i18n }}:
+							{{ 'ticket.sort.' + (sortActionsAscending ? 'asc' : 'desc') | i18n }}
+							<span class="btn btn-outline-primary btn-sm"
+								  (click)="sortActionsAscending = !sortActionsAscending; sortActions()"><i
+								class="fas fa-sort"></i></span><br>
+							<b *ngIf="userIsPoster() && hasOpenSolution() && !isClosed()">{{ 'ticket.closeoptions' | i18n }}
+								:</b>
+							<div *ngIf="userIsPoster() && hasOpenSolution() && !isClosed()" class="btn-group-vert">
+								<button (click)="markSolution(followupHTML, true)"
+										class="btn btn-sm btn-outline-success max-width">{{ 'ticket.action_accept' | i18n }}</button>
+								<button (click)="markSolution(followupHTML, false)"
+										class="btn btn-sm btn-outline-danger max-width">{{ 'ticket.action_failed' | i18n }}</button>
+							</div>
+						</div>
+						<div class="col-xl-4">
+							<b *ngIf="userIsAssigned() && !isClosed()">{{ 'ticket.supportoptions' | i18n }}:</b>
+							<div *ngIf="userIsAssigned() && !isClosed()" class="btn-group-vert">
+								<button (click)="followup(followupHTML)"
+										class="btn btn-sm btn-highlight max-width">{{ 'ticket.action_feedback' | i18n }}</button>
+								<label class="btn btn-sm btn-success max-width">
+									<input type="file" (change)="attach($event.target)"
+										   class="custom-file-input">{{ 'ticket.action_document' | i18n }}
+								</label>
+								<button (click)="proposeSolution(solutionHTML)"
+										class="btn btn-sm btn-primary max-width">{{ 'ticket.action_solution' | i18n }}</button>
+							</div>
+						</div>
+					</div>
+					<ng-container *ngFor="let action of actions">
+						<ng-container *ngIf="!isArray(action)">
+							<ng-container *ngIf="action.status == 'N/A'">
+								<div [class]="'action-block row status-' + toCssClass(action.status)">
+									<div class="col-3 center person-box">
+										<a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
+										   target="_blank">
+											<i *ngIf="!action.users_id.picture"
+											   class="fas fa-user"></i>
+											<img *ngIf="action.users_id.picture" alt="profile"
+												 style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
+												 [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
+											<br>
+											{{ action.users_id.firstname }} {{ action.users_id.realname }}
+										</a>
+									</div>
+									<div class="col-7">
+										{{ 'ticket.attach.note' | i18n }}<br>
+										<span [innerHTML]="action.content | br"></span>
+									</div>
+									<div class="col-2 action-date">
+										<span>{{ action.date_mod }}</span>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngIf="action.status != 'N/A'">
+								<div [class]="'action-block row status-' + toCssClass(action.status)">
+									<div class="col-2 action-date">
+										<span>{{ action.date_mod }}</span>
+									</div>
+									<div class="col-7">
+										{{ 'ticket.feedback.note' | i18n }}<br>
+										<span [innerHTML]="action.content | br"></span>
+									</div>
+									<div class="col-3 center person-box">
+										<a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
+										   target="_blank">
+											<i *ngIf="!action.users_id.picture"
+											   class="fas fa-user"></i>
+											<img *ngIf="action.users_id.picture" alt="profile"
+												 style="min-height: 50px;min-width: 50px;height: 50px;width: 50px;max-height: 50px;max-width: 50px;"
+												 [src]="glpiURL + 'front/document.send.php?file=_pictures/' + action.users_id.picture">
+											<br>
+											{{ action.users_id.firstname }} {{ action.users_id.realname }}
+										</a>
+									</div>
+								</div>
+							</ng-container>
+						</ng-container>
+						<ng-container *ngIf="isArray(action)">
+							<div class="attachment-block attachment-block-delay center" *ngIf="action.length === 3">
+								<div class="attachment-date action-date">
+									<span>{{ action[2] }}</span>
+								</div>
+								<a target="_blank" [href]="glpiURL + action[1].substr(1)">
+									<i class="fa fa-download" aria-hidden="true"></i><br>
+									{{ action[0] }}
+								</a>
+							</div>
+							<div class="attachment-block attachment-block-delay attachment-img center"
+								 *ngIf="action.length === 4">
+								<div class="attachment-date action-date">
+									<span>{{ action[2] }}</span>
+								</div>
+								<img (click)="toggleFixed($event.target)" [alt]="action[0]" style="max-height: 75%"
+									 [src]="'data:image/png;base64,' + action[3]"><br>
+								<a target="_blank"
+								   [href]="glpiURL + action[1].substr(1)">{{ action[0] }}</a>
+							</div>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-2" style="padding: 0 !important;" *ngIf="userIsAssigned()">
+			<div class="inner-block inner-block-right">
+				<div>
+					<b>{{ 'ticket.solution.assigned' | i18n }}</b><br><br>
+					<p *ngIf="ticket.solutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
+					<p *ngFor="let solution of ticket.solutions" [title]="solution.answer | striphtml">
+						<a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
+							<i class="far fa-hand-point-right"></i>
+						</a>
+						{{ solution.name | striphtml }}
+					</p>
+				</div>
+				<div>
+					<b>{{ 'ticket.solution.suggested' | i18n }}</b><br><br>
+					<p *ngIf="ticket.possibleSolutions.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
+					<p *ngFor="let solution of ticket.possibleSolutions" [title]="solution.answer | striphtml">
+						<a [href]="glpiURL + '/front/knowbaseitem.form.php?id=' + solution.id" target="_blank">
+							<i class="far fa-hand-point-right"></i>
+						</a>
+						{{ solution.name | striphtml }}
+					</p>
+				</div>
+				<div>
+					<b>{{ 'ticket.solution.similar' | i18n }}</b><br><br>
+					<p *ngIf="ticket.similar.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
+					<p *ngFor="let ticketSim of ticket.similar" [title]="ticketSim.content | striphtml">
+						<a [href]="glpiURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
+							<i class="far fa-hand-point-right"></i>
+						</a>
+						{{ ticketSim.name | striphtml }}
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

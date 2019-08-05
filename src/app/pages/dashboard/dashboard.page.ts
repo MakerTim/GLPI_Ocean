@@ -4,7 +4,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Ticket} from '../../models/Ticket';
-import {sendSecureHeader} from '../../services/login.service';
+import {getUserRaw, sendSecureHeader} from '../../services/login.service';
 import {GLOBAL} from '../../services/global';
 import {RefreshPage} from '../../models/RefreshPage';
 
@@ -27,6 +27,7 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 	public tickets: Ticket[] = [];
 	public pageId = '0';
 	public isUser = false;
+	public name = '';
 
 	constructor(
 		private httpClient: HttpClient,
@@ -72,8 +73,56 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 			this.httpClient.get<Ticket[]>(GLOBAL.api + '/Dashboard', {headers}).toPromise()
 				.then(response => {
 					this.tickets = response;
+					this.guessName();
 				});
 		});
+	}
+
+	guessName() {
+		const firstTicket = this.tickets[0];
+		if (this.pageId === 'self') {
+			const self = getUserRaw();
+			this.name = self.firstname + ' ' + self.realname;
+			return;
+		}
+		if (this.isUser) {
+			for (const rUser of firstTicket.requested_users) {
+				if (rUser.id === this.pageId.toString()) {
+					this.name = rUser.requested_users;
+					return;
+				}
+			}
+			for (const rUser of firstTicket.assigned_users) {
+				if (rUser.id === this.pageId.toString()) {
+					this.name = rUser.assigned_users;
+					return;
+				}
+			}
+			// @ts-ignore
+			if (firstTicket.users_id_lastupdater_id === this.pageId.toString()) {
+				this.name = firstTicket.users_id_lastupdater;
+				return;
+			}
+			// @ts-ignore
+			if (firstTicket.users_id_recipient_id === this.pageId.toString()) {
+				this.name = firstTicket.users_id_recipient;
+				return;
+			}
+		} else {
+			for (const rGroup of firstTicket.requested_groups) {
+				if (rGroup.id === this.pageId.toString()) {
+					this.name = rGroup.requested_groups;
+					return;
+				}
+			}
+			for (const rGroup of firstTicket.assigned_groups) {
+				if (rGroup.id === this.pageId.toString()) {
+					this.name = rGroup.assigned_groups;
+					return;
+				}
+			}
+		}
+		this.name = '';
 	}
 
 	setNavbar(b: boolean) {
@@ -137,7 +186,7 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 		if (ticket.requested_users.length === 0) {
 			return ticket.users_id_recipient;
 		}
-		return ticket.requested_users.map(userObj => userObj.requested_users.split(' ')[0]).join(', ');
+		return ticket.requested_users.map(userObj => userObj.requested_users ? userObj.requested_users.split(' ')[0] : ['N/A']).join(', ');
 	}
 
 	assigned(ticket) {
@@ -147,6 +196,6 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 			}
 			return ticket.assigned_groups.map(groupObj => groupObj.assigned_groups).join(', ');
 		}
-		return ticket.assigned_users.map(userObj => userObj.assigned_users.split(' ')[0]).join(', ');
+		return ticket.assigned_users.map(userObj => userObj.assigned_users ? userObj.assigned_users.split(' ')[0] : ['N/A']).join(', ');
 	}
 }
