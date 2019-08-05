@@ -59,7 +59,7 @@ export class LighthouseService implements ErrorHandler {
 			});
 		} catch (e) {
 			console.error(e);
-			throw error;
 		}
+		throw error;
 	}
 }
