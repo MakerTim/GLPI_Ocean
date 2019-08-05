@@ -4,7 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve --aot",
-		"start2": "ng serve --host=0.0.0.0 --disableHostCheck --disable-host-check --aot",
+		"start2": "ng serve --host=0.0.0.0 --disableHostCheck --disable-host-check --aot --port 4201",
 		"build": "ng build --aot --prod --build-optimizer",
 		"build-prodtest": "ng build --aot --watch --configuration prodtest --build-optimizer --base-href /glpi/plugins/ocean/dist/client/",
 		"gen": "ng generate",
