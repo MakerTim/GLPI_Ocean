@@ -215,7 +215,7 @@
     "ticket.action_document": "Add Attachment",
     "ticket.action_clipboard": "Paste clipboard",
     "ticket.action_feedback": "Send Feedback",
-    "ticket.action_solution": "Propose solution",
+    "ticket.action_solution": "Send solution",
     "ticket.action_accept": "Mark as solved",
     "ticket.action_failed": "Solution not working",
     "ticket.useroptions": "Options",

@@ -75,9 +75,9 @@
 					<button class="btn btn-sm btn-danger" (click)="createNewCategory(newCategoryHTML)">+</button>
 					<select (change)="selectSolutionDir($event.target.value, modal)" class="form-control"
 							id="navigateSolutionDir">
-						<option [value]="null" selected>{{ 'ticket.solution.none' | i18n }}</option>
+						<option [value]="null">{{ 'ticket.solution.none' | i18n }}</option>
 						<option *ngFor="let solutionDirectory of solutionDirectories"
-								[value]="solutionDirectory.id">
+								[value]="solutionDirectory.id" [defaultSelected]="checkDefaultSelected(solutionDirectory, modal)">
 							{{ solutionDirectory.name }}
 						</option>
 					</select>
@@ -255,9 +255,9 @@
 							<span class="btn btn-outline-primary btn-sm"
 								  (click)="sortActionsAscending = !sortActionsAscending; sortActions()"><i
 								class="fas fa-sort"></i></span><br>
-							<b *ngIf="userIsPoster() && hasOpenSolution() && !isClosed()">{{ 'ticket.closeoptions' | i18n }}
+							<b *ngIf="userIsPoster() && hasOpenSolution()">{{ 'ticket.closeoptions' | i18n }}
 								:</b>
-							<div *ngIf="userIsPoster() && hasOpenSolution() && !isClosed()" class="btn-group-vert">
+							<div *ngIf="userIsPoster() && hasOpenSolution()" class="btn-group-vert">
 								<button (click)="markSolution(followupHTML, true)"
 										class="btn btn-sm btn-outline-success max-width">{{ 'ticket.action_accept' | i18n }}</button>
 								<button (click)="markSolution(followupHTML, false)"
@@ -378,7 +378,7 @@
 					<b>{{ 'ticket.solution.similar' | i18n }}</b><br><br>
 					<p *ngIf="ticket.similar.length === 0">{{ 'ticket.solution.nofound' | i18n }}</p>
 					<p *ngFor="let ticketSim of ticket.similar" [title]="ticketSim.content | striphtml">
-						<a [href]="glpiURL + '/front/ticket.form.php?id=' + ticketSim.id" target="_blank">
+						<a [href]="'/open/Ticket/' + ticketSim.id" target="_blank">
 							<i class="far fa-hand-point-right"></i>
 						</a>
 						{{ ticketSim.name | striphtml }}

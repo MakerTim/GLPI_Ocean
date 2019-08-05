@@ -298,7 +298,6 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 			size: 'lg'
 		}, (modalArray) => {
 			const modal = modalArray[2];
-			console.log(modal);
 			this.postSelectedSolution(modal.private, modal);
 			this.refresh();
 		});
@@ -362,7 +361,28 @@ export class OpenTicketPage extends RefreshPage implements OnInit {
 				.then(foundSolution => {
 					modal.privateObject = foundSolution;
 					modal.private = foundSolution.answer;
+					this.refresh();
 				});
 		});
+	}
+
+	checkDefaultSelected(solutionDirectory: any, modal) {
+		if (solutionDirectory.ds) {
+			return solutionDirectory.ds;
+		}
+		if (solutionDirectory.comment && solutionDirectory.comment.indexOf('}') > 0) {
+			const groupsObj = JSON
+				.parse(solutionDirectory.comment.substring(0, solutionDirectory.comment.indexOf('}') + 1));
+			const user = getUserRaw();
+			for (const group of user.groups) {
+				if (groupsObj.groups.indexOf(group) >= 0) {
+					setTimeout(() => this.selectSolutionDir(solutionDirectory.id, modal), 100);
+					solutionDirectory.ds = true;
+					return true;
+				}
+			}
+		}
+		solutionDirectory.ds = false;
+		return false;
 	}
 }
