@@ -34,7 +34,7 @@ class User extends RoutingBase {
 		}
 		$user = $statement->fetch();
 
-		$statement = $DB->prepare('SELECT t.id, t.name FROM glpi_tickets t LEFT JOIN glpi_tickets_users tu ON tu.tickets_id = t.id WHERE tu.users_id=:id ORDER BY t.date_mod DESC LIMIT 5');
+		$statement = $DB->prepare('SELECT DISTINCT t.id, t.name FROM glpi_tickets t LEFT JOIN glpi_tickets_users tu ON tu.tickets_id = t.id WHERE tu.users_id=:id ORDER BY t.date_mod DESC LIMIT 5');
 		$statement->bindParam(':id', $_SERVER['HTTP_ID']);
 		$statement->execute();
 		$user['tickets'] = $statement->fetchAll();
