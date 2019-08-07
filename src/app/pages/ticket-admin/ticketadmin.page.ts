@@ -5,7 +5,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {sendSecureHeader} from '../../services/login.service';
 import {GLOBAL} from '../../services/global';
-import {fields, retrieveTicketLayout, TicketCategory, TicketSubCategory} from '../../models/Ticket';
+import {fields, IdValue, retrieveTicketLayout, TicketCategory, TicketSubCategory} from '../../models/Ticket';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SnackbarService} from 'ngx-snackbar';
 import {I18n} from '../../pipes/translator';
@@ -31,6 +31,7 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 	public viewing: string[] = [];
 	public editing: string[] = [];
 	public databaseStructure: any = {};
+	public subtypeCache: any = {};
 	public categories: TicketCategory[] = [];
 	public page = 1;
 	public newOptionName = '';
@@ -439,5 +440,31 @@ export class TicketAdminPage extends RefreshPage implements OnInit {
 
 	addCustomField(data: any) {
 		data['custom.' + this.customField] = ['empty'];
+	}
+
+	findSubtypes(dataOptionElement: any) {
+		if (this.subtypeCache[dataOptionElement]) {
+			return this.subtypeCache[dataOptionElement];
+		}
+		sendSecureHeader(headers => {
+			headers = headers.set('Type', 'options')
+				.set('Table', dataOptionElement)
+				.set('Field', 'name');
+			this.httpClient.get<IdValue[]>(GLOBAL.api + '/TicketForm', {headers}).toPromise()
+				.then(values => {
+					this.subtypeCache[dataOptionElement] = values;
+				})
+				.catch(console.error);
+			this.subtypeCache[dataOptionElement] = [];
+		});
+		return [];
+	}
+
+	hasTypes(dataOptionElement: string) {
+		if (!dataOptionElement) {
+			return false;
+		}
+		const keys = this.objectKeys(this.databaseStructure);
+		return keys.indexOf(dataOptionElement.substr(0, dataOptionElement.length - 1) + 'types') >= 0;
 	}
 }

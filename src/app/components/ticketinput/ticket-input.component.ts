@@ -41,16 +41,17 @@ export class TicketInputComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	getDatabaseOptions(table: string, field: string) {
+	getDatabaseOptions(table: string, field: string, type: string|null) {
 		const thiz = this;
-		const key = table + '~' + field;
+		const key = table + '~' + field + '~' + type;
 		if (key in TicketInputComponent.dictionary) {
 			return TicketInputComponent.dictionary[key];
 		}
 		sendSecureHeader(headers => {
 			headers = headers.set('Type', 'options')
 				.set('Table', table)
-				.set('Field', field);
+				.set('Field', field)
+				.set('SubType', type && type !== 'null' ? type : '');
 			this.httpClient.get<IdValue[]>(GLOBAL.api + '/TicketForm', {headers}).toPromise()
 				.then(values => {
 					TicketInputComponent.dictionary[key] = values;

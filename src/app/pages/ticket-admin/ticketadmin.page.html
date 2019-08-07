@@ -50,7 +50,19 @@
         <ng-container *ngIf="dataOption[3]">{{ 'ticket.useName' | i18n }}:</ng-container>
         <ng-container *ngIf="!dataOption[3]">{{ 'ticket.useId' | i18n }}:</ng-container>
         <input [(ngModel)]="dataOption[3]" type="checkbox" [value]="dataOption[3]">
-    </label>&nbsp;
+    </label>&nbsp;<br *ngIf="hasTypes(dataOption[1])">
+	<label *ngIf="hasTypes(dataOption[1])">
+		{{ 'ticket.subtype' | i18n }}:
+		<select class="btn btn-sm btn-outline-primary"
+				[(ngModel)]="dataOption[4]">
+			<option [value]="null" [selected]="true">{{ 'ticket.all' | i18n }}</option>
+			<option
+				*ngFor="let subType of findSubtypes(dataOption[1])"
+				[value]="subType.id">
+				{{ subType.value }}
+			</option>
+		</select>
+	</label>&nbsp;
 </ng-template>
 <ng-template #selectorInput let-dataOption="dataOption">
     <label>
@@ -164,9 +176,10 @@
     <div class="header">{{ 'ticket-admin.header' | i18n }}</div>
 
     <br>
-    <div *ngIf="error">{{ error }}</div>
+	<h4 style="color: red; text-align: center">Know what you do, do what you know</h4>
+	<div *ngIf="error">{{ error }}</div>
     <div *ngIf="!error" class="row no-margin">
-        <div class="col-lg-8">
+		<div class="col-lg-8">
             <div class="inner-block">
                 <h3>{{ 'ticket.settings' | i18n }}</h3>
                 <hr>

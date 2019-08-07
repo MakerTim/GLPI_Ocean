@@ -129,8 +129,15 @@ class TicketForm extends RoutingBase {
 			sendError("Can't get field $requestedField in $requestedTable");
 		}
 
+		$where = '';
+		$subType = array_key_exists('HTTP_SUBTYPE', $_SERVER) ? $_SERVER['HTTP_SUBTYPE'] : '';
+		if ($subType) {
+			$field = substr($requestedTable, 5, -1) . 'types_id';
+			$where .= "WHERE $field='" . str_replace("'",'"', $subType) . "'";
+		}
+
 		/** @noinspection SqlResolve */
-		$realStatement = $DB->query("SELECT id, $requestedField as `value` FROM $requestedTable ORDER BY id ASC");
+		$realStatement = $DB->query("SELECT id, $requestedField as `value` FROM $requestedTable $where ORDER BY id");
 		if (!$realStatement->execute()) {
 			sendError('Error that never should have happend');
 		}
