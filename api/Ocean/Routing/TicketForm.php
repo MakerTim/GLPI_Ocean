@@ -133,7 +133,7 @@ class TicketForm extends RoutingBase {
 		$subType = array_key_exists('HTTP_SUBTYPE', $_SERVER) ? $_SERVER['HTTP_SUBTYPE'] : '';
 		if ($subType) {
 			$field = substr($requestedTable, 5, -1) . 'types_id';
-			$where .= "WHERE $field='" . str_replace("'",'"', $subType) . "'";
+			$where .= "WHERE $field='" . str_replace("'", '"', $subType) . "'";
 		}
 
 		/** @noinspection SqlResolve */
@@ -181,6 +181,9 @@ class TicketForm extends RoutingBase {
 		$rootFiles = GLPI_ROOT . 'files/';
 		if (!is_dir($rootFiles)) {
 			mkdir($rootFiles, 0777, true);
+		}
+		if (!is_dir($rootFiles . 'ocean')) {
+			mkdir($rootFiles . 'ocean', 0777, true);
 		}
 		if (strpos($fileContent, ';base64,') === false) {
 			sendError('File encoding not allowed');
