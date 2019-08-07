@@ -26,10 +26,10 @@
     <div class="tickets">
         <b>{{ 'user.tickets' | i18n }}</b>
         <div *ngFor="let ticket of subList(user.tickets, 5)">
-            {{ ticket.name }}
             <a [routerLink]="'/open/Ticket/' + ticket.id">
-                <i class="fas fa-external-link-alt"></i>
+				<i class="far fa-caret-square-right"></i>
             </a>
+			{{ ticket.name }}
         </div>
         <b>{{ 'user.groups' | i18n }}</b><br>
         <span *ngFor="let group of user.groups">
