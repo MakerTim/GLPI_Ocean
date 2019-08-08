@@ -75,5 +75,16 @@ export class SettingsPage extends RefreshPage implements OnInit {
 				});
 		});
 	}
+
+	importGroups(btn) {
+		btn.target.disabled = true;
+		sendSecureHeader((headers: HttpHeaders) => {
+			this.httpClient.get(GLOBAL.api + '/ReverseGroup', {headers, responseType: 'blob'})
+				.subscribe(log => {
+					const blob = new Blob([log], {type: 'application/json'});
+					window.open(URL.createObjectURL(blob));
+				});
+		});
+	}
 }
 
