@@ -26,13 +26,11 @@ class Dashboard extends RoutingBase {
 			if (!preg_match('/\d+/', $_SERVER['HTTP_ID'])) {
 				$_SERVER['HTTP_ID'] = $user->id;
 			}
-			$statement = $DB->prepare("SELECT * FROM glpi_tickets WHERE (users_id_recipient=:field OR id IN (SELECT tickets_id FROM glpi_tickets_users WHERE users_id=:field)) AND date_mod>:lstMnd ORDER BY status ASC, date DESC LIMIT 250");
+			$statement = $DB->prepare("SELECT * FROM glpi_tickets WHERE (users_id_recipient=:field OR id IN (SELECT tickets_id FROM glpi_tickets_users WHERE users_id=:field)) ORDER BY status ASC, date DESC LIMIT 250");
 		} else {
-			$statement = $DB->prepare("SELECT * FROM glpi_tickets WHERE (id IN (SELECT tickets_id FROM glpi_groups_tickets WHERE groups_id=:field)) AND date_mod>:lstMnd ORDER BY status ASC, date DESC LIMIT 250");
+			$statement = $DB->prepare("SELECT * FROM glpi_tickets WHERE (id IN (SELECT tickets_id FROM glpi_groups_tickets WHERE groups_id=:field)) ORDER BY status ASC, date DESC LIMIT 250");
 		}
 
-		$lastMonth = date('Y-m-d', strtotime('last day of -3 months'));
-		$statement->bindParam(':lstMnd', $lastMonth);
 		$statement->bindParam(':field', $_SERVER['HTTP_ID']);
 		if (!$statement->execute()) {
 			sendError('Failed to get dashboard');
