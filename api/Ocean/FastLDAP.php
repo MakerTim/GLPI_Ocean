@@ -63,10 +63,13 @@ class FastLDAP {
 					}
 					$userEntry = ldap_get_entries($ds, $user);
 					if (is_array($userEntry) && $userEntry['count'] === 1) {
-						if (!@ldap_bind($ds, $userEntry[0]['dn'], $password)) {
+						if ($password !== null && !@ldap_bind($ds, $userEntry[0]['dn'], $password)) {
 							$log[] = 'WRONG PASSWORD! WOMP WOMP!' . PHP_EOL;
 						} else {
 							$log[] = 'WELCOME ' . $userEntry[0]['cn'][0];
+							preg_match_all('/OU=((?:(?:\\\\,)|(?:[^,]))+)/', $userEntry[0]['dn'], $group, PREG_SET_ORDER, 0);
+							$group = str_replace('\,', ',', $group[0][1]);
+							$log[] = 'GROUP: ' . $group;
 							$user = [ //
 								'_loginfield' => $ldap['login_field'], //
 								'dn' => $userEntry[0]['dn'], //
@@ -76,10 +79,14 @@ class FastLDAP {
 								'whencreated' => date('Y-m-d H:i:s', strtotime(str_replace('.0', '', $userEntry[0]['whencreated'][0]))), //
 								'whenchanged' => date('Y-m-d H:i:s', strtotime(str_replace('.0', '', $userEntry[0]['whenchanged'][0]))), //
 								'mail' => $userEntry[0]['mail'][0], //
+								'group' => $group, //
 								'auth_id' => $ldap['id'], //
 							];
 						}
 						break;
+					} else {
+						$log[] = 'USER NOT FOUND: '  . $login;
+						$log[] = $userEntry;
 					}
 				}
 			}
@@ -115,10 +122,18 @@ class FastLDAP {
 					$out[] = 'NOT CREATED';
 				}
 			}
+
+			// Check if group exists
+			$group = FastGroup::exists($user['group']);
+			if (!$group) {
+				$group = FastGroup::createGroup($user['group']);
+			}
+
 			$statement = $DB->prepare('SELECT id, personal_token FROM glpi_users WHERE name=:name LIMIT 1');
 			$statement->bindParam(':name', $user[$user['_loginfield']]);
 			$statement->execute();
 			$user = $statement->fetch();
+			FastGroup::setUserInGroup($user['id'], $group);
 		}
 		return $user;
 	}
