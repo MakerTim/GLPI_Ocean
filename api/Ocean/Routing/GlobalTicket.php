@@ -77,10 +77,16 @@ class GlobalTicket extends RoutingBase {
 			$newId = $new[1];
 			$toTable = $old[2];
 
-			$statement = $DB->prepare("UPDATE $toTable SET " . $type . "s_id=:newAssigned WHERE tickets_id=:id AND " . $type . "s_id=:assigned AND type=2 LIMIT 1");
-			$statement->bindParam(':id', $ticketId);
-			$statement->bindParam(':assigned', $id);
-			$statement->bindParam(':newAssigned', $newId);
+			if ($this->isDupe($toTable, $type, 2, $ticketId, $newId)) {
+				$statement = $DB->prepare("DELETE FROM $toTable WHERE tickets_id=:id AND " . $type . "s_id=:assigned AND type=2 LIMIT 1");
+				$statement->bindParam(':id', $ticketId);
+				$statement->bindParam(':assigned', $newId);
+			} else {
+				$statement = $DB->prepare("UPDATE $toTable SET " . $type . "s_id=:newAssigned WHERE tickets_id=:id AND " . $type . "s_id=:assigned AND type=2 LIMIT 1");
+				$statement->bindParam(':id', $ticketId);
+				$statement->bindParam(':assigned', $id);
+				$statement->bindParam(':newAssigned', $newId);
+			}
 			FastTicket::setTicketStatus($ticketId, FastTicket::ASSIGNED, FastTicket::INCOMING);
 		} else {
 			$type = $old[0];
