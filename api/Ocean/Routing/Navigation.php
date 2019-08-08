@@ -33,7 +33,6 @@ class Navigation extends RoutingBase {
 			'settings', //
 			'ticket-form', //
 			'logs', //
-			'users', //
 		];
 
 		foreach ($adminItems as $adminItem) {
