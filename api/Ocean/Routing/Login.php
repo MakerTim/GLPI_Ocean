@@ -2,6 +2,7 @@
 
 namespace Ocean\Routing;
 
+use Ocean\FastLDAP;
 use Ocean\FastUser;
 use Ocean\RoutingBase;
 use PDO;
@@ -39,10 +40,18 @@ class Login extends RoutingBase {
 		}
 		$result = $statement->fetch();
 		if (!$result) {
+			$user = FastLDAP::createLoginIfNotExist($username, $password);
+			if ($user) {
+				return ['personal-token' => $user['personal_token']];
+			}
 			sendError('No username found');
 		}
 		$passwordHash = $result['password'];
 		if (!FastUser::checkPassword($password, $passwordHash)) {
+			$user = FastLDAP::createLoginIfNotExist($username, $password);
+			if ($user) {
+				return ['personal-token' => $user['personal_token']];
+			}
 			sendError('Password doesnt match', 401);
 		}
 
