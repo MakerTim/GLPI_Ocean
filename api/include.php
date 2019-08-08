@@ -3,6 +3,7 @@
 use Ocean\PDOWrapper;
 
 spl_autoload_register(function ($class_name) {
+	$class_name = str_replace('\\', '/', $class_name);
 	if (file_exists("../api/$class_name.php")) {
 		/** @noinspection PhpIncludeInspection */
 		include "../api/$class_name.php";
