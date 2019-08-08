@@ -23,8 +23,10 @@ export class HomePage implements OnInit {
 			// tslint:disable-next-line:no-bitwise
 			if (user.rights && ((user.rights.ticket) & 2) === 2) {
 				this.isAdmin = true;
-				if (user.groups) {
-					this.groups = user.groups;
+				// @ts-ignore
+				if (user.groupsService) {
+					// @ts-ignore
+					this.groups = user.groupsService;
 				}
 			}
 		});

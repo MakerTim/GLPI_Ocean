@@ -17,13 +17,17 @@ class GetSelf extends RoutingBase {
 		$user->rights = $user->getRightsTable();
 
 		$id = $user->id;
-		$groupsStatement = $DB->prepare('SELECT groups_id FROM glpi_groups_users WHERE users_id=:id');
+		$groupsStatement = $DB->prepare('SELECT g.id, g.is_assign, g.name FROM glpi_groups_users gu JOIN glpi_groups g ON g.id = gu.groups_id WHERE gu.users_id=:id');
 		$groupsStatement->bindParam(':id', $id);
 		$groupsStatement->execute();
 
 		$user->groups = [];
+		$user->groupsService = [];
 		foreach ($groupsStatement->fetchAll() as $groupEntry) {
-			$user->groups[] = $groupEntry['groups_id'];
+			$user->groups[] = $groupEntry['id'];
+			if ($groupEntry['is_assign'] == 1) {
+				$user->groupsService[] = $groupEntry['name'];
+			}
 		}
 
 		return $user;

@@ -80,7 +80,8 @@
 		</a>
 		<ng-container *ngFor="let group of groups">
 			<a [routerLink]="'/group/Ticket/' + group" class="block animated-3 animated-delay-3 fadeInUpLow">
-				<span>{{ 'home.mydesk' | i18n }} {{ hasMultipleGroups() ? group : '' }}</span>
+				<span *ngIf="hasMultipleGroups()">{{ group }}</span>
+				<span *ngIf="!hasMultipleGroups()">{{ 'home.mydesk' | i18n }}</span>
 				<br>
 				<i class="far fa-window-maximize"></i>
 			</a>
