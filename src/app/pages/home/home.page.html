@@ -73,7 +73,7 @@
 		</a>
 		<br>
 		<br>
-		<a [routerLink]="'/global/Ticket'" class="block animated-2 animated-delay-2 fadeInUpLow">
+		<a *ngIf="isAdmin" [routerLink]="'/global/Ticket'" class="block animated-2 animated-delay-2 fadeInUpLow">
 			<span>{{ 'home.desk' | i18n }}</span>
 			<br>
 			<i class="fas fa-window-maximize"></i>

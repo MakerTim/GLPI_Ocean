@@ -21,7 +21,7 @@ export class HomePage implements OnInit {
 	ngOnInit() {
 		getUser(user => {
 			// tslint:disable-next-line:no-bitwise
-			if (((user.rights.ticket) & 1) === 1) {
+			if (user.rights && ((user.rights.ticket) & 2) === 2) {
 				this.isAdmin = true;
 				if (user.groups) {
 					this.groups = user.groups;
