@@ -123,7 +123,18 @@ class FastUser extends FastModel {
 
 		$result = $statement->fetchAll();
 		if (!$result) {
-			sendError('No profiles for user');
+			$statement = $DB->prepare('INSERT INTO glpi_profiles_users (users_id, profiles_id, is_dynamic) values (:userId, 9, 1)');
+			$statement->bindParam(':userId', $this->id, PDO::PARAM_INT);
+			if (!$statement->execute()) {
+				sendError('No profiles for user');
+			}
+			$statement = $DB->prepare('SELECT p.* ' .//
+				'FROM glpi_profiles p ' .//
+				'JOIN glpi_profiles_users pu ' . //
+				'ON pu.profiles_id = p.id ' . //
+				'WHERE pu.users_id = :userId');
+			$statement->bindParam(':userId', $this->id, PDO::PARAM_INT);
+			$statement->execute();
 		}
 		$profiles = [];
 		foreach ($result as $row) {
@@ -171,7 +182,7 @@ class FastUser extends FastModel {
 		return $ok;
 	}
 
-	private static function generateToken($length, $subset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+	public static function generateToken($length, $subset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
 		$token = '';
 		$subsetLength = strlen($subset) - 1;
 		for ($i = 0; $i < $length; $i++) {
