@@ -27,6 +27,7 @@ class PDOWrapper {
 
 		$warningLevel = ini_get('error_reporting');
 		try {
+			error_reporting(E_ALL ^ E_WARNING);
 			$DB = new \PDO("$dbType:host=$host;dbname=$default;charset=utf8", $user, $password, [ //
 				PDO::ATTR_PERSISTENT => true, //
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, //
@@ -38,7 +39,7 @@ class PDOWrapper {
 			if (!count($connectionTest) || !array_key_exists('test', $connectionTest[0])) {
 				sendError('Connection failed! ' . "$host | $user | $password | $default");
 			}
-		} catch (\Exception $ex) {
+		} catch (\Throwable $ex) {
 			sendError($ex->getTraceAsString());
 		}
 	}
