@@ -80,6 +80,9 @@ export class DashboardPage extends RefreshPage implements OnInit, OnDestroy {
 
 	guessName() {
 		const firstTicket = this.tickets[0];
+		if (!firstTicket) {
+			return;
+		}
 		if (this.pageId === 'self') {
 			const self = getUserRaw();
 			this.name = self.firstname + ' ' + self.realname;
