@@ -6,7 +6,15 @@ import {sendSecureHeader} from './login.service';
 import {GLOBAL} from './global';
 import {I18n} from '../pipes/translator';
 
-function open(modalService: NgbModal, followupHTML, options: NgbModalOptions = {centered: true}) {
+function open(modalService: NgbModal, followupHTML, options: NgbModalOptions = null) {
+	if (options === null) {
+		options = {
+			beforeDismiss: function () {
+				return confirm('Want to close this popup?');
+			},
+			centered: true
+		};
+	}
 	return modalService.open(followupHTML, options);
 }
 
@@ -35,14 +43,11 @@ export function followup(modalService: NgbModal, followupHTML, httpClient: HttpC
 export function newInternalCategory(modalService: NgbModal, newCategoryHTML, httpClient: HttpClient, triggerPost) {
 	open(modalService, newCategoryHTML).result
 		.then(result => {
-			console.log('A');
 			if (!result || result.toString().trim().length === 0) {
 				newInternalCategory(modalService, newCategoryHTML, httpClient, triggerPost);
 				return;
 			}
-			console.log('B');
 			sendSecureHeader(headers => {
-				console.log('C');
 				headers = headers.set('Type', 'newCategory')
 					.set('category', result);
 				httpClient.post(GLOBAL.api + '/Ticket', result, {headers}).toPromise()
