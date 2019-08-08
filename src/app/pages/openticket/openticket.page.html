@@ -161,7 +161,12 @@
 								   [routerLink]="'/dashboard/Ticket/user/' + item['id']">
 									<i class="fas fa-columns"></i>
 								</a>
-								<a class="iconholder" *ngIf="item['id'] && userIsAssigned()"
+								<a class="iconholder" *ngIf="item['id'] && userIsAssigned() && leftMenuItem[1] === 'user'"
+								   [routerLink]="'/admin/user/' + item['id']"
+								   [href]="glpiURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
+									<i class="fas fa-user"></i>
+								</a>
+								<a class="iconholder" *ngIf="item['id'] && userIsAssigned() && leftMenuItem[1] !== 'user'"
 								   target="_blank"
 								   [href]="glpiURL + 'front/' + leftMenuItem[1] + '.form.php?id=' + item['id']">
 									<i class="fas fa-external-link-alt"></i>
@@ -283,7 +288,7 @@
 							<ng-container *ngIf="action.status == 'N/A'">
 								<div [class]="'action-block row status-' + toCssClass(action.status)">
 									<div class="col-3 center person-box">
-										<a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
+										<a [routerLink]="'/admin/user/' + action.users_id.id"
 										   target="_blank">
 											<i *ngIf="!action.users_id.picture"
 											   class="fas fa-user"></i>
@@ -313,7 +318,7 @@
 										<span [innerHTML]="action.content | br"></span>
 									</div>
 									<div class="col-3 center person-box">
-										<a [href]="glpiURL + 'front/user.form.php?id=' + action.users_id.id"
+										<a [routerLink]="'/admin/user/' + action.users_id.id"
 										   target="_blank">
 											<i *ngIf="!action.users_id.picture"
 											   class="fas fa-user"></i>

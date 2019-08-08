@@ -48,7 +48,7 @@
             </span>
         </button>
     </a>
-    <a [href]="GLPI_URL + 'front/user.form.php?id=' + user.id">
+    <a [routerLink]="'/admin/user/' + user.id">
         <button>
             <span>
                 {{ 'user.glpi' | i18n }} <br>

@@ -73,7 +73,7 @@
                 </a>
                 <div class="listBlock-body row">
                     <div class="col-3"><a
-                            [href]="glpiURL() + 'front/user.form.php?id=' + getUserId(log)"
+							[routerLink]="'/admin/user/' + getUserId(log)"
                             target="_blank">{{ getUserName(log) }}</a>
                     </div>
                     <div class="col-5 center">
@@ -132,7 +132,7 @@
                     <h3>
                         {{ logfile[2] }}
                         <a target="_blank" *ngIf="hasUserId(logfile[2])"
-                           [href]='glpiURL() + "front/user.form.php?id=" + parseUserId(logfile[2])'>
+						   [routerLink]="'/admin/user/' + parseUserId(logfile[2])">
                             <i class="fas fa-external-link-alt"></i>
                         </a>
                         <span ngbTooltip="{{ logfile['full'] }}" placement="left">
@@ -146,7 +146,7 @@
                         <ng-container *ngIf="logfile[3]">
                             {{ 'logs.who' | i18n }}: {{ logfile[3] }}
                             <a target="_blank" *ngIf="hasUserId(logfile[3])"
-                               [href]='glpiURL() + "front/user.form.php?id=" + parseUserId(logfile[3])'>
+							   [routerLink]="'/admin/user/' + parseUserId(logfile[3])">
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                             <br>
