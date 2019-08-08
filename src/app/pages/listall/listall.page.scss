@@ -40,7 +40,7 @@
 
 	.listBlock-body {
 		min-height: 2em;
-		padding-left: 5%;
+		padding-left: 10px;
 
 		.search-desc > span {
 			width: 30%;
@@ -60,6 +60,11 @@
 			&.grayed {
 				background-color: rgba(150, 150, 150, 0.1);
 				box-shadow: 0px -4px 0px rgba(150, 150, 150, 0.1);
+
+				&, & > * {
+					color: lightgray !important;
+					border-color: lightgray !important;
+				}
 			}
 
 			> .form-control, button {
@@ -86,4 +91,8 @@
 	overflow-wrap: break-word;
 	margin-bottom: 1em;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.padLeft {
+	padding-right: 10px;
 }

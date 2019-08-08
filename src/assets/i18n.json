@@ -609,14 +609,14 @@
 		"listall.property.racktypes_id": "Type",
 		"listall.property.rackmodels_id": "Model",
 		"ticket.welcome": "Welkom",
-		"ticket.mainquestion": "Meld hier je incident",
+		"ticket.mainquestion": "Meld hier je Ticket",
 		"ticket.header": "Servicedesk",
 		"ticket.maincategorie": "Onder welke categorie valt het",
 		"ticket.subcategorie": "Onder welke subcategorie valt het",
 		"ticket.noScreenshots": "Nog geen screenshots toegevoegd",
 		"ticket.noScreenshotsTooltip": "Plak een schermafbeelding",
-		"ticket.yoursopen": "Jou open tickets",
-		"ticket.yoursclosed": "Jou gesloten tickets",
+		"ticket.yoursopen": "Mijn open tickets",
+		"ticket.yoursclosed": "Mijn gesloten tickets",
 		"ticket.departmenttickets": "Afdelings tickets",
 		"ticket.type": "Type",
 		"ticket.category": "Categorie",
@@ -734,6 +734,10 @@
 		"mail.none": "Geen",
 		"mail.here": "hier",
 		"mail.followticketalt": "Volg je ticket {0}",
+		"listall.filter.searchfield": "Zoek op veld",
+		"listall.filter.searchcase": "Negeer hoofdletters",
+		"listall.filter.searchremove": "",
+		"listall.filter.searching": "Zoek naar",
 		"404": "Pagina niet gevonden"
 	}
 }

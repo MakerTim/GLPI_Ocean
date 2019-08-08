@@ -36,7 +36,7 @@ export class ListallPage extends RefreshPage implements OnInit {
 	public limit = 50;
 
 	public searches: { field: string, search: string, ignoreCase: boolean }[] = [
-		{field: '', search: '', ignoreCase: true}
+		{field: 'name', search: '', ignoreCase: true}
 	];
 
 	@ViewChild('filterElement') filterElement: ElementRef;
